@@ -21,14 +21,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${pretendard.className} antialiased`}>
-        <div className="flex h-full bg-stone-100 gap-20 pr-20">
-          <aside className="flex flex-col h-full w-300 border-r border-gray-200 bg-white">
+        <div className="flex h-full gap-20 bg-stone-100 pr-20">
+          <aside className="flex h-full w-300 flex-col border-r border-gray-200 bg-white">
             <nav></nav>
           </aside>
 
-          <div className="flex flex-col w-full h-full pb-20 gap-10">
-            <header className="flex pt-20 pb-10">
-              <h1 className="font-bold text-indigo-500 text-4xl">title</h1>
+          <div className="flex h-full w-full flex-col gap-10 pb-20">
+            <header className="flex pb-10 pt-20">
+              <h1 className="text-4xl font-bold text-indigo-500">title</h1>
             </header>
             {children}
           </div>
