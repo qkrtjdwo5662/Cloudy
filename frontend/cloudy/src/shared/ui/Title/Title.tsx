@@ -32,14 +32,16 @@ const Title = ({
     <div className="flex items-center justify-between pl-4 pr-2 pt-9">
       <span className={classes}>{children}</span>
       {showButton && (
-        <Button
-          size={size === "l" ? "m" : "s"}
-          variant="primary"
-          design="fill"
-          type="button"
-          mainText={buttonContent}
-          rightIcon={buttonIcon}
-        />
+        <div>
+          <Button
+            size={size === "l" ? "m" : "s"}
+            variant="primary"
+            design="fill"
+            type="button"
+            mainText={buttonContent}
+            rightIcon={buttonIcon}
+          />
+        </div>
       )}
     </div>
   );
