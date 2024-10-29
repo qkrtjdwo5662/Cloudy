@@ -8,7 +8,7 @@
   }
 
   .scrollbar-custom::-webkit-scrollbar-thumb {
-    @apply min-h-[50px] rounded-[10px] border-[7px] border-white bg-warmGray300;
+    @apply bg-warmGray300 min-h-[50px] rounded-[10px] border-[7px] border-white;
   }
 
   .scrollbar-hidden {
@@ -81,6 +81,12 @@ button,
 textarea,
 select {
   font: inherit;
+}
+
+input {
+  background-color: transparent;
+  outline: none;
+  box-shadow: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

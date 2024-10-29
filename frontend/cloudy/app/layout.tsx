@@ -1,12 +1,5 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "../src/shared/globals.css";
-
-const pretendard = localFont({
-  src: "../src/app/fonts/PretendardVariable.woff2",
-  display: "swap",
-  weight: "45 920",
-});
 
 export const metadata: Metadata = {
   title: "Cloudy",
@@ -20,20 +13,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${pretendard.className} antialiased`}>
-        <div className="flex h-full gap-20 bg-stone-100 pr-20">
-          <aside className="flex h-full w-300 flex-col border-r border-gray-200 bg-white">
-            <nav></nav>
-          </aside>
-
-          <div className="flex h-full w-full flex-col gap-10 pb-20">
-            <header className="flex pb-10 pt-20">
-              <h1 className="text-4xl font-bold text-indigo-500">title</h1>
-            </header>
-            {children}
-          </div>
-        </div>
-      </body>
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+          rel="stylesheet"
+        />
+      </head>
+      <body>{children}</body>
     </html>
   );
 }
