@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  backend:
+    image: cloudy-be:latest
+    container_name: cloudy-be
+#    depends_on:
+#      - mysql
+    ports:
+      - "8081:8081"
+    restart: "always"
+    networks:
+      - cloudy
+
+volumes:
+  db: {}
+
+networks:
+  cloudy:
+    name: cloudy
+    driver: bridge
