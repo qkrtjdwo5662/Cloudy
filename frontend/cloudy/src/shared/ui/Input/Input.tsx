@@ -32,13 +32,15 @@ const Input = ({
           className="h-40 w-full rounded-8 border border-gray-200 p-16"
         />
         {showButton && (
-          <Button
-            size="m"
-            variant="primary"
-            design="fill"
-            mainText={buttonContent}
-            type={buttonType as ClickType}
-          />
+          <div>
+            <Button
+              size="m"
+              variant="primary"
+              design="fill"
+              mainText={buttonContent}
+              type={buttonType as ClickType}
+            />
+          </div>
         )}
       </div>
       {warning && <p className="pl-6 text-sm text-red-500">warning</p>}
