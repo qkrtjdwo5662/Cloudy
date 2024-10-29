@@ -57,9 +57,9 @@ const Button = ({
     base: "flex items-center justify-center gap-8 rounded-md px-16 py-12",
 
     size: {
-      l: "h-48 px-6 text-lg",
-      m: "h-40 px-4 text-base",
-      s: "h-36 px-2 text-sm",
+      l: "h-48 text-lg",
+      m: "h-40 text-base",
+      s: "h-36 text-sm",
     },
 
     variant: {
