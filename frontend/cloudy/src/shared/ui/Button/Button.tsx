@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 type Variant = "primary" | "secondary" | "tertiary";
 type Design = "fill" | "outline";
-type ClickType = "submit" | "button";
+export type ClickType = "submit" | "button";
 type Size = "l" | "m" | "s";
 
 type StyleBase = {
@@ -54,7 +54,7 @@ const Button = ({
     size: Record<Size, string>;
     variant: VariantStyles;
   } = {
-    base: "flex items-center justify-center gap-8 rounded-md px-16 py-12",
+    base: "flex items-center justify-center w-full gap-8 rounded-md px-16 py-12",
 
     size: {
       l: "h-48 text-lg",
