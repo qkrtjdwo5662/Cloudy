@@ -1,11 +1,26 @@
 version: '3.9'
 
 services:
+
+  mysql:
+    image: mysql:8
+    container_name: cloudy-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=root
+    ports:
+      - "3306:3306" # MySQL 기본 포트를 외부에 노출
+    volumes:
+      - db:/var/lib/mysql # MySQL 데이터를 영구적으로 저장
+    networks:
+      - cloudy
+    restart: "always"
+
   cloudy:
     image: cloudy-be:latest
     container_name: cloudy-be
-#    depends_on:
-#      - mysql
+    depends_on:
+      - mysql
     ports:
       - "8081:8081"
     restart: "always"
