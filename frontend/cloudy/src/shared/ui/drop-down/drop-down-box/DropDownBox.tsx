@@ -1,7 +1,7 @@
 import { useState } from "react";
-import DropDownItem from "../drop-down-item/DropDownItem";
+import { DropDownItem } from "../drop-down-item/DropDownItem";
 
-const DropDownBox = () => {
+export const DropDownBox = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const items = ["Dropdown Item 1", "Dropdown Ite 2", "Dropdown Ite 3"];
@@ -20,5 +20,3 @@ const DropDownBox = () => {
     </div>
   );
 };
-
-export default DropDownBox;

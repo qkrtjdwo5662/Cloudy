@@ -1,7 +1,7 @@
 import { useState } from "react";
-import NavigationItem from "../navigation-item/NavigationItem";
+import { NavigationItem } from "../navigation-item/NavigationItem";
 
-const NavigationBox = () => {
+export const NavigationBox = () => {
   const items = [
     {
       leftIcon: "cloudy",
@@ -65,5 +65,3 @@ const NavigationBox = () => {
     </div>
   );
 };
-
-export default NavigationBox;

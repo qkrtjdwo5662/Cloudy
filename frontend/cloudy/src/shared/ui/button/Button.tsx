@@ -36,7 +36,7 @@ interface ButtonProps {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const Button = ({
+export const Button = ({
   size,
   variant,
   design,
@@ -140,5 +140,3 @@ const Button = ({
     </button>
   );
 };
-
-export default Button;

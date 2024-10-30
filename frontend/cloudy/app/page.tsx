@@ -1,9 +1,11 @@
 "use client";
-import Button from "@/shared/ui/button/Button";
-import Chips from "@/shared/ui/chips/Chips";
-import Input from "@/shared/ui/input/Input";
-import Title from "@/shared/ui/title/Title";
-import NavigationBox from "@/shared/ui/navigation/navigation-box/NavigationBox";
+
+import { Button } from "@/shared/ui";
+import { Chips } from "@/shared/ui";
+import { Input } from "@/shared/ui";
+import { Title } from "@/shared/ui";
+import { NavigationBox } from "@/shared/ui";
+import { DropDownBox } from "@/shared/ui";
 
 export default function Home() {
   return (
@@ -106,6 +108,9 @@ export default function Home() {
         </Title>
       </div>
       <NavigationBox />
+      <div className="flex w-300">
+        <DropDownBox />
+      </div>
     </div>
   );
 }

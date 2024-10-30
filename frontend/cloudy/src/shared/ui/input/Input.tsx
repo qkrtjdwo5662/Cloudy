@@ -1,5 +1,5 @@
-import Button from "../button/Button";
 import { ClickType } from "../button/Button";
+import { Button } from "../button/Button";
 
 interface InputProps {
   placeholder: string;
@@ -11,7 +11,7 @@ interface InputProps {
   buttonType?: ClickType;
 }
 
-const Input = ({
+export const Input = ({
   placeholder = "placeholder",
   showStar,
   label,
@@ -47,5 +47,3 @@ const Input = ({
     </div>
   );
 };
-
-export default Input;
