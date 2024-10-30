@@ -38,7 +38,7 @@ services:
       - /var/www/html:/var/www/html  # 정적 파일 제공을 위한 경로
       - /etc/letsencrypt:/etc/letsencrypt  # SSL 인증서 경로
     depends_on:
-      - backend
+      - cloudy
     restart: "always"
     networks:
       - cloudy
