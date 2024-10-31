@@ -1,4 +1,4 @@
-package com.cloudy.domain.apiusage.controller;
+package com.cloudy.domain.serviceusage.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

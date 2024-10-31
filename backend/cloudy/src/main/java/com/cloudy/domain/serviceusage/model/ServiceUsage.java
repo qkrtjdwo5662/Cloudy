@@ -1,4 +1,4 @@
-package com.cloudy.domain.apiusage.model;
+package com.cloudy.domain.serviceusage.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
