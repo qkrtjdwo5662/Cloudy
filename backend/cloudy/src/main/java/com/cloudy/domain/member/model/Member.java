@@ -20,6 +20,10 @@ public class Member {
 
     private String password;
 
+    private boolean isUseEmailAlarm;
+
+    private boolean isUseServiceAlarm;
+
     private String role; //todo: enum으로 수정 필요
 
 }
