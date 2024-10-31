@@ -5,21 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "member")
+@Table(name = "server")
 @Getter
 @NoArgsConstructor
 public class Server {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
+    private Long serverId;
 
-    private String departmentName; //부서명
+    private String serverName; //부서명
 
-    private String loginId;
-
-    private String password;
-
-    private String role; //todo: enum으로 수정 필요
+    private String serverLimit;
 
 }
