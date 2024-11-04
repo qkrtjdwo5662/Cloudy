@@ -6,8 +6,8 @@ services:
     image: mysql:8
     container_name: cloudy-mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=root
+      - MYSQL_ROOT_PASSWORD=cloudy
+      - MYSQL_DATABASE=cloudy1234!
     ports:
       - "3306:3306" # MySQL 기본 포트를 외부에 노출
     volumes:
