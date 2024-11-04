@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "컨테이너 관련 API")
 @RestController
@@ -25,7 +22,7 @@ public class ContainerController {
 
     @Operation(summary = "서버 전체 컨테이너 사용량 조회 API", description = "서버 전체 컨테이너 사용량을 전체 조회합니다.")
     @SwaggerApiSuccess(description = "서버 전체 컨테이너 사용량 조회를 성공했습니다.")
-    @PostMapping("/")
+    @GetMapping
     public Response<?> getContainerUsages(@Parameter(name = "서버 id", example = "1") @RequestParam Long serverId,
                                           @Parameter(name = "회원 id", description = "추후 이 필드는 사라질 예정입니다.", example = "1") @RequestParam Long memberId,
                                           @Parameter(name = "시작일시", example = "2024-11-03 14:27:00") @RequestParam String startDateTime,
