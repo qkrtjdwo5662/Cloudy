@@ -22,7 +22,7 @@ public class ContainerController {
 
     @Operation(summary = "서버 전체 컨테이너 사용량 조회 API", description = "서버 전체 컨테이너 사용량을 전체 조회합니다.")
     @SwaggerApiSuccess(description = "서버 전체 컨테이너 사용량 조회를 성공했습니다.")
-    @GetMapping("")
+    @GetMapping()
     public Response<?> getContainerUsages(@Parameter(name = "서버 id", example = "1") @RequestParam Long serverId,
                                           @Parameter(name = "회원 id", description = "추후 이 필드는 사라질 예정입니다.", example = "1") @RequestParam Long memberId,
                                           @Parameter(name = "시작일시", example = "2024-11-03 14:27:00") @RequestParam String startDateTime,
