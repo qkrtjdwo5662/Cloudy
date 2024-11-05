@@ -1,6 +1,10 @@
 package com.cloudy.domain.member.model;
 
+import com.cloudy.domain.company.model.Company;
+import com.cloudy.domain.member.model.dto.request.MemberCreateRequest;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,16 +18,52 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
+    @NotBlank
     private String departmentName; //부서명
 
+    @NotBlank
     private String loginId;
 
+    @NotBlank
     private String password;
 
-    private boolean isUseEmailAlarm;
+    @NotNull
+    private boolean isUseEmailAlarm; //기본값 false
 
-    private boolean isUseServiceAlarm;
+    @NotNull
+    private boolean isUseServiceAlarm; //기본값 false
 
-    private String role; //todo: enum으로 수정 필요
+    @NotBlank
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
+    @ManyToOne
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
+
+    public Member(String departmentName, String loginId, String password, Role role, Company company) {
+        this.departmentName = departmentName;
+        this.loginId = loginId;
+        this.password = password;
+        this.role = role;
+        this.company = company;
+        this.isUseEmailAlarm = false;
+        this.isUseServiceAlarm = false;
+    }
+
+    public static Member of(MemberCreateRequest memberCreateRequest, String encode, Company company) {
+        return new Member(memberCreateRequest.getDepartmentName(),
+                memberCreateRequest.getLoginId(),
+                encode,
+                Role.NORMAL,
+                company);
+    }
+
+    public static Member createSuperMember(MemberCreateRequest memberCreateRequest, String encode, Company company) {
+        return new Member(memberCreateRequest.getDepartmentName(),
+                memberCreateRequest.getLoginId(),
+                encode,
+                Role.SUPER,
+                company);
+    }
 }

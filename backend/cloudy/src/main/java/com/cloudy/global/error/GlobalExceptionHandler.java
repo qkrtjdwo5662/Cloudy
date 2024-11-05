@@ -4,6 +4,7 @@ import com.cloudy.global.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -22,6 +23,13 @@ public class GlobalExceptionHandler {
         log.error("NumberFormatException - message: {} / class: {}", ex.getMessage(), ex.getClass());
         ex.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Response.ERROR(ErrorCode.INTERNAL_SERVER_ERROR, ex.getMessage()));
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    protected ResponseEntity<Response<ErrorInfo>> handleAuthorizationDeniedException(Exception ex){
+        log.error("AuthorizationDeniedException - message: {} / class: {}", ex.getMessage(), ex.getClass());
+        ex.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Response.ERROR(ErrorCode.UNAUTHORIZED, ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
