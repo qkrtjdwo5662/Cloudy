@@ -16,7 +16,7 @@ services:
       - cloudy
     restart: "always"
 
-  cloudy:
+  cloudy-be:
     image: cloudy-be:latest
     container_name: cloudy-be
     depends_on:
