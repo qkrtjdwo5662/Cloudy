@@ -2,6 +2,7 @@ package com.cloudy.domain.container.controller;
 
 import com.cloudy.domain.container.model.dto.request.ContainerGetUsagesRequest;
 import com.cloudy.domain.container.service.ContainerService;
+import com.cloudy.global.config.guard.Login;
 import com.cloudy.global.config.swagger.SwaggerApiSuccess;
 import com.cloudy.global.response.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +25,7 @@ public class ContainerController {
     @SwaggerApiSuccess(description = "서버 전체 컨테이너 사용량 조회를 성공했습니다.")
     @GetMapping
     public Response<?> getContainerUsages(@Parameter(name = "서버 id", example = "1") @RequestParam Long serverId,
-                                          @Parameter(name = "회원 id", description = "추후 이 필드는 사라질 예정입니다.", example = "1") @RequestParam Long memberId,
+                                          @Login Long memberId,
                                           @Parameter(name = "시작일시", example = "2024-11-03 14:27:00") @RequestParam String startDateTime,
                                           @Parameter(name = "종료일시", example = "2024-11-04 14:27:00") @RequestParam String endDateTime) {
         containerService.getContainerUsages(new ContainerGetUsagesRequest(serverId, memberId, startDateTime, endDateTime));
