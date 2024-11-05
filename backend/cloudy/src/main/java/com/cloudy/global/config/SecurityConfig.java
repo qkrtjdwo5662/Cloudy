@@ -5,6 +5,7 @@ import com.cloudy.global.config.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -21,6 +22,7 @@ import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -81,25 +83,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                                 authorizeRequests
                                         // '/login', '/oauth2' 나머지 모든 요청은 인증된 사용자만 접근 가능
-                                        .requestMatchers("/register", "/login", "/register/duplicate","/reissue","/login/oauth", "/oauth2/**"
-                                                ,"/login/oauth2/**", "/error", "login/oauth2/code/kakao","/swagger-ui/**"
-                                                ,"/swagger-resources/**", "/v3/api-docs/**", "/fcm/test", "/sms/**", "/locations/**").permitAll()
+                                        .requestMatchers("/auth/**"
+                                                ,"/error", "login/oauth2/code/kakao","/swagger-ui/**"
+                                                ,"/swagger-resources/**", "/v3/api-docs/**").permitAll()
 //                                        .requestMatchers("/**").permitAll()
 //                                        .requestMatchers("/admin").hasRole("ADMIN") // admin은 ADMIN 롤만
                                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(exceptionHandlerFilter, JwtAuthenticationFilter.class);
-        // OAuth 설정
-//                .oauth2Login(oauth2Login -> //oauth2 login 기능 설정 진입점
-//                                oauth2Login
-//                                        .loginPage("/oauth2/login")
-//                                        .userInfoEndpoint(c -> c.userService(oauthUserService))
-//                                        //login 성공 시 핸들러 -> 소셜 로그인 성공 시 JWT 토큰 발급해야 한다.
-//                                        .successHandler(oAuth2SuccessHandler)
-//                                        //login 실패 시 핸들러 -> 소셜 로그인 실패 시 redirect 링크 보내거나, 에러 처리 해야한다.
-//                                        .failureHandler(customAuthenticationFailureHandler)
-//                );
 
         return http.build();
     }

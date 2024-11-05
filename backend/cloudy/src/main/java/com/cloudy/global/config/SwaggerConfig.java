@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Configuration;
 )
 public class SwaggerConfig {
 
-    private final String[] noRequiredTokenApi = {};
+    private final String[] noRequiredTokenApi = {"/auth/**"};
 //    private final View error;
 
     private final OperationCustomizer operationCustomizer;

@@ -7,7 +7,7 @@ import com.cloudy.domain.member.exception.NormalRegisterFailException;
 import com.cloudy.domain.member.exception.ReissueFailException;
 import com.cloudy.domain.member.model.Member;
 import com.cloudy.domain.member.model.dto.request.MemberLoginRequest;
-import com.cloudy.domain.member.model.dto.request.MemberNormalCreateRequest;
+import com.cloudy.domain.member.model.dto.request.MemberCreateRequest;
 import com.cloudy.domain.member.model.dto.request.MemberReissueRequest;
 import com.cloudy.domain.member.model.dto.response.MemberLoginResponse;
 import com.cloudy.domain.member.model.dto.response.MemberReissueTokenResponse;
@@ -32,19 +32,37 @@ public class AuthServiceImpl implements AuthService{
 
 
     /*
-    * 회사에서 추가하는 normal 계정 회원가입.
-    * */
+     * 회사에서 추가하는 normal 계정 회원가입.
+     * */
     @Override
-    public void normalRegister(MemberNormalCreateRequest memberNormalCreateRequest) {
-        Company company = companyRepository.findById(memberNormalCreateRequest.getCompanyId())
+    public void superRegister(MemberCreateRequest memberCreateRequest) {
+        Company company = companyRepository.findById(memberCreateRequest.getCompanyId())
                 .orElseThrow(() -> new NormalRegisterFailException(ErrorCode.NOT_EXIST_COMPANY, "해당 ID를 가진 회사가 존재하지 않습니다."));
 
-        if(memberRepository.existsByLoginId(memberNormalCreateRequest.getLoginId())){
+        if(memberRepository.existsByLoginId(memberCreateRequest.getLoginId())){
             throw new NormalRegisterFailException(ErrorCode.DUPLICATED_MEMBER, "해당 ID를 가진 회원이 이미 존재합니다.");
         }
 
         // 회원 등록
-        Member member = Member.of(memberNormalCreateRequest, passwordEncoder.encode(memberNormalCreateRequest.getPassword()), company);
+        Member member = Member.createSuperMember(memberCreateRequest, passwordEncoder.encode(memberCreateRequest.getPassword()), company);
+
+        memberRepository.save(member);
+    }
+
+    /*
+    * 회사에서 추가하는 normal 계정 회원가입.
+    * */
+    @Override
+    public void normalRegister(MemberCreateRequest memberCreateRequest) {
+        Company company = companyRepository.findById(memberCreateRequest.getCompanyId())
+                .orElseThrow(() -> new NormalRegisterFailException(ErrorCode.NOT_EXIST_COMPANY, "해당 ID를 가진 회사가 존재하지 않습니다."));
+
+        if(memberRepository.existsByLoginId(memberCreateRequest.getLoginId())){
+            throw new NormalRegisterFailException(ErrorCode.DUPLICATED_MEMBER, "해당 ID를 가진 회원이 이미 존재합니다.");
+        }
+
+        // 회원 등록
+        Member member = Member.of(memberCreateRequest, passwordEncoder.encode(memberCreateRequest.getPassword()), company);
 
         memberRepository.save(member);
     }

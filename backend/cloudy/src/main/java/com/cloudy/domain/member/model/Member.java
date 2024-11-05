@@ -1,7 +1,7 @@
 package com.cloudy.domain.member.model;
 
 import com.cloudy.domain.company.model.Company;
-import com.cloudy.domain.member.model.dto.request.MemberNormalCreateRequest;
+import com.cloudy.domain.member.model.dto.request.MemberCreateRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -51,11 +51,19 @@ public class Member {
         this.isUseServiceAlarm = false;
     }
 
-    public static Member of(MemberNormalCreateRequest memberNormalCreateRequest, String encode, Company company) {
-        return new Member(memberNormalCreateRequest.getDepartmentName(),
-                memberNormalCreateRequest.getLoginId(),
+    public static Member of(MemberCreateRequest memberCreateRequest, String encode, Company company) {
+        return new Member(memberCreateRequest.getDepartmentName(),
+                memberCreateRequest.getLoginId(),
                 encode,
                 Role.NORMAL,
+                company);
+    }
+
+    public static Member createSuperMember(MemberCreateRequest memberCreateRequest, String encode, Company company) {
+        return new Member(memberCreateRequest.getDepartmentName(),
+                memberCreateRequest.getLoginId(),
+                encode,
+                Role.SUPER,
                 company);
     }
 }

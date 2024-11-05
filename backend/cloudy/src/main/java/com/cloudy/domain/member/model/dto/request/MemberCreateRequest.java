@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @Getter
-public class MemberNormalCreateRequest {
+public class MemberCreateRequest {
 
     @Schema(description = "아이디", example = "asdf")
     @NotEmpty(message = "아이디를 입력하세요")
@@ -26,7 +26,7 @@ public class MemberNormalCreateRequest {
     @NotEmpty(message = "부서명을 입력하세요.")
     private String departmentName;
 
-    @Schema(description = "회사 id", example = "회사 id")
+    @Schema(description = "회사 id", example = "2")
     @NotNull(message = "회사 id를 입력하세요")
     private Long companyId;
 }
