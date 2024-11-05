@@ -52,7 +52,7 @@ public class SecurityConfig {
         return web -> web.ignoring()
                 // error endpoint를 열어줘야 함, favicon.ico 추가!
                 .requestMatchers("/error", "/favicon.ico","/swagger-ui/**","/swagger-resources/**","/v3/api-docs/**",
-                        "/swagger-ui.html/**");
+                        "/swagger-ui.html/**", "/companies");
     }
 
     @Bean
@@ -85,7 +85,7 @@ public class SecurityConfig {
                                         // '/login', '/oauth2' 나머지 모든 요청은 인증된 사용자만 접근 가능
                                         .requestMatchers("/auth/**"
                                                 ,"/error", "login/oauth2/code/kakao","/swagger-ui/**"
-                                                ,"/swagger-resources/**", "/v3/api-docs/**").permitAll()
+                                                ,"/swagger-resources/**", "/v3/api-docs/**", "/companies").permitAll()
 //                                        .requestMatchers("/**").permitAll()
 //                                        .requestMatchers("/admin").hasRole("ADMIN") // admin은 ADMIN 롤만
                                         .anyRequest().authenticated()

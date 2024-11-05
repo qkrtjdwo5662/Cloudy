@@ -1,5 +1,6 @@
 package com.cloudy.domain.company.model.dto.response;
 
+import com.cloudy.domain.company.model.Company;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -21,4 +22,9 @@ public class CompanyResponse {
 
     @Schema(description = "super 계정 ID", example = "admin@company.com")
     private String superAccountId;
+
+    public static CompanyResponse of(Company company, String superAccountId) {
+        return new CompanyResponse(company.getCompanyId(),
+                company.getCompanyName(), company.getBusinessRegistrationNumber(), superAccountId);
+    }
 }

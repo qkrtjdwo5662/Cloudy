@@ -1,5 +1,6 @@
 package com.cloudy.domain.member.model.dto.request;
 
+import com.cloudy.domain.company.model.dto.request.CompanyCreateRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -29,4 +30,11 @@ public class MemberCreateRequest {
     @Schema(description = "회사 id", example = "2")
     @NotNull(message = "회사 id를 입력하세요")
     private Long companyId;
+
+    public static MemberCreateRequest of(CompanyCreateRequest request, Long companyId) {
+        return new MemberCreateRequest(request.getId(),
+                request.getPassword(),
+                "회사",
+                companyId);
+    }
 }

@@ -35,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     private static final List<String> EXCLUDE_URLS = Arrays.asList(
-            "/auth/**", "/error",
+            "/auth/**", "/companies","/error",
             "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**"
     );
 

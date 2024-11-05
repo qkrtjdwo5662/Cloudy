@@ -6,6 +6,9 @@ import com.cloudy.domain.company.model.dto.request.ContainerUpdateRequest;
 import com.cloudy.domain.company.model.dto.request.ServiceUsageRequest;
 import com.cloudy.domain.company.model.dto.response.*;
 import com.cloudy.domain.company.service.CompanyService;
+import com.cloudy.domain.member.model.dto.request.MemberCreateRequest;
+import com.cloudy.domain.member.service.AuthService;
+import com.cloudy.domain.member.service.MemberService;
 import com.cloudy.global.config.swagger.SwaggerApiSuccess;
 import com.cloudy.global.response.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,13 +27,15 @@ import java.util.List;
 public class CompanyController {
 
     private final CompanyService companyService;
+    private final AuthService authService;
 
     @Operation(summary = "회사 생성 API", description = "CompanyCreateRequest로 생성 후 super 계정 생성")
     @SwaggerApiSuccess(description = "회사 생성 성공")
     @PostMapping
-    public Response<CompanyResponse> createCompany(@Valid @RequestBody CompanyCreateRequest request) {
+    public Response<?> createCompany(@Valid @RequestBody CompanyCreateRequest request) {
         CompanyResponse response = companyService.createCompany(request);
-        return Response.SUCCESS(response, "Company created successfully");
+        authService.superRegister(MemberCreateRequest.of(request, response.getCompanyId()));
+        return Response.SUCCESS();
     }
 
     @Operation(summary = "회사 중복 체크", description = "사업자 등록 번호 및 id를 중복 체크")

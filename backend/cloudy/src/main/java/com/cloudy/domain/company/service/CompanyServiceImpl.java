@@ -1,10 +1,12 @@
 package com.cloudy.domain.company.service;
 
+import com.cloudy.domain.company.model.Company;
 import com.cloudy.domain.company.model.dto.request.CompanyCreateRequest;
 import com.cloudy.domain.company.model.dto.request.CompanyDuplicateCheckRequest;
 import com.cloudy.domain.company.model.dto.request.ContainerUpdateRequest;
 import com.cloudy.domain.company.model.dto.request.ServiceUsageRequest;
 import com.cloudy.domain.company.model.dto.response.*;
+import com.cloudy.domain.company.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,9 +19,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CompanyServiceImpl implements CompanyService{
 
+    private final CompanyRepository companyRepository;
+
     @Override
     public CompanyResponse createCompany(CompanyCreateRequest request) {
-        return null;
+        Company company = companyRepository.save(Company.of(request));
+        return CompanyResponse.of(company, request.getId());
     }
 
     @Override
