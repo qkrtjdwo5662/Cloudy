@@ -1,4 +1,4 @@
-package com.cloudy.domain.company.model.dto.response;
+package com.cloudy.domain.serviceusage.model.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
