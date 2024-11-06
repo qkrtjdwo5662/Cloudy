@@ -1,7 +1,5 @@
 package com.cloudy.domain.member.service;
 
-import com.cloudy.domain.company.model.Company;
-import com.cloudy.domain.company.repository.CompanyRepository;
 import com.cloudy.domain.member.exception.LoginFailException;
 import com.cloudy.domain.member.exception.NormalRegisterFailException;
 import com.cloudy.domain.member.exception.ReissueFailException;
