@@ -1,7 +1,6 @@
 version: '3.9'
 
 services:
-
   mysql:
     image: mysql:8
     container_name: cloudy-mysql
@@ -23,6 +22,23 @@ services:
       - mysql
     ports:
       - "8081:8081"
+    restart: "always"
+    networks:
+      - cloudy
+
+  companyservice-be:
+    image: cloudy-be:latest
+    container_name: cloudy-be
+    ports:
+      - "8082:8082"
+    restart: "always"
+    networks:
+      - cloudy
+  externalservice-be:
+    image: externalservice-be:latest
+    container_name: externalservice-be
+    ports:
+      - "4041:4041"
     restart: "always"
     networks:
       - cloudy
