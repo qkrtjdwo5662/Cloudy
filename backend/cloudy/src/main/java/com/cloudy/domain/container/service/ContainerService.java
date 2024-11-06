@@ -1,13 +1,9 @@
 package com.cloudy.domain.container.service;
 
-import com.cloudy.domain.container.model.dto.request.ContainerGetDailyCostRequest;
-import com.cloudy.domain.container.model.dto.request.ContainerGetServiceUsageRequest;
-import com.cloudy.domain.container.model.dto.request.ContainerGetUsagesRequest;
-import com.cloudy.domain.container.model.dto.request.ContainerGetMonthlyCostRequest;
-import com.cloudy.domain.container.model.dto.response.ContainerGetDailyCostResponses;
-import com.cloudy.domain.container.model.dto.response.ContainerGetMonthlyCostResponse;
-import com.cloudy.domain.container.model.dto.response.ContainerGetServiceUsageResponses;
-import com.cloudy.domain.container.model.dto.response.ContainerGetUsagesResponses;
+import com.cloudy.domain.company.model.dto.request.ContainerUpdateRequest;
+import com.cloudy.domain.company.model.dto.response.ContainerResponse;
+import com.cloudy.domain.container.model.dto.request.*;
+import com.cloudy.domain.container.model.dto.response.*;
 
 public interface ContainerService {
 
@@ -31,6 +27,9 @@ public interface ContainerService {
 
     //컨테이너별 각 서비스 호출횟수 및 비용 조회
     ContainerGetServiceUsageResponses getContainerServiceUsages(ContainerGetServiceUsageRequest request);
+
+    //컨테이너 이름 수정
+    ContainerUpdateNameResponse updateContainerName(ContainerUpdateNameRequest request);
 
 
 }
