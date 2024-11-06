@@ -1,7 +1,9 @@
 package com.cloudy.domain.container.service;
 
-import com.cloudy.domain.container.model.dto.request.ContainerGetUsagesRequest;
-import com.cloudy.domain.container.model.dto.response.ContainerGetUsagesResponses;
+import com.cloudy.domain.company.model.dto.request.ContainerUpdateRequest;
+import com.cloudy.domain.company.model.dto.response.ContainerResponse;
+import com.cloudy.domain.container.model.dto.request.*;
+import com.cloudy.domain.container.model.dto.response.*;
 
 public interface ContainerService {
 
@@ -17,7 +19,17 @@ public interface ContainerService {
     //전체 컨테이너의 내/외부 서비스 사용량 조회, 전체 사용량 많은 순서로 정렬해서 보내줄 것.
     ContainerGetUsagesResponses getContainerUsages(ContainerGetUsagesRequest request);
 
+    //컨테이너 비용 캘린더 조회 (해당 일자까지의 일자별 전체 비용 조회)
+    ContainerGetMonthlyCostResponse getContainerMonthlyCosts(ContainerGetMonthlyCostRequest request);
 
+    //컨테이너별 비용 조회 (해당 일자의 컨테이너별 전체 서비스 비용 조회)
+    ContainerGetDailyCostResponses getContainerDailyCosts(ContainerGetDailyCostRequest request);
+
+    //컨테이너별 각 서비스 호출횟수 및 비용 조회
+    ContainerGetServiceUsageResponses getContainerServiceUsages(ContainerGetServiceUsageRequest request);
+
+    //컨테이너 이름 수정
+    ContainerUpdateNameResponse updateContainerName(ContainerUpdateNameRequest request);
 
 
 }

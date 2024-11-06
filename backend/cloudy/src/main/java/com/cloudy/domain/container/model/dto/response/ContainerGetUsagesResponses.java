@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ContainerGetUsagesResponses {
 
-    @Schema(name = "containerGetUsagesResponse", description = "서버 전체 컨테이너 사용량 조회 목록")
+    @Schema(name = "ContainerGetUsagesResponse", description = "서버 전체 컨테이너 사용량 조회 목록")
     private List<ContainerGetUsagesResponse> containerGetUsagesResponses;
 
     @Schema(description = "목록 개수", example = "1")
