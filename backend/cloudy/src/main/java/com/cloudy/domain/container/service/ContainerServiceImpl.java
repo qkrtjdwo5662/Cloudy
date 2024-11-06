@@ -1,7 +1,9 @@
 package com.cloudy.domain.container.service;
 
+import com.cloudy.domain.container.model.dto.request.ContainerGetDailyCostRequest;
 import com.cloudy.domain.container.model.dto.request.ContainerGetMonthlyCostRequest;
 import com.cloudy.domain.container.model.dto.request.ContainerGetUsagesRequest;
+import com.cloudy.domain.container.model.dto.response.ContainerGetDailyCostResponses;
 import com.cloudy.domain.container.model.dto.response.ContainerGetMonthlyCostResponse;
 import com.cloudy.domain.container.model.dto.response.ContainerGetUsagesResponses;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,11 @@ public class ContainerServiceImpl implements ContainerService {
 
     @Override
     public ContainerGetMonthlyCostResponse getContainerMonthlyCosts(ContainerGetMonthlyCostRequest request) {
+        return null;
+    }
+
+    @Override
+    public ContainerGetDailyCostResponses getContainerDailyCosts(ContainerGetDailyCostRequest request) {
         return null;
     }
 }

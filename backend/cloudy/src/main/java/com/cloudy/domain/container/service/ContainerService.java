@@ -1,7 +1,9 @@
 package com.cloudy.domain.container.service;
 
+import com.cloudy.domain.container.model.dto.request.ContainerGetDailyCostRequest;
 import com.cloudy.domain.container.model.dto.request.ContainerGetUsagesRequest;
 import com.cloudy.domain.container.model.dto.request.ContainerGetMonthlyCostRequest;
+import com.cloudy.domain.container.model.dto.response.ContainerGetDailyCostResponses;
 import com.cloudy.domain.container.model.dto.response.ContainerGetMonthlyCostResponse;
 import com.cloudy.domain.container.model.dto.response.ContainerGetUsagesResponses;
 
@@ -21,6 +23,7 @@ public interface ContainerService {
 
     ContainerGetMonthlyCostResponse getContainerMonthlyCosts(ContainerGetMonthlyCostRequest request);
 
+    ContainerGetDailyCostResponses getContainerDailyCosts(ContainerGetDailyCostRequest request);
 
 
 }
