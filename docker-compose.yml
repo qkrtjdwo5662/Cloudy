@@ -27,8 +27,8 @@ services:
       - cloudy
 
   companyservice-be:
-    image: cloudy-be:latest
-    container_name: cloudy-be
+    image: companyservice-be:latest
+    container_name: companyservice-be
     ports:
       - "8082:8082"
     restart: "always"
