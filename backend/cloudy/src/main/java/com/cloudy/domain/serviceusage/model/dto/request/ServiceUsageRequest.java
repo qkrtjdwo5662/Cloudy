@@ -1,4 +1,4 @@
-package com.cloudy.domain.company.model.dto.request;
+package com.cloudy.domain.serviceusage.model.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
