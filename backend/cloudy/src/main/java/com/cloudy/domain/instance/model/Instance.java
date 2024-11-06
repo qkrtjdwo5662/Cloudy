@@ -36,7 +36,7 @@ public class Instance {
     private String osType;
 
     @Column(nullable = false)
-    private double networkBandwidth;
+    private String networkBandwidth;
 
     @Column(length = 20, nullable = false)
     private String location = "아시아 태평양(서울)";
