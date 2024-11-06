@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { NavigationItem } from "../navigation-item/NavigationItem";
 
@@ -25,7 +27,7 @@ export const NavigationBox = () => {
   };
 
   return (
-    <div className="flex w-300 flex-col border-r border-gray-200 pt-28">
+    <div className="flex w-270 flex-col border-r border-gray-200 pt-28">
       <div className="flex border-b border-gray-200 p-20">
         dayoungpyo@gmail.com
       </div>
