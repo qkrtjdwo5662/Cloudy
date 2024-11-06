@@ -7,7 +7,7 @@ import lombok.Getter;
 
 import java.util.List;
 
-@Schema(name = "ContainerGetUsagesResponses", description = "서버 전체 컨테이너 사용량 조회 목록 DTO")
+@Schema(name = "ContainerGetServiceUsageResponses", description = "컨테이너별 각 서비스 호출횟수 및 비용 조회 목록 DTO")
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ContainerGetServiceUsageResponses {

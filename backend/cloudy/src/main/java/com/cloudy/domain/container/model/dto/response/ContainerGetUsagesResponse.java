@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
-@Schema(name = "ContainerGetUsagesResponse", description = "알람 전체 조회 응답 DTO")
+@Schema(name = "ContainerGetUsagesResponse", description = "서버 전체 컨테이너 사용량 조회 DTO")
 @Getter
 @ToString
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

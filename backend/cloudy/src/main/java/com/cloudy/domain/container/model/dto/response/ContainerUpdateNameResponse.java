@@ -3,7 +3,7 @@ package com.cloudy.domain.container.model.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-@Schema(name = "컨테이너 이름 수정 응답 DTO", description = "컨테이너 이름 수정 응답 정보")
+@Schema(name = "ContainerUpdateNameResponse", description = "컨테이너 이름 수정 응답 정보")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @Getter
