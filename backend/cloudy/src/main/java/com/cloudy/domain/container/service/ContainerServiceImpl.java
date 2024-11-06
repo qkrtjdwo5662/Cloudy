@@ -1,6 +1,5 @@
 package com.cloudy.domain.container.service;
 
-import com.cloudy.domain.company.model.dto.request.ContainerUpdateRequest;
 import com.cloudy.domain.container.model.dto.request.*;
 import com.cloudy.domain.container.model.dto.response.*;
 import lombok.RequiredArgsConstructor;

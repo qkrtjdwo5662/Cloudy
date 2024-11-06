@@ -62,7 +62,7 @@ public class AuthServiceImpl implements AuthService{
         }
 
         // 회원 등록
-        Member member = Member.of(memberCreateRequest, passwordEncoder.encode(memberCreateRequest.getPassword()), company);
+        Member member = Member.of(memberCreateRequest, passwordEncoder.encode(memberCreateRequest.getPassword()));
 
         memberRepository.save(member);
     }
