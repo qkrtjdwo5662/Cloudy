@@ -28,41 +28,34 @@ public class AuthServiceImpl implements AuthService{
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final CompanyRepository companyRepository;
 
 
     /*
-     * 회사에서 추가하는 normal 계정 회원가입.
+     * super 계정 회원가입.
      * */
     @Override
     public void superRegister(MemberCreateRequest memberCreateRequest) {
-        Company company = companyRepository.findById(memberCreateRequest.getCompanyId())
-                .orElseThrow(() -> new NormalRegisterFailException(ErrorCode.NOT_EXIST_COMPANY, "해당 ID를 가진 회사가 존재하지 않습니다."));
-
         if(memberRepository.existsByLoginId(memberCreateRequest.getLoginId())){
             throw new NormalRegisterFailException(ErrorCode.DUPLICATED_MEMBER, "해당 ID를 가진 회원이 이미 존재합니다.");
         }
 
         // 회원 등록
-        Member member = Member.createSuperMember(memberCreateRequest, passwordEncoder.encode(memberCreateRequest.getPassword()), company);
+        Member member = Member.createSuperMember(memberCreateRequest, passwordEncoder.encode(memberCreateRequest.getPassword()));
 
         memberRepository.save(member);
     }
 
     /*
-    * 회사에서 추가하는 normal 계정 회원가입.
+    * normal 계정 회원가입.
     * */
     @Override
     public void normalRegister(MemberCreateRequest memberCreateRequest) {
-        Company company = companyRepository.findById(memberCreateRequest.getCompanyId())
-                .orElseThrow(() -> new NormalRegisterFailException(ErrorCode.NOT_EXIST_COMPANY, "해당 ID를 가진 회사가 존재하지 않습니다."));
-
         if(memberRepository.existsByLoginId(memberCreateRequest.getLoginId())){
             throw new NormalRegisterFailException(ErrorCode.DUPLICATED_MEMBER, "해당 ID를 가진 회원이 이미 존재합니다.");
         }
 
         // 회원 등록
-        Member member = Member.of(memberCreateRequest, passwordEncoder.encode(memberCreateRequest.getPassword()), company);
+        Member member = Member.of(memberCreateRequest, passwordEncoder.encode(memberCreateRequest.getPassword()));
 
         memberRepository.save(member);
     }

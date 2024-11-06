@@ -1,6 +1,5 @@
 package com.cloudy.domain.member.model;
 
-import com.cloudy.domain.company.model.Company;
 import com.cloudy.domain.member.model.dto.request.MemberCreateRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -37,33 +36,26 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false)
-    private Company company;
-
-    public Member(String departmentName, String loginId, String password, Role role, Company company) {
+    public Member(String departmentName, String loginId, String password, Role role) {
         this.departmentName = departmentName;
         this.loginId = loginId;
         this.password = password;
         this.role = role;
-        this.company = company;
         this.isUseEmailAlarm = false;
         this.isUseServiceAlarm = false;
     }
 
-    public static Member of(MemberCreateRequest memberCreateRequest, String encode, Company company) {
+    public static Member of(MemberCreateRequest memberCreateRequest, String encode) {
         return new Member(memberCreateRequest.getDepartmentName(),
                 memberCreateRequest.getLoginId(),
                 encode,
-                Role.NORMAL,
-                company);
+                Role.NORMAL);
     }
 
-    public static Member createSuperMember(MemberCreateRequest memberCreateRequest, String encode, Company company) {
+    public static Member createSuperMember(MemberCreateRequest memberCreateRequest, String encode) {
         return new Member(memberCreateRequest.getDepartmentName(),
                 memberCreateRequest.getLoginId(),
                 encode,
-                Role.SUPER,
-                company);
+                Role.SUPER);
     }
 }

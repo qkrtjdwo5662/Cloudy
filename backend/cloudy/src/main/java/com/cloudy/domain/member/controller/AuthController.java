@@ -40,12 +40,22 @@ public class AuthController {
         return Response.SUCCESS(memberLoginResponse, "login을 성공했습니다.");
     }
 
-    @Operation(summary = "일반 회원 회원가입 API", description = "MemberCreateRequest로 회원가입 진행")
+    //todo: memberController로 옮기기.
+    @Operation(summary = "일반 회원 회원가입 API", description = "MemberCreateRequest로 회원가입 진행, member/로 이동 예정. token 필요할 예정임.")
     @SwaggerApiSuccess(description = "일반 회원 회원가입 성공")
     @SwaggerApiError({ErrorCode.DUPLICATED_MEMBER})
     @PostMapping("/register/normal")
-    public Response<?> register(@Valid @RequestBody MemberCreateRequest memberCreateRequest) {
+    public Response<?> normalRegister(@Valid @RequestBody MemberCreateRequest memberCreateRequest) {
         authService.normalRegister(memberCreateRequest);
+        return Response.SUCCESS();
+    }
+
+    @Operation(summary = "슈퍼 회원 회원가입 API", description = "MemberCreateRequest로 회원가입 진행")
+    @SwaggerApiSuccess(description = "일반 회원 회원가입 성공")
+    @SwaggerApiError({ErrorCode.DUPLICATED_MEMBER})
+    @PostMapping("/register/super")
+    public Response<?> superRegister(@Valid @RequestBody MemberCreateRequest memberCreateRequest) {
+        authService.superRegister(memberCreateRequest);
         return Response.SUCCESS();
     }
 

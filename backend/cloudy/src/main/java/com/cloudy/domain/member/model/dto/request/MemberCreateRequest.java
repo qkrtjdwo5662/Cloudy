@@ -25,8 +25,4 @@ public class MemberCreateRequest {
     @Schema(description = "부서명", example = "부서명")
     @NotEmpty(message = "부서명을 입력하세요.")
     private String departmentName;
-
-    @Schema(description = "회사 id", example = "2")
-    @NotNull(message = "회사 id를 입력하세요")
-    private Long companyId;
 }
