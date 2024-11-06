@@ -43,18 +43,29 @@ services:
     networks:
       - cloudy
 
-  nginx:
+  nginx-reverse:
     image: nginx:latest
-    container_name: nginx
+    container_name: nginx-reverse
     ports:
-      - "80:80"
-      - "443:443"
+      - "80:80"       # 리버스 프록시용 HTTP 포트
+      - "443:443"     # 리버스 프록시용 HTTPS 포트
     volumes:
-      - /etc/nginx:/etc/nginx  # nginx 설정 파일 경로
+      - /etc/nginx/reverse:/etc/nginx  # 리버스 프록시 설정 파일 경로
       - /var/www/html:/var/www/html  # 정적 파일 제공을 위한 경로
       - /etc/letsencrypt:/etc/letsencrypt  # SSL 인증서 경로
     depends_on:
       - cloudy-be
+    restart: "always"
+    networks:
+      - cloudy
+
+  nginx-forward:
+    image: nginx:latest
+    container_name: nginx-forward
+    ports:
+      - "8888:8888"  # 포워드 프록시용 포트 (클라이언트에서 포워드 프록시로 요청할 포트)
+    volumes:
+      - /etc/nginx/forward:/etc/nginx  # 포워드 프록시 설정 파일 경로
     restart: "always"
     networks:
       - cloudy
