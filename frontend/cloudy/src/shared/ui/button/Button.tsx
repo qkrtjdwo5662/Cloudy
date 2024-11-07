@@ -132,7 +132,9 @@ export const Button = ({
         <span className="material-symbols-outlined">{leftIcon}</span>
       )}
       {leftSubText && <span>{leftSubText}</span>}
-      {mainText && <span className="font-semibold">{mainText}</span>}
+      {mainText && (
+        <span className="whitespace-nowrap font-semibold">{mainText}</span>
+      )}
       {rightSubText && <span>{rightSubText}</span>}
       {rightIcon && (
         <span className="material-symbols-outlined">{rightIcon}</span>

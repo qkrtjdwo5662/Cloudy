@@ -24,6 +24,28 @@
   }
 }
 
+/* 스크롤바의 너비 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* 스크롤바 트랙 */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* 스크롤바 핸들 */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+/* 스크롤바 핸들에 마우스가 올려졌을 때 */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 @layer utilities {
   input[type="number"]::-webkit-inner-spin-button {
     @apply appearance-none;

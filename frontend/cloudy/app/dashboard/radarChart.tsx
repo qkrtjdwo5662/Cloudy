@@ -37,6 +37,8 @@ const defaultData = {
 };
 
 const options = {
+  responsive: true,
+  maintainAspectRatio: false,
   scales: {
     r: {
       beginAtZero: true,
@@ -49,9 +51,13 @@ export default function RadarChart({
   title = "Radar Chart",
 }) {
   return (
-    <div className="flex flex-col items-center">
-      <h3 className="mb-2 text-lg font-bold">{title}</h3>
-      <Radar data={data} options={options} />
+    <div className="flex h-full w-full flex-col items-center justify-center overflow-hidden">
+      <div className="flex items-center justify-center pb-10">
+        <p className="text-sm font-bold">컨테이너 사용량</p>
+      </div>
+      <div className="relative" style={{ width: "100%", height: "80%" }}>
+        <Radar data={data} options={options} />
+      </div>
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 export default function CostSummary() {
   return (
-    <div className="max-w-xs rounded-lg bg-white p-20 shadow-md">
+    <div className="max-w-xs rounded-lg bg-white p-20">
       <div className="flex items-center px-20">
         <span className="text-lg font-bold text-black">비용 요약</span>
       </div>
