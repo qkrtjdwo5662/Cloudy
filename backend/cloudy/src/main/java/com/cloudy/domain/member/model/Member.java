@@ -27,9 +27,6 @@ public class Member {
     private String password;
 
     @NotNull
-    private boolean isUseEmailAlarm; //기본값 false
-
-    @NotNull
     private boolean isUseServiceAlarm; //기본값 false
 
     @NotBlank
@@ -41,7 +38,6 @@ public class Member {
         this.loginId = loginId;
         this.password = password;
         this.role = role;
-        this.isUseEmailAlarm = false;
         this.isUseServiceAlarm = false;
     }
 
