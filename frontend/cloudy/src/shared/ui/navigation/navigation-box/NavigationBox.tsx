@@ -1,38 +1,56 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { usePathname } from "next/navigation";
 import { NavigationItem } from "../navigation-item/NavigationItem";
 
-export const NavigationBox = () => {
-  const items = [
-    {
-      leftIcon: "cloudy",
-      rightIcon: "keyboard_arrow_down",
-      label: "Navigation Item",
-      isSubItem: false,
-      subItems: [
-        { to: "/sub1", label: "Sub Item 1" },
-        { to: "/sub2", label: "Sub Item 2" },
-      ],
-    },
-    { leftIcon: "cloudy", to: "/", label: "Navigation Item" },
-    { leftIcon: "cloudy", to: "/test2", label: "Navigation Item" },
-    { leftIcon: "cloudy", to: "/test3", label: "Navigation Item" },
-  ];
+const NAVIGATION_ITEMS = [
+  {
+    leftIcon: "cloudy",
+    rightIcon: "keyboard_arrow_down",
+    label: "컨테이너 사용량",
+    isSubItem: false,
+    subItems: [
+      { to: "/sub1", label: "컨테이너 1" },
+      { to: "/sub2", label: "컨테이너 2" },
+    ],
+  },
+  { leftIcon: "cloudy", to: "/server-usage", label: "서버 사용량" },
+  { leftIcon: "cloudy", to: "/cost-calendar", label: "비용 캘린더" },
+  { leftIcon: "cloudy", to: "/molu", label: "몰루" },
+] as const;
 
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+export const NavigationBox = () => {
+  const pathname = usePathname();
+  const [openIndex, setOpenIndex] = useState<number | null>(() => {
+    const initialIndex = NAVIGATION_ITEMS.findIndex((item) =>
+      item.subItems?.some((subItem) => subItem.to === pathname),
+    );
+    return initialIndex !== -1 ? initialIndex : null;
+  });
+
+  // URL 변경 시 열린 메뉴 상태 업데이트
+  useEffect(() => {
+    const parentIndex = NAVIGATION_ITEMS.findIndex((item) =>
+      item.subItems?.some((subItem) => subItem.to === pathname),
+    );
+
+    if (parentIndex !== -1) {
+      setOpenIndex(parentIndex);
+    }
+  }, [pathname]);
 
   const handleToggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
   return (
-    <div className="flex w-270 flex-col border-r border-gray-200 pt-28">
+    <div className="flex w-270 flex-col justify-between border-r border-gray-200 pt-28">
       <div className="flex border-b border-gray-200 p-20">
         dayoungpyo@gmail.com
       </div>
-      <div className="flex flex-col gap-12 px-12 py-10">
-        {items.map((item, index) => (
+      <div className="flex h-full flex-col gap-12 px-12 py-10">
+        {NAVIGATION_ITEMS.map((item, index) => (
           <div key={index}>
             <NavigationItem
               leftIcon={item.leftIcon}
@@ -59,8 +77,8 @@ export const NavigationBox = () => {
           </div>
         ))}
       </div>
-      <div className="flex border-t border-gray-200 px-12">
-        <NavigationItem leftIcon="settings" to="/settings">
+      <div className="flex border-t border-gray-200 px-12 pt-12">
+        <NavigationItem leftIcon="settings" to="/add-server">
           settings
         </NavigationItem>
       </div>
