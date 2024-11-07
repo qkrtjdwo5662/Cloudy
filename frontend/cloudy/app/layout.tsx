@@ -36,6 +36,9 @@ export default function RootLayout({
           <div className="flex h-full w-full flex-col gap-10 pb-20">
             {children}
           </div>
+          <div className="flex h-full w-full flex-col gap-10 pb-20">
+            {children}
+          </div>
         </div>
       </body>
     </html>

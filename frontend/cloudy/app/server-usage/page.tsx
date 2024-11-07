@@ -16,8 +16,8 @@ export default function DashBoardPage() {
   return (
     <div className="flex h-full w-full bg-gray-100">
       <div className="flex h-full w-full flex-col gap-6 p-20">
-        <header className="flex p-20">
-          <h1 className="text-4xl font-bold text-indigo-500">서버사용량</h1>
+        <header className="flex items-center justify-between pb-6">
+          <h1 className="text-3xl font-bold text-indigo-500">서버 사용량</h1>
         </header>
 
         <div className="flex h-full flex-row gap-10">
