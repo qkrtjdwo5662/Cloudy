@@ -1,3 +1,5 @@
+import { Title } from "@/shared/ui";
+
 export default function AlarmList() {
   const alarmData = [
     {
@@ -80,11 +82,9 @@ export default function AlarmList() {
   return (
     <div className="flex h-full w-full">
       <div className="flex h-full w-full flex-col gap-6 p-20">
-        <header className="flex items-center justify-between pb-6">
-          <h1 className="text-3xl font-bold text-indigo-500">알람 목록</h1>
-        </header>
+        <Title size="l">알람 목록</Title>
 
-        <div className="flex h-full w-full flex-col rounded-md bg-white p-24">
+        <div className="mt-10 flex h-full w-full flex-col rounded-5 border border-gray-200 bg-white p-24">
           <div className="flex w-full bg-indigo-500 font-semibold text-white">
             <div className="flex w-1/5 items-center justify-center border-b border-gray-200 px-20 py-10">
               서버 이름

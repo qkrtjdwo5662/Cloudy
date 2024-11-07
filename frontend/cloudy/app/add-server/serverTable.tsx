@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import React from "react";
+import { Button } from "@/shared/ui/button/Button";
 
 interface TableRowProps {
   serverName: string;
@@ -38,9 +39,13 @@ const TableRow = ({
     <td className="px-6 py-4 text-center">{networkBandwidth}</td>
     <td className="px-6 py-4 text-center">{paymentPlan}</td>
     <td className="px-6 py-4 text-center">
-      <button className="rounded-6 border border-gray-500 p-2 text-gray-500 hover:border-red-500 hover:bg-red-500 hover:text-white">
-        삭제
-      </button>
+      <Button
+        size="s"
+        variant="primary"
+        design="fill"
+        mainText="삭제"
+        type="button"
+      />
     </td>
   </tr>
 );
@@ -83,7 +88,7 @@ const TableContainer = () => {
   ];
 
   return (
-    <div className="h-full w-full overflow-x-auto">
+    <div className="h-full w-full overflow-y-auto">
       <table className="min-w-full border-collapse bg-white">
         <thead>
           <tr className="border-b bg-gray-100">

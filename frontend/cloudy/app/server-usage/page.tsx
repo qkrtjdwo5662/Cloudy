@@ -20,7 +20,7 @@ export default function DashBoardPage() {
 
         <div className="flex h-full flex-row gap-6 pt-10">
           <main className="flex w-2/3 rounded-5 border border-gray-200 bg-white p-6">
-            <div className="flex w-full rounded-lg">
+            <div className="flex w-full rounded-lg p-20">
               <MainLineChart />
             </div>
           </main>
