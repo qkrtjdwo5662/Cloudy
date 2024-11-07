@@ -12,7 +12,7 @@ export default function ServerOption({
   link,
 }: ServerOptionProps) {
   return (
-    <div className="px-4 py-10">
+    <div className="px-4 py-5">
       <a href={link} target="_blank" rel="noopener noreferrer">
         <div
           className="each mb-3 flex cursor-pointer select-none rounded-md border border-gray-300 p-6 hover:border-gray-500 hover:shadow-lg"
