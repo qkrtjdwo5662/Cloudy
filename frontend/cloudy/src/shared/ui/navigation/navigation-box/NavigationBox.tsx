@@ -15,9 +15,12 @@ const NAVIGATION_ITEMS = [
       { to: "/sub2", label: "컨테이너 2" },
     ],
   },
+  { leftIcon: "cloudy", to: "/dashboard", label: "메인" },
   { leftIcon: "cloudy", to: "/server-usage", label: "서버 사용량" },
   { leftIcon: "cloudy", to: "/cost-calendar", label: "비용 캘린더" },
-  { leftIcon: "cloudy", to: "/molu", label: "몰루" },
+  { leftIcon: "cloudy", to: "/member-setting", label: "회원 설정" },
+  { leftIcon: "cloudy", to: "/alarm-list", label: "알람 목록" },
+  { leftIcon: "cloudy", to: "/join", label: "회사 등록" },
 ] as const;
 
 export const NavigationBox = () => {

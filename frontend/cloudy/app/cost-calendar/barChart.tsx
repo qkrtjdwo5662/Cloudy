@@ -70,8 +70,10 @@ const options = {
 
 export default function CostBarChart() {
   return (
-    <div className="h-full w-full">
-      <Bar data={data} options={options} />
+    <div className="flex h-full w-full flex-col items-center justify-center overflow-hidden">
+      <div className="relative" style={{ width: "100%", height: "90%" }}>
+        <Bar data={data} options={options} />
+      </div>
     </div>
   );
 }

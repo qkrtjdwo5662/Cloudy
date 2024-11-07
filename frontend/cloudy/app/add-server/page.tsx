@@ -4,16 +4,15 @@ import { Input } from "@/shared/ui/input/Input";
 import { AddDropDownBox } from "./dropDownBox";
 import { CloudOptions } from "./cloudOption";
 import TableContainer from "./serverTable";
+import { Title } from "@/shared/ui";
 
 export default function AddServer() {
   return (
-    <div className="flex h-full w-full bg-gray-100">
+    <div className="flex h-full w-full">
       <div className="flex h-full w-full flex-col gap-6 p-20">
-        <header className="flex items-center justify-between pb-6">
-          <h1 className="text-3xl font-bold text-indigo-500">서버 추가하기</h1>
-        </header>
+        <Title size="l">서버 설정</Title>
         <div className="flex h-full w-full flex-col gap-6">
-          <section className="flex h-full w-full flex-col gap-6 rounded-lg border border-gray-200 bg-white p-4">
+          <section className="flex h-full w-full flex-col gap-6 rounded-5 border border-gray-200 bg-white p-10">
             <section className="flex h-full w-full gap-6">
               <div className="flex w-1/3 rounded-lg bg-white p-4">
                 <div className="w-full p-20">
@@ -44,7 +43,7 @@ export default function AddServer() {
               </div>
             </section>
             <section className="flex h-1/6 w-full gap-6">
-              <div className="flex w-full rounded-lg bg-white p-4">
+              <div className="flex w-full rounded-lg bg-white">
                 <Button
                   size="l"
                   variant="primary"
@@ -56,7 +55,7 @@ export default function AddServer() {
             </section>
           </section>
           <section className="flex h-full w-full">
-            <div className="flex w-full rounded-lg border border-gray-200 bg-white p-20">
+            <div className="flex w-full rounded-5 border border-gray-200 bg-white p-20">
               <TableContainer />
             </div>
           </section>
