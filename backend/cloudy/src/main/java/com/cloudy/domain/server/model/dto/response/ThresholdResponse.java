@@ -11,7 +11,7 @@ import lombok.*;
 public class ThresholdResponse {
 
     @Schema(description = "서버 ID", example = "123")
-    private String serverId;
+    private Long serverId;
 
     @Schema(description = "설정된 임계치 값", example = "80")
     private int limitValue;

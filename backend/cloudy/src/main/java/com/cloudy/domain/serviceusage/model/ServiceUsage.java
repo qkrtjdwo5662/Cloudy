@@ -1,5 +1,6 @@
 package com.cloudy.domain.serviceusage.model;
 
+import com.cloudy.global.config.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "service_usage")
 @Getter
 @NoArgsConstructor
-public class ServiceUsage {
+public class ServiceUsage extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -15,7 +15,7 @@ public class ThresholdCreateRequest {
 
     @Schema(description = "서버 ID", example = "123")
     @NotEmpty(message = "서버 ID를 입력하세요.")
-    private String serverId;
+    private Long serverId;
 
     @Schema(description = "임계치 값", example = "80")
     private int limitValue;

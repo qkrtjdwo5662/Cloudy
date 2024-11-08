@@ -3,6 +3,8 @@ package com.cloudy.domain.server.model.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Schema(name = "서버 상세 응답 DTO", description = "서버 상세 정보 응답")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
@@ -26,5 +28,5 @@ public class ServerDetailResponse {
     private String status;
 
     @Schema(description = "서버 생성일", example = "2023-01-01T00:00:00")
-    private String createdAt;
+    private LocalDateTime createdAt;
 }

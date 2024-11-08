@@ -14,15 +14,13 @@ import java.util.List;
 public interface ServerService {
     ServerResponse createServer(ServerCreateRequest request, Long memberId);
 
-    ThresholdResponse createThreshold(ThresholdCreateRequest request, Long memberId);
-
     ThresholdResponse updateThreshold(ThresholdUpdateRequest request, Long memberId);
 
     List<ServerResponse> getServers(Long memberId);
 
     ServerDetailResponse getServerDetail(Long serverId);
 
-    ServerResponse updateServer(ServerUpdateRequest request, Long memberId);
+    ServerResponse deleteServer(Long serverId, Long memberId);
 
     MonitoringResponse monitorServer(Long serverId, int duration);
 }

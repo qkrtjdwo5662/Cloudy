@@ -1,6 +1,7 @@
 package com.cloudy.domain.member.model;
 
 import com.cloudy.domain.member.model.dto.request.MemberCreateRequest;
+import com.cloudy.global.config.common.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "member")
 @Getter
 @NoArgsConstructor
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

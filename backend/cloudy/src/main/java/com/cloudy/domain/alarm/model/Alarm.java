@@ -1,6 +1,7 @@
 package com.cloudy.domain.alarm.model;
 
 import com.cloudy.domain.member.model.Member;
+import com.cloudy.global.config.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "alarm")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Alarm {
+public class Alarm extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,6 +2,7 @@ package com.cloudy.domain.container.model;
 
 import com.cloudy.domain.member.model.Member;
 import com.cloudy.domain.server.model.Server;
+import com.cloudy.global.config.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "container")
 @Getter
 @NoArgsConstructor
-public class Container {
+public class Container extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

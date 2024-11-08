@@ -1,9 +1,12 @@
 package com.cloudy.domain.instance.service;
 
-import com.cloudy.domain.instance.model.dto.response.InstanceResponse;
+import com.cloudy.domain.instance.model.dto.response.InstanceDetailResponse;
+import com.cloudy.domain.instance.model.dto.response.InstanceTypeResponse;
 
 import java.util.List;
 
 public interface InstanceService {
-    List<InstanceResponse> getInstanceList(String cloudType, String search);
+    List<InstanceDetailResponse> getInstanceDetail(Long InstanceId);
+
+    List<InstanceTypeResponse> getInstanceTypeList(String cloudType, String search);
 }
