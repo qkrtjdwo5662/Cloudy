@@ -1,7 +1,9 @@
+"use client";
 import type { Metadata } from "next";
 import "../src/shared/globals.css";
 import localFont from "next/font/local";
 import { NavigationBox } from "@/shared/ui";
+import { usePathname } from "next/navigation";
 
 // export const metadata: Metadata = {
 //   title: "Cloudy",
@@ -19,6 +21,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const hideNavbar = pathname === "/join" || pathname === "/signin";
+
   return (
     <html lang="en">
       <head>
@@ -29,10 +34,11 @@ export default function RootLayout({
       </head>
       <body className={`${pretendard.className}`}>
         <div className="flex h-full gap-20 bg-gray-100 pr-20">
-          <aside className="flex w-300 flex-col bg-white">
-            <NavigationBox />
-          </aside>
-
+          {!hideNavbar && (
+            <aside className="flex w-300 flex-col bg-white">
+              <NavigationBox />
+            </aside>
+          )}
           <div className="flex h-full w-full flex-col gap-10 pb-20">
             {children}
           </div>
