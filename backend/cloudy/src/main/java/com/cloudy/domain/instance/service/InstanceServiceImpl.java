@@ -1,19 +1,55 @@
 package com.cloudy.domain.instance.service;
 
-import com.cloudy.domain.instance.model.dto.response.InstanceResponse;
+import com.cloudy.domain.instance.model.dto.response.InstanceDetailResponse;
+import com.cloudy.domain.instance.model.dto.response.InstanceTypeResponse;
+import com.cloudy.domain.instance.repository.InstanceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import com.cloudy.domain.instance.model.Instance;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class InstanceServiceImpl implements InstanceService {
+
+    private final InstanceRepository instanceRepository;
+
     @Override
-    public List<InstanceResponse> getInstanceList(String cloudType, String search) {
-        return List.of();
+    public List<InstanceDetailResponse> getInstanceDetail(Long instanceId) {
+        // 1. 인스턴스 조회
+        Instance instance = instanceRepository.findById(instanceId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid instance ID"));
+
+        // 2. 관련 목록 상세 조회
+        List<Instance> details = instanceRepository.findByInstanceId(instanceId);
+
+        // 3. DTO 변환 및 반환
+        return details.stream()
+                .map(InstanceDetailResponse::fromEntity)
+                .collect(Collectors.toList());
     }
+
+    @Override
+    public List<InstanceTypeResponse> getInstanceTypeList(String cloudType, String search) {
+        List<Instance> instances;
+
+        if (search == null || search.isEmpty()) {
+            // 검색어가 없을 때는 클라우드 타입만 필터링
+            instances = instanceRepository.findByCloudType(cloudType);
+        } else {
+            // 검색어가 있을 때는 클라우드 타입과 검색어로 필터링
+            instances = instanceRepository.findByCloudTypeAndNameContaining(cloudType, search);
+        }
+
+        // 인스턴스 종류만 포함한 응답 리스트 생성
+        return instances.stream()
+                .map(InstanceTypeResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
 }

@@ -38,14 +38,14 @@ public class ServerController {
         return Response.SUCCESS(response, "Server created successfully");
     }
 
-    @Operation(summary = "임계치 생성", description = "서버의 임계치를 설정")
-    @SwaggerApiSuccess(description = "임계치 생성 성공")
-    @PostMapping("/limit/create")
-    public Response<ThresholdResponse> createThreshold(@Valid @RequestBody ThresholdCreateRequest request,
-                                                       @Login Long memberId) {
-        ThresholdResponse response = serverService.createThreshold(request, memberId);
-        return Response.SUCCESS(response, "Threshold created successfully");
-    }
+//    @Operation(summary = "임계치 생성", description = "서버의 임계치를 설정")
+//    @SwaggerApiSuccess(description = "임계치 생성 성공")
+//    @PostMapping("/limit/create")
+//    public Response<ThresholdResponse> createThreshold(@Valid @RequestBody ThresholdCreateRequest request,
+//                                                       @Login Long memberId) {
+//        ThresholdResponse response = serverService.createThreshold(request, memberId);
+//        return Response.SUCCESS(response, "Threshold created successfully");
+//    }
 
     @Operation(summary = "임계치 수정", description = "서버의 임계치를 수정")
     @SwaggerApiSuccess(description = "임계치 수정 성공")
@@ -75,13 +75,12 @@ public class ServerController {
 //        return Response.SUCCESS(response, "Server detail retrieved successfully");
 //    }
 
-
-    @Operation(summary = "서버 갱신", description = "서버 정보를 갱신")
-    @SwaggerApiSuccess(description = "서버 갱신 성공")
-    @PutMapping("/update")
-    public Response<ServerResponse> updateServer(@Valid @RequestBody ServerUpdateRequest request,
+    @Operation(summary = "서버 삭제", description = "서버 아이디를 입력받아 삭제")
+    @SwaggerApiSuccess(description = "서버 삭제 성공")
+    @DeleteMapping("/update")
+    public Response<ServerResponse> deleteServer(@Parameter(description = "서버 ID", example = "123") @RequestParam Long serverId,
                                                  @Login long memberId) {
-        ServerResponse response = serverService.updateServer(request,memberId);
+        ServerResponse response = serverService.deleteServer(serverId,memberId);
         return Response.SUCCESS(response, "Server updated successfully");
     }
 

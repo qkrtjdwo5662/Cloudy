@@ -15,7 +15,7 @@ public class ThresholdUpdateRequest {
 
     @Schema(description = "서버 ID", example = "123")
     @NotEmpty(message = "서버 ID를 입력하세요.")
-    private String serverId;
+    private Long serverId;
 
     @Schema(description = "수정할 임계치 값", example = "85")
     private int updatedLimitValue;

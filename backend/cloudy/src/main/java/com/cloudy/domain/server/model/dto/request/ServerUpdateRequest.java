@@ -13,6 +13,10 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ServerUpdateRequest {
 
+    @Schema(description = "서버 id", example = "1")
+    @NotEmpty(message = "서버 아이디를 입력하세요")
+    private Long serverId;
+
     @Schema(description = "서버 이름", example = "스프링 서버")
     @NotEmpty(message = "서버 이름을 입력하세요.")
     private String serverName;
