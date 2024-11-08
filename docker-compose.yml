@@ -4,13 +4,12 @@ services:
   mysql:
     image: mysql:8
     container_name: cloudy-mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=cloudy
-      - MYSQL_DATABASE=cloudy1234!
+    env_file:
+      - /etc/mysql/.env
     ports:
-      - "3306:3306" # MySQL 기본 포트를 외부에 노출
+      - "3306:3306" 
     volumes:
-      - db:/var/lib/mysql # MySQL 데이터를 영구적으로 저장
+      - db:/var/lib/mysql 
     networks:
       - cloudy
     restart: "always"
@@ -69,6 +68,33 @@ services:
     restart: "always"
     networks:
       - cloudy
+
+  elasticsearch:
+    image: elasticsearch:8.5.0  
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m  # 메모리
+      - network.host=0.0.0.0
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - cloudy
+
+  logstash:
+    image: logstash:8.5.0  # 필요한 Logstash 버전
+    container_name: logstash
+    volumes:
+      - /etc/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf  # Logstash 설정 파일 경로
+    ports:
+      - "5044:5044"
+    depends_on:
+      - elasticsearch
+    networks:
+      - cloudy
+
 
 volumes:
   db: {}
