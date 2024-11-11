@@ -24,9 +24,24 @@ public class Alarm extends BaseEntity {
     private String title;
 
     @Column(length = 100, nullable = false)
-    private String alarmTime;
+    private String content;
+
+    @Column(length = 100, nullable = false)
+    private Boolean isRead;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private Member memberId;
+    private Member member;
+
+    public void setIsRead(boolean isRead) {
+        this.isRead = isRead;
+    }
+
+    public Alarm(String serverName, String title, String content, boolean isRead, Member member) {
+        this.serverName = serverName;
+        this.title = title;
+        this.content = content;
+        this.isRead = isRead;
+        this.member = member;
+    }
 }

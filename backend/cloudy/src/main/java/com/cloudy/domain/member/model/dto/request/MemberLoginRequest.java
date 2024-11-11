@@ -13,11 +13,11 @@ import lombok.NoArgsConstructor;
 @Getter
 public class MemberLoginRequest {
 
-    @Schema(description = "아이디", example = "asdf")
+    @Schema(description = "아이디", example = "cloudy")
     @NotEmpty(message = "아이디를 입력하세요")
     private String loginId;
 
-    @Schema(description = "비밀번호", example = "asdf")
+    @Schema(description = "비밀번호", example = "cloudy1234@!")
     @NotEmpty(message = "비밀번호를 입력하세요.")
     private String password;
 }
