@@ -2,87 +2,14 @@
 
 import { useFetchAlarm } from "@/features/alram/hooks/useFetchAlarm";
 import { Title } from "@/shared/ui";
+import { AlarmGetResponse } from "@/features/alram/model/types";
 
 export default function AlarmList() {
-  const alarmData = [
-    {
-      serverName: "FinOps Server A",
-      title: "CPU Usage High",
-      time: "2024-11-07 12:30 PM",
-    },
-    {
-      serverName: "FinOps Server B",
-      title: "Memory Usage Near Limit",
-      time: "2024-11-07 1:45 PM",
-    },
-    {
-      serverName: "FinOps Server C",
-      title: "Disk Space Warning",
-      time: "2024-11-07 3:15 PM",
-    },
-    {
-      serverName: "FinOps Server D",
-      title: "Network Latency Spike",
-      time: "2024-11-07 4:00 PM",
-    },
-    {
-      serverName: "FinOps Server E",
-      title: "High I/O Wait Time",
-      time: "2024-11-07 4:30 PM",
-    },
-    {
-      serverName: "FinOps Server A",
-      title: "CPU Usage High",
-      time: "2024-11-07 12:30 PM",
-    },
-    {
-      serverName: "FinOps Server B",
-      title: "Memory Usage Near Limit",
-      time: "2024-11-07 1:45 PM",
-    },
-    {
-      serverName: "FinOps Server C",
-      title: "Disk Space Warning",
-      time: "2024-11-07 3:15 PM",
-    },
-    {
-      serverName: "FinOps Server D",
-      title: "Network Latency Spike",
-      time: "2024-11-07 4:00 PM",
-    },
-    {
-      serverName: "FinOps Server E",
-      title: "High I/O Wait Time",
-      time: "2024-11-07 4:30 PM",
-    },
-    {
-      serverName: "FinOps Server A",
-      title: "CPU Usage High",
-      time: "2024-11-07 12:30 PM",
-    },
-    {
-      serverName: "FinOps Server B",
-      title: "Memory Usage Near Limit",
-      time: "2024-11-07 1:45 PM",
-    },
-    {
-      serverName: "FinOps Server C",
-      title: "Disk Space Warning",
-      time: "2024-11-07 3:15 PM",
-    },
-    {
-      serverName: "FinOps Server D",
-      title: "Network Latency Spike",
-      time: "2024-11-07 4:00 PM",
-    },
-    {
-      serverName: "FinOps Server E",
-      title: "High I/O Wait Time",
-      time: "2024-11-07 4:30 PM",
-    },
-  ];
   const { data, error, isLoading } = useFetchAlarm();
-  console.log(data);
+
+  if (error) return <p>Error loading alarms</p>;
+
+  const alarmData: AlarmGetResponse[] = Array.isArray(data) ? data : [];
 
   return (
     <div className="flex h-full w-full">
@@ -95,7 +22,7 @@ export default function AlarmList() {
               서버 이름
             </div>
             <div className="flex w-3/5 items-center justify-center border-b border-gray-200 px-20 py-10">
-              제목
+              내용
             </div>
             <div className="flex w-1/5 items-center justify-center border-b border-gray-200 px-20 py-10">
               시간
@@ -106,16 +33,19 @@ export default function AlarmList() {
             className="flex flex-col overflow-y-auto"
             style={{ maxHeight: "520px" }}
           >
-            {alarmData.map((alarm, index) => (
-              <div key={index} className="flex w-full bg-white text-gray-800">
+            {alarmData.map((alarm) => (
+              <div
+                key={alarm.alarmId}
+                className="flex w-full bg-white text-gray-800"
+              >
                 <div className="flex w-1/5 items-center justify-center border-b border-gray-200 px-20 py-10">
                   {alarm.serverName}
                 </div>
                 <div className="flex w-3/5 items-center justify-center border-b border-gray-200 px-20 py-10">
-                  {alarm.title}
+                  {alarm.content}
                 </div>
                 <div className="flex w-1/5 items-center justify-center border-b border-gray-200 px-20 py-10">
-                  {alarm.time}
+                  {new Date(alarm.createdAt).toLocaleString()}
                 </div>
               </div>
             ))}
