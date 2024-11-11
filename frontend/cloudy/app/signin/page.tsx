@@ -11,6 +11,7 @@ import {
   ChangeEventHandler,
   useEffect,
 } from "react";
+import { useAuthStore } from "@/shared/stores/authStore"; // zustand 스토어 import
 
 export default function JoinPage() {
   const [loginId, setloginId] = useState("");
@@ -18,6 +19,9 @@ export default function JoinPage() {
   const [mounted, setMounted] = useState(false);
   const mutation = useLogin();
   const router = useRouter();
+
+  const setAccessToken = useAuthStore((state) => state.setAccessToken);
+  const setEmail = useAuthStore((state) => state.setEmail);
 
   useEffect(() => {
     setMounted(true);
@@ -28,7 +32,13 @@ export default function JoinPage() {
 
     console.log(loginId, password);
     try {
-      await mutation.mutateAsync({ loginId, password });
+      const response = await mutation.mutateAsync({ loginId, password });
+
+      if (response.accessToken) {
+        setAccessToken(response.accessToken);
+        setEmail(loginId);
+      }
+
       router.push("/dashboard");
     } catch (error) {
       console.log("❌ Login Failed", error);
