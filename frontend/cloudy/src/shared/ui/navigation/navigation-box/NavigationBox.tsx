@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { NavigationItem } from "../navigation-item/NavigationItem";
 import { useAuthStore } from "@/shared/stores/authStore";
 import { useFetchServers } from "@/features/server/hooks/useFetchServers";
+import { AddDropDownBox } from "@/shared/ui/drop-down/drop-down-box/dropDown"; // AddDropDownBox 컴포넌트 임포트
 
 const NAVIGATION_ITEMS = [
   {
@@ -31,9 +32,10 @@ export const NavigationBox = () => {
   const pathname = usePathname();
   const { servers, loading } = useFetchServers();
   const email = useAuthStore((state) => state.email);
-  const serverId = useAuthStore((state) => state.serverId);
-  const setServerId = useAuthStore((state) => state.setServerId);
-  const hasHydrated = useAuthStore((state) => state.hasHydrated); // 상태 로드 완료 여부 확인
+  const serverId = useAuthStore((state) => state.serverId); // 현재 선택된 serverId
+  const setServerId = useAuthStore((state) => state.setServerId); // serverId 업데이트 함수
+  const hasHydrated = useAuthStore((state) => state.hasHydrated);
+  console.log(serverId);
 
   const [openIndex, setOpenIndex] = useState<number | null>(() => {
     const initialIndex = NAVIGATION_ITEMS.findIndex((item) =>
@@ -57,28 +59,23 @@ export const NavigationBox = () => {
   };
 
   if (!hasHydrated) {
-    return <div className="flex w-270"></div>; // 상태가 로드될 때까지 로딩 UI 표시
+    return <div className="flex w-270"></div>;
   }
 
   return (
-    <div className="flex w-270 flex-col justify-between border-r border-gray-200 pt-28">
+    <div className="flex w-270 flex-col justify-between border-r border-gray-200">
       <div className="flex border-b border-gray-200 p-20">
         {email ? (
-          <select
-            value={serverId || ""}
-            onChange={(e) => setServerId(Number(e.target.value))}
-          >
-            <option value="" disabled>
-              서버 선택
-            </option>
-            {servers.map((server) => (
-              <option key={server.serverId} value={server.serverId}>
-                {server.serverName}
-              </option>
-            ))}
-          </select>
+          <AddDropDownBox
+            options={servers.map((server) => ({
+              label: server.serverName,
+              id: server.serverId,
+            }))}
+            onSelect={(id: number) => setServerId(id)}
+            initialSelectedId={serverId !== null ? serverId : 0}
+          />
         ) : (
-          "로그인을 해주세요"
+          <span className="text-sm text-gray-500">로그인을 해주세요</span>
         )}
       </div>
       <div className="flex h-full flex-col gap-12 px-12 py-10">
