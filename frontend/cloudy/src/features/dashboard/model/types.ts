@@ -10,3 +10,15 @@ export interface ServerMonitoringResponse {
 export interface ServerMonitoringResponses {
   data: ServerMonitoringResponse[];
 }
+
+export interface ContainerGetUsageResponse {
+  serviceId: number;
+  serviceName: string;
+  usage: number;
+  cost: number;
+}
+
+export interface ContainerUsageCostResponse {
+  data: ContainerGetUsageResponse[];
+  size: number;
+}
