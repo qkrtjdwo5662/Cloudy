@@ -41,6 +41,7 @@ export default function JoinPage() {
 
       router.push("/dashboard");
     } catch (error) {
+      alert("로그인 정보를 다시 확인하세요");
       console.log("❌ Login Failed", error);
     }
   };

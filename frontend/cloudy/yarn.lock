@@ -2132,6 +2132,11 @@ micromatch@^4.0.4, micromatch@^4.0.5:
     braces "^3.0.3"
     picomatch "^2.3.1"
 
+middleware@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/middleware/-/middleware-1.0.0.tgz#7d1c6363a403a0812e5740dc44e4246e7b025ce2"
+  integrity sha512-c3rqqJbL4fMsacWYc1Cgck/ohjVh6s9rwX8wb2BnJSdEwNguf8La0QukSEPAeAHKl8I9WrCnJOb70YgyNCCzjg==
+
 mime-db@1.52.0:
   version "1.52.0"
   resolved "https://registry.npmjs.org/mime-db/-/mime-db-1.52.0.tgz"

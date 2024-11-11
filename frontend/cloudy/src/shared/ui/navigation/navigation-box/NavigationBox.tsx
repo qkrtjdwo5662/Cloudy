@@ -3,22 +3,10 @@
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { NavigationItem } from "../navigation-item/NavigationItem";
+import { useAuthStore } from "@/shared/stores/authStore";
+import { useFetchServers } from "@/features/server/hooks/useFetchServers";
 
-type SubItem = {
-  to: string;
-  label: string;
-};
-
-type NavigationItemType = {
-  leftIcon: string;
-  rightIcon?: string;
-  to?: string;
-  label: string;
-  isSubItem?: boolean;
-  subItems?: SubItem[];
-};
-
-const NAVIGATION_ITEMS: NavigationItemType[] = [
+const NAVIGATION_ITEMS = [
   {
     leftIcon: "cloudy",
     rightIcon: "keyboard_arrow_down",
@@ -41,6 +29,12 @@ const NAVIGATION_ITEMS: NavigationItemType[] = [
 
 export const NavigationBox = () => {
   const pathname = usePathname();
+  const { servers, loading } = useFetchServers();
+  const email = useAuthStore((state) => state.email);
+  const serverId = useAuthStore((state) => state.serverId);
+  const setServerId = useAuthStore((state) => state.setServerId);
+  const hasHydrated = useAuthStore((state) => state.hasHydrated); // 상태 로드 완료 여부 확인
+
   const [openIndex, setOpenIndex] = useState<number | null>(() => {
     const initialIndex = NAVIGATION_ITEMS.findIndex((item) =>
       item.subItems?.some((subItem) => subItem.to === pathname),
@@ -62,10 +56,30 @@ export const NavigationBox = () => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
+  if (!hasHydrated) {
+    return <div className="flex w-270"></div>; // 상태가 로드될 때까지 로딩 UI 표시
+  }
+
   return (
     <div className="flex w-270 flex-col justify-between border-r border-gray-200 pt-28">
       <div className="flex border-b border-gray-200 p-20">
-        dayoungpyo@gmail.com
+        {email ? (
+          <select
+            value={serverId || ""}
+            onChange={(e) => setServerId(Number(e.target.value))}
+          >
+            <option value="" disabled>
+              서버 선택
+            </option>
+            {servers.map((server) => (
+              <option key={server.serverId} value={server.serverId}>
+                {server.serverName}
+              </option>
+            ))}
+          </select>
+        ) : (
+          "로그인을 해주세요"
+        )}
       </div>
       <div className="flex h-full flex-col gap-12 px-12 py-10">
         {NAVIGATION_ITEMS.map((item, index) => (
