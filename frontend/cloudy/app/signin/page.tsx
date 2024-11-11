@@ -11,13 +11,19 @@ import {
   ChangeEventHandler,
   useEffect,
 } from "react";
+import { useAuthStore } from "@/shared/stores/authStore"; // zustand 스토어 import
 
 export default function JoinPage() {
-  const [loginId, setloginId] = useState("");
+  const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
   const [mounted, setMounted] = useState(false);
   const mutation = useLogin();
   const router = useRouter();
+
+  // Zustand 상태 설정 함수
+  const setAccessToken = useAuthStore((state) => state.setAccessToken);
+  const setEmail = useAuthStore((state) => state.setEmail);
+  const setServerId = useAuthStore((state) => state.setServerId); // 서버 ID 설정 함수
 
   useEffect(() => {
     setMounted(true);
@@ -28,15 +34,26 @@ export default function JoinPage() {
 
     console.log(loginId, password);
     try {
-      await mutation.mutateAsync({ loginId, password });
+      const response = await mutation.mutateAsync({ loginId, password });
+
+      if (response.accessToken) {
+        console.log(response);
+
+        // 로그인 성공 시 zustand 상태에 저장
+        setAccessToken(response.accessToken);
+        setEmail(loginId);
+        setServerId(response.serverId); // 서버 ID 설정
+      }
+
       router.push("/dashboard");
     } catch (error) {
+      alert("로그인 정보를 다시 확인하세요");
       console.log("❌ Login Failed", error);
     }
   };
 
   const onChangeloginId: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setloginId(e.target.value.trim());
+    setLoginId(e.target.value.trim());
   };
 
   const onChangePassword: ChangeEventHandler<HTMLInputElement> = (e) => {

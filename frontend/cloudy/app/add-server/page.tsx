@@ -33,11 +33,15 @@ export default function AddServer() {
                 <div className="flex w-full flex-col gap-20 p-20">
                   <div className="flex w-full flex-col gap-6">
                     <h1>인스턴스 종류</h1>
-                    <AddDropDownBox />
+                    <AddDropDownBox
+                      options={["Option 1", "Option 2", "Option 3"]}
+                    />
                   </div>
                   <div className="flex w-full flex-col gap-6">
                     <h1>결제 방식</h1>
-                    <AddDropDownBox />
+                    <AddDropDownBox
+                      options={["Option 1", "Option 2", "Option 3"]}
+                    />
                   </div>
                 </div>
               </div>
