@@ -21,6 +21,8 @@ const NAVIGATION_ITEMS = [
   { leftIcon: "cloudy", to: "/member-setting", label: "회원 설정" },
   { leftIcon: "cloudy", to: "/alarm-list", label: "알람 목록" },
   { leftIcon: "cloudy", to: "/join", label: "회사 등록" },
+  { leftIcon: "cloudy", to: "/signin", label: "로그인" },
+  { leftIcon: "cloudy", to: "/limit-setting", label: "임계치 설정" },
 ] as const;
 
 export const NavigationBox = () => {
