@@ -1,10 +1,24 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { NavigationItem } from "../navigation-item/NavigationItem";
 
-const NAVIGATION_ITEMS = [
+type SubItem = {
+  to: string;
+  label: string;
+};
+
+type NavigationItemType = {
+  leftIcon: string;
+  rightIcon?: string;
+  to?: string;
+  label: string;
+  isSubItem?: boolean;
+  subItems?: SubItem[];
+};
+
+const NAVIGATION_ITEMS: NavigationItemType[] = [
   {
     leftIcon: "cloudy",
     rightIcon: "keyboard_arrow_down",
@@ -23,7 +37,7 @@ const NAVIGATION_ITEMS = [
   { leftIcon: "cloudy", to: "/join", label: "회사 등록" },
   { leftIcon: "cloudy", to: "/signin", label: "로그인" },
   { leftIcon: "cloudy", to: "/limit-setting", label: "임계치 설정" },
-] as const;
+];
 
 export const NavigationBox = () => {
   const pathname = usePathname();
@@ -34,7 +48,6 @@ export const NavigationBox = () => {
     return initialIndex !== -1 ? initialIndex : null;
   });
 
-  // URL 변경 시 열린 메뉴 상태 업데이트
   useEffect(() => {
     const parentIndex = NAVIGATION_ITEMS.findIndex((item) =>
       item.subItems?.some((subItem) => subItem.to === pathname),
@@ -62,7 +75,7 @@ export const NavigationBox = () => {
               rightIcon={item.rightIcon}
               to={item.to}
               isSubItem={item.isSubItem}
-              onClick={() => item.rightIcon && handleToggle(index)}
+              onClick={() => item.subItems && handleToggle(index)}
             >
               {item.label}
             </NavigationItem>
