@@ -10,7 +10,7 @@ import lombok.Getter;
 @Schema(name = "로그인 response dto", description = "로그인 후 반환되는 token 정보")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class MemberLoginResponse {
+public class MemberLoginResponseOriginal {
 
     @Schema(description = "access token", example = "token.token.token")
     private String accessToken;
@@ -18,17 +18,12 @@ public class MemberLoginResponse {
     @Schema(description = "refresh token", example = "token.token.token")
     private String refreshToken;
 
-    @Schema(description = "serverId", example = "1")
-    private Long serverId;
 
-    @Schema(description = "serverName", example = "스프링서버")
-    private String serverName;
-
-    public static MemberLoginResponse of(String accessToken, String refreshToken, Long serverId, String serverName){
-        return new MemberLoginResponse(accessToken, refreshToken, serverId, serverName);
+    public static MemberLoginResponseOriginal of(String accessToken, String refreshToken){
+        return new MemberLoginResponseOriginal(accessToken, refreshToken);
     }
 
-    public static MemberLoginResponse from(JwtToken jwtToken, Server server){
-        return new MemberLoginResponse(jwtToken.getAccessToken(), jwtToken.getRefreshToken(), server.getServerId(), server.getServerName());
+    public static MemberLoginResponseOriginal from(JwtToken jwtToken){
+        return new MemberLoginResponseOriginal(jwtToken.getAccessToken(), jwtToken.getRefreshToken());
     }
 }

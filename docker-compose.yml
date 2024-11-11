@@ -33,7 +33,7 @@ services:
     restart: "always"
     networks:
       - cloudy
-
+      
   externalservice-be:
     image: externalservice-be:latest
     container_name: externalservice-be
@@ -66,7 +66,7 @@ services:
       - "8888:8888"  # 포워드 프록시용 포트 (클라이언트에서 포워드 프록시로 요청할 포트)
     volumes:
       - /etc/nginx/forward:/etc/nginx  # 포워드 프록시 설정 파일 경로
-    restart: "no"
+    restart: "always"
     networks:
       - cloudy
 
