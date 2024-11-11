@@ -12,6 +12,20 @@ const api = axios.create({
   withCredentials: true,
 });
 
+// 요청 인터셉터 설정
+api.interceptors.request.use(
+  (config: ApiRequestConfig) => {
+    const token = localStorage.getItem("accessToken"); // 로컬 스토리지에서 토큰을 가져옴
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`; // Authorization 헤더에 토큰 추가
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
+
 export const handleApiRequest = async <T, M extends HttpMethod, D = undefined>(
   url: string,
   method: M,
