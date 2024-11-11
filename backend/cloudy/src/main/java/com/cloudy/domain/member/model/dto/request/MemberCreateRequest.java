@@ -1,6 +1,7 @@
 package com.cloudy.domain.member.model.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -25,4 +26,8 @@ public class MemberCreateRequest {
     @Schema(description = "부서명", example = "부서명")
     @NotEmpty(message = "부서명을 입력하세요.")
     private String departmentName;
+
+    @Schema(description = "사업자 등록 번호", example = "1145930")
+    @NotBlank
+    private String businessRegistrationNumber; // 사업자 등록번호
 }

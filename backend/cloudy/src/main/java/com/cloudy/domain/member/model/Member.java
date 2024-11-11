@@ -34,25 +34,32 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public Member(String departmentName, String loginId, String password, Role role) {
+    @NotBlank
+    @Column(unique = true, length = 20)
+    private String businessRegistrationNumber; // 사업자 등록번호
+
+    public Member(String departmentName, String loginId, String password, Role role, String businessRegistrationNumber) {
         this.departmentName = departmentName;
         this.loginId = loginId;
         this.password = password;
         this.role = role;
         this.isUseServiceAlarm = false;
+        this.businessRegistrationNumber = businessRegistrationNumber;
     }
 
     public static Member of(MemberCreateRequest memberCreateRequest, String encode) {
         return new Member(memberCreateRequest.getDepartmentName(),
                 memberCreateRequest.getLoginId(),
                 encode,
-                Role.NORMAL);
+                Role.NORMAL,
+                memberCreateRequest.getBusinessRegistrationNumber());
     }
 
     public static Member createSuperMember(MemberCreateRequest memberCreateRequest, String encode) {
         return new Member(memberCreateRequest.getDepartmentName(),
                 memberCreateRequest.getLoginId(),
                 encode,
-                Role.SUPER);
+                Role.SUPER,
+                memberCreateRequest.getBusinessRegistrationNumber());
     }
 }

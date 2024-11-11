@@ -34,8 +34,9 @@ public class AuthController {
     @Operation(summary = "로그인 API", description = "MemberLoginRequest로 로그인 진행")
     @SwaggerApiSuccess(description = "로그인 성공")
     @SwaggerApiError({ErrorCode.NOT_EXIST_MEMBER, ErrorCode.NOT_MATCH_PASSWORD})
-    @PostMapping("/login")
+    @GetMapping("/login")
     public Response<MemberLoginResponse> login(@Valid @RequestBody MemberLoginRequest memberLoginRequest) {
+//        System.out.println(memberLoginRequest.getLoginId());
         MemberLoginResponse memberLoginResponse = authService.login(memberLoginRequest);
         return Response.SUCCESS(memberLoginResponse, "login을 성공했습니다.");
     }
