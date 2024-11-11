@@ -16,7 +16,7 @@ public interface InstanceRepository extends JpaRepository<Instance, Long> {
 
     List<Instance> findByCloudType(String cloudType);
 
-    List<Instance> findByCloudTypeAndNameContaining(String cloudType, String search);
+    List<Instance> findByCloudTypeAndInstanceNameContaining(String cloudType, String instanceName);
 
     List<Instance> findByInstanceId(Long instanceId);
 }
