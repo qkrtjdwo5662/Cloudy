@@ -35,7 +35,6 @@ public class InstanceDetailResponse {
         return InstanceDetailResponse.builder()
                 .instanceId(instance.getInstanceId())
                 .instanceName(instance.getInstanceName())
-                .instanceStorage(instance.getInstanceStorage())
                 .vCPU(instance.getCpu())
                 .memory(instance.getMemory())
                 .networkBandwidth(instance.getNetworkBandwidth())

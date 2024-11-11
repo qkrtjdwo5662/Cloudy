@@ -9,4 +9,6 @@ public interface InstanceService {
     List<InstanceDetailResponse> getInstanceDetail(Long InstanceId);
 
     List<InstanceTypeResponse> getInstanceTypeList(String cloudType, String search);
+
+    List<InstanceTypeResponse> getInstanceTypeList(String cloudType);
 }

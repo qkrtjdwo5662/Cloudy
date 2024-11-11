@@ -34,6 +34,23 @@ public class InstanceServiceImpl implements InstanceService {
                 .collect(Collectors.toList());
     }
 
+
+    @Override
+    public List<InstanceTypeResponse> getInstanceTypeList(String cloudType) {
+        List<Instance> instances = instanceRepository.findDistinctByCloudType(cloudType);
+
+        // instanceName 기준으로 중복 제거
+        return instances.stream()
+                .collect(Collectors.toMap(
+                        Instance::getInstanceName, // 키: instanceName
+                        InstanceTypeResponse::fromEntity, // 값: DTO 변환
+                        (existing, replacement) -> existing // 중복 시 기존 값 유지
+                ))
+                .values()
+                .stream()
+                .collect(Collectors.toList());
+    }
+
     @Override
     public List<InstanceTypeResponse> getInstanceTypeList(String cloudType, String search) {
         List<Instance> instances;

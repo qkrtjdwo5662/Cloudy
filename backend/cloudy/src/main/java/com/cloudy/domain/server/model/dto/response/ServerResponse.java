@@ -49,7 +49,6 @@ public class ServerResponse {
                 .paymentType(server.getPaymentType())
                 .CPU(server.getInstance().getCpu()) // Instance에서 가져온 정보
                 .memory(server.getInstance().getMemory())
-                .instanceStorage(server.getInstance().getInstanceStorage())
                 .networkBandwidth(server.getInstance().getNetworkBandwidth())
                 .build();
     }

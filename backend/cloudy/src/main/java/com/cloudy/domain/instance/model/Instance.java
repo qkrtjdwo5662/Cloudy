@@ -1,6 +1,5 @@
 package com.cloudy.domain.instance.model;
 
-import com.cloudy.global.config.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "instance")
 @Getter
 @NoArgsConstructor
-public class Instance extends BaseEntity {
+public class Instance{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,13 +35,10 @@ public class Instance extends BaseEntity {
     @Column(length = 20, nullable = false)
     private String osType;
 
-    @Column(length = 20, nullable = false)
-    private String instanceStorage = "EBS 전용";
-
     @Column(nullable = false)
     private String networkBandwidth;
 
     @Column(length = 20, nullable = false)
-    private String location = "아시아 태평양(서울)";
+    private String location;
 
 }

@@ -17,11 +17,15 @@ public class InstanceTypeResponse {
     @Schema(description = "인스턴스 이름", example = "MyInstance")
     private String instanceName;
 
+    @Schema(description = "클라우드 타입", example = "cloudType")
+    private String cloudType;
+
     // 정적 메서드로 엔티티에서 DTO 변환 지원
     public static InstanceTypeResponse fromEntity(Instance instance) {
         return InstanceTypeResponse.builder()
                 .instanceId(instance.getInstanceId())
                 .instanceName(instance.getInstanceName())
+                .cloudType(instance.getCloudType())
                 .build();
     }
 

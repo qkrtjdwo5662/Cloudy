@@ -24,13 +24,12 @@ public class InstanceController {
 
     private final InstanceService instanceService;
 
-    @Operation(summary = "인스턴스 종류 조회", description = "클라우드 타입에 따라 인스턴스 종류을 조회하고 검색어가 있다면 검색")
+    @Operation(summary = "인스턴스 종류 조회", description = "클라우드 타입에 따라 인스턴스 종류를 조회합니다.")
     @SwaggerApiSuccess(description = "인스턴스 종류 조회 성공")
     @GetMapping("/type")
     public Response<List<InstanceTypeResponse>> getInstanceList(
-            @Parameter(description = "클라우드 타입", example = "AWS") @RequestParam String cloudType,
-            @Parameter(description = "검색어", example = "test") @RequestParam(required = false) String search) {
-        List<InstanceTypeResponse> response = instanceService.getInstanceTypeList(cloudType, search);
+            @Parameter(description = "클라우드 타입", example = "AWS") @RequestParam String cloudType) {
+        List<InstanceTypeResponse> response = instanceService.getInstanceTypeList(cloudType);
         return Response.SUCCESS(response, "Instance list retrieved successfully");
     }
 
@@ -38,8 +37,8 @@ public class InstanceController {
     @SwaggerApiSuccess(description = "인스턴스 목록 상세 조회 성공")
     @GetMapping("/details")
     public Response<List<InstanceDetailResponse>> getInstanceDetail(
-            @Parameter(description = "인스턴스 Id", example = "1") @RequestParam Long InstanceId) {
-        List<InstanceDetailResponse> response = instanceService.getInstanceDetail(InstanceId);
+            @Parameter(description = "인스턴스 Id", example = "1") @RequestParam Long instanceId) {
+        List<InstanceDetailResponse> response = instanceService.getInstanceDetail(instanceId);
         return Response.SUCCESS(response, "Instance list retrieved successfully");
     }
 
