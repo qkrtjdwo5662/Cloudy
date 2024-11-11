@@ -57,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throw new CustomJwtException(ErrorCode.EXPIRED_JWT_TOKEN, "Access token이 만료됐습니다.");
 
         Claims payload = jwtTokenProvider.getPayload(token);
-        int userId = jwtTokenProvider.getUserIdFromPayload(payload);
+        long userId = jwtTokenProvider.getUserIdFromPayload(payload);
         Role role = jwtTokenProvider.getRoleFromPayload(payload);
 
         UserDetails userDetails = new PrincipalDetails(userId, role);

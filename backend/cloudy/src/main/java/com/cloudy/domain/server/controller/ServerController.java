@@ -59,8 +59,7 @@ public class ServerController {
     @Operation(summary = "서버 조회", description = "회원 ID를 기준으로 서버 목록 조회")
     @SwaggerApiSuccess(description = "서버 목록 조회 성공")
     @GetMapping
-    public Response<List<ServerResponse>> getServers(
-            @Parameter(description = "회원 ID", example = "1") @Login long memberId) {
+    public Response<List<ServerResponse>> getServers(@Login Long memberId) {
         List<ServerResponse> response = serverService.getServers(memberId);
         return Response.SUCCESS(response, "Server list retrieved successfully");
     }
@@ -79,7 +78,7 @@ public class ServerController {
     @SwaggerApiSuccess(description = "서버 삭제 성공")
     @DeleteMapping("/update")
     public Response<ServerResponse> deleteServer(@Parameter(description = "서버 ID", example = "123") @RequestParam Long serverId,
-                                                 @Login long memberId) {
+                                                 @Login Long memberId) {
         ServerResponse response = serverService.deleteServer(serverId,memberId);
         return Response.SUCCESS(response, "Server updated successfully");
     }
