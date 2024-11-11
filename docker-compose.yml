@@ -12,7 +12,7 @@ services:
       - db:/var/lib/mysql 
     networks:
       - cloudy
-    restart: "always"
+    restart: "no"
 
   cloudy-be:
     image: cloudy-be:latest
@@ -33,6 +33,7 @@ services:
     restart: "always"
     networks:
       - cloudy
+      
   externalservice-be:
     image: externalservice-be:latest
     container_name: externalservice-be

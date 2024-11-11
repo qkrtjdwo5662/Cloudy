@@ -29,5 +29,6 @@ public interface ContainerService {
     //컨테이너 이름 수정
     ContainerUpdateNameResponse updateContainerName(ContainerUpdateNameRequest request);
 
+    void createContainer(ContainerCreateRequest containerCreateRequest, Long serverId);
 
 }

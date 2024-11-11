@@ -4,6 +4,7 @@ import com.cloudy.domain.member.model.dto.request.MemberCreateRequest;
 import com.cloudy.domain.member.model.dto.request.MemberLoginRequest;
 import com.cloudy.domain.member.model.dto.request.MemberReissueRequest;
 import com.cloudy.domain.member.model.dto.response.MemberLoginResponse;
+import com.cloudy.domain.member.model.dto.response.MemberLoginResponseOriginal;
 import com.cloudy.domain.member.model.dto.response.MemberReissueTokenResponse;
 
 public interface AuthService {
@@ -16,6 +17,7 @@ public interface AuthService {
 
     MemberLoginResponse login(MemberLoginRequest request);  // 로그인 메서드
 
+    MemberLoginResponseOriginal loginOriginal(MemberLoginRequest request);
     MemberReissueTokenResponse reissueToken(MemberReissueRequest memberReissueRequest);
 
 }

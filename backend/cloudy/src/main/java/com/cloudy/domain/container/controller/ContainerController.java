@@ -9,6 +9,7 @@ import com.cloudy.global.response.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -73,4 +74,11 @@ public class ContainerController {
         return Response.SUCCESS(response);
     }
 
+    @Operation(summary = "컨테이너 생성", description = "서버의 컨테이너를 생성합니다.")
+    @SwaggerApiSuccess(description = "컨테이너 생성을 성공하였습니다.")
+    @PostMapping("/{serverId}/create")
+    public Response<?> createContainer(@Valid @RequestBody ContainerCreateRequest containerCreateRequest, @PathVariable Long serverId){
+        containerService.createContainer(containerCreateRequest, serverId);
+        return Response.SUCCESS();
+    }
 }
