@@ -1,3 +1,6 @@
+"use client";
+
+import { useFetchAlarm } from "@/features/alram/hooks/useFetchAlarm";
 import { Title } from "@/shared/ui";
 
 export default function AlarmList() {
@@ -78,6 +81,8 @@ export default function AlarmList() {
       time: "2024-11-07 4:30 PM",
     },
   ];
+  const { data, error, isLoading } = useFetchAlarm();
+  console.log(data);
 
   return (
     <div className="flex h-full w-full">
