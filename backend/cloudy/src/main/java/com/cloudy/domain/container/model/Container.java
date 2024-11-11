@@ -23,4 +23,9 @@ public class Container extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "server_id", nullable = false)
     private Server serverId;
+
+    public Container(String containerName, Server serverId){
+        this.containerName = containerName;
+        this.serverId = serverId;
+    }
 }
