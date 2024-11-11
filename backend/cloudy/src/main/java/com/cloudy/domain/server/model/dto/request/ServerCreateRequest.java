@@ -25,7 +25,7 @@ public class ServerCreateRequest {
     @NotEmpty(message = "인스턴스 종류를 입력하세요.")
     private String instanceType;
 
-    @Schema(description = "결제 방식", example = "On-Demand")
+    @Schema(description = "결제 방식", example = "ON")
     @NotEmpty(message = "결제 방식을 입력하세요.")
     private String paymentType;
 }

@@ -34,6 +34,7 @@ public class ServerController {
     @PostMapping("/create")
     public Response<ServerResponse> createServer(@Valid @RequestBody ServerCreateRequest request,
                                                  @Login Long memberId) {
+        System.out.println("memberId : " + memberId);
         ServerResponse response = serverService.createServer(request, memberId);
         return Response.SUCCESS(response, "Server created successfully");
     }
