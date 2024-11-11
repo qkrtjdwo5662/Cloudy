@@ -14,14 +14,14 @@ import java.util.Map;
 @Slf4j
 public class PrincipalDetails implements UserDetails {
 
-    private Integer userId;
+    private Long userId;
     private Role role;
     private Map<String, Object> attributes;
 
     /**
      * 일반 로그인 생성자
      */
-    public PrincipalDetails(Integer userId, Role role) {
+    public PrincipalDetails(Long userId, Role role) {
         this.userId = userId;
         this.role = role;
     }
