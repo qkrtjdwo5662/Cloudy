@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ThresholdUpdateRequest {
 
-    @Schema(description = "서버 ID", example = "123")
+    @Schema(description = "서버 ID", example = "1")
     @NotEmpty(message = "서버 ID를 입력하세요.")
     private Long serverId;
 

@@ -37,16 +37,17 @@ public class ServerServiceImpl implements ServerService {
 
     @Override
     public ServerResponse createServer(ServerCreateRequest request, Long memberId) {
+//        System.out.println(request.getInstanceType() + " " +request.getPaymentType());
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
 
-        Instance instance = instanceRepository.findByInstanceName(request.getInstanceType())
+        Instance instance = instanceRepository.findByInstanceNameAndInstancePeriodType(request.getInstanceType(), request.getPaymentType())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid instance type"));
 
         Server server = new Server(request.getServerName(), 0, request.getPaymentType(), member, instance);
         serverRepository.save(server);
 
-        return ServerResponse.fromEntity(server);
+        return null;
     }
 
     @Override
