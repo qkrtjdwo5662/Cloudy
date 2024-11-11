@@ -11,5 +11,5 @@ import java.util.Optional;
 @Repository
 public interface ServerRepository extends JpaRepository<Server, Long> {
 
-    List<Server> findByMemberId(Long memberId);
+    List<Server> findByMember_MemberId(Long memberId);
 }

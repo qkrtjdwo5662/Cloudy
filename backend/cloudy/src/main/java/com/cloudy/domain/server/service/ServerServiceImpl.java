@@ -63,7 +63,7 @@ public class ServerServiceImpl implements ServerService {
 
     @Override
     public List<ServerResponse> getServers(Long memberId) {
-        List<Server> servers = serverRepository.findByMemberId(memberId);
+        List<Server> servers = serverRepository.findByMember_MemberId(memberId);
 
         return servers.stream()
                 .map(ServerResponse::fromEntity)

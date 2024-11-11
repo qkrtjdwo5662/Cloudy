@@ -43,7 +43,7 @@ public class InstanceServiceImpl implements InstanceService {
             instances = instanceRepository.findByCloudType(cloudType);
         } else {
             // 검색어가 있을 때는 클라우드 타입과 검색어로 필터링
-            instances = instanceRepository.findByCloudTypeAndNameContaining(cloudType, search);
+            instances = instanceRepository.findByCloudTypeAndInstanceNameContaining(cloudType, search);
         }
 
         // 인스턴스 종류만 포함한 응답 리스트 생성
