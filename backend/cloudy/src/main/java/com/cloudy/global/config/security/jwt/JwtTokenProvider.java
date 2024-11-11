@@ -57,7 +57,7 @@ public class JwtTokenProvider {
         log.info("reissue");
         Claims payload = getPayload(accessToken);
         log.info("get payload 완료");
-        Integer userId = getUserIdFromPayload(payload);
+        Long userId = getUserIdFromPayload(payload);
         Role role = getRoleFromPayload(payload);
 
         return createAccessToken(userId, role);
@@ -121,9 +121,10 @@ public class JwtTokenProvider {
         }
     }
 
-    public int getUserIdFromPayload(final Claims claims) {
+    public long getUserIdFromPayload(final Claims claims) {
         String userId = claims.get("userId", String.class);
-        return Integer.parseInt(aes256SecureUtil.decrypt(userId, claims.getExpiration().toString()));
+//        System.out.println(Integer.parseInt(aes256SecureUtil.decrypt(userId, claims.getExpiration().toString())));
+        return Long.parseLong(aes256SecureUtil.decrypt(userId, claims.getExpiration().toString()));
     }
 
     public Role getRoleFromPayload(Claims claims) {
@@ -140,7 +141,7 @@ public class JwtTokenProvider {
         try {
 //            Jwts.parserBuilder().
             //jwt가 위변조되지 않았는지 secretKey를 이용해 확인
-            Jws<Claims> claims = Jwts.parser()
+            Jwts.parser()
                     .verifyWith(secretKey)
                     .build()
                     .parseSignedClaims(token);
