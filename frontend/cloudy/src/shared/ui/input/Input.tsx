@@ -9,6 +9,9 @@ interface InputProps {
   showButton?: boolean;
   buttonContent?: string;
   buttonType?: ClickType;
+  type?: "text" | "password";
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const Input = ({
@@ -19,6 +22,9 @@ export const Input = ({
   showButton,
   buttonContent,
   buttonType,
+  type,
+  value,
+  onChange,
 }: InputProps) => {
   return (
     <div className="flex flex-col gap-4">
@@ -30,9 +36,11 @@ export const Input = ({
       )}
       <div className="flex gap-8">
         <input
-          type="text"
+          type={type}
           placeholder={placeholder}
           className="h-40 w-full rounded-8 border border-gray-200 p-16"
+          onChange={onChange}
+          value={value}
         />
         {showButton && (
           <div>
