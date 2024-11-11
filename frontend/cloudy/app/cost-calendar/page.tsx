@@ -3,6 +3,7 @@ import Table from "../server-usage/table";
 import CostBarChart from "./barChart";
 import Calendar from "../dashboard/Calendar";
 import { Title } from "@/shared/ui";
+import { useFetchCalendar } from "@/features/cost-calendar/hooks/fetchCalendar";
 
 const sampleData = [
   { containerName: "컨테이너1", callCount: "14회" },
@@ -13,6 +14,9 @@ const sampleData = [
 ];
 
 export default function CostCalendarPage() {
+  const { data, error, isLoading } = useFetchCalendar("1");
+  console.log(data);
+
   return (
     <div className="flex h-full w-full">
       <div className="flex h-full w-full flex-col gap-6 p-20">
