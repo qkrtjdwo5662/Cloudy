@@ -19,7 +19,7 @@ public class BoardController {
 
     @Autowired
     public BoardController(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://localhost:8082").build();
+        this.webClient = webClientBuilder.baseUrl("http://k11a606.p.ssafy.io:4041").build();
     }
 
     @GetMapping
