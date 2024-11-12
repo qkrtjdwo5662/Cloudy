@@ -1,5 +1,6 @@
 package com.companyservice.domain.board.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @RestController
 @RequestMapping("/boards")
 public class BoardController {
@@ -17,11 +19,12 @@ public class BoardController {
 
     @Autowired
     public BoardController(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://k11a606.p.ssafy.io:4041").build();
+        this.webClient = webClientBuilder.baseUrl("http://localhost:8082").build();
     }
 
     @GetMapping
     public ResponseEntity<?> getBoard(){
+        log.info("method: getBoard, API: /boards");
         return ResponseEntity.ok("Get Request");
     }
 
@@ -32,6 +35,7 @@ public class BoardController {
 
     @GetMapping("/external-data/get")
     public Mono<String> getExternalData() {
+        log.info("method: getExternalData, API: /external-data/get");
         return webClient.get()
                 .uri("/api/get")
                 .retrieve()
