@@ -88,6 +88,7 @@ public class SecurityConfig {
                                                 ,"/swagger-resources/**", "/v3/api-docs/**").permitAll()
 //                                        .requestMatchers("/**").permitAll()
 //                                        .requestMatchers("/admin").hasRole("ADMIN") // admin은 ADMIN 롤만
+                                        .requestMatchers("/alarms/subscribe").permitAll()
                                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
