@@ -5,14 +5,23 @@ import { Button } from "@/shared/ui/button/Button";
 
 interface AddDropDownBoxProps {
   options: string[];
+  onChange: (value: string) => void;
+  value?: string;
 }
 
-export const AddDropDownBox = ({ options }: AddDropDownBoxProps) => {
+export const AddDropDownBox = ({
+  options,
+  onChange,
+  value,
+}: AddDropDownBoxProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(
+    value ? options.indexOf(value) : -1,
+  );
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const selectedItem = options[selectedIndex];
+  const selectedItem =
+    selectedIndex === -1 ? "선택하세요" : options[selectedIndex];
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
@@ -29,6 +38,12 @@ export const AddDropDownBox = ({ options }: AddDropDownBoxProps) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const handleItemClick = (index: number) => {
+    setSelectedIndex(index);
+    setIsOpen(false);
+    onChange(options[index]);
+  };
+
   return (
     <div
       ref={dropdownRef}
@@ -44,18 +59,17 @@ export const AddDropDownBox = ({ options }: AddDropDownBoxProps) => {
       />
       {isOpen && (
         <div className="absolute top-full z-10 mt-2 w-full rounded-md bg-white shadow-lg">
-          {options.map((item, index) => (
-            <DropDownItem
-              key={index}
-              isSelected={selectedIndex === index}
-              onClick={() => {
-                setSelectedIndex(index);
-                setIsOpen(false);
-              }}
-            >
-              {item}
-            </DropDownItem>
-          ))}
+          <div className="max-h-200 overflow-y-auto">
+            {options.map((item, index) => (
+              <DropDownItem
+                key={index}
+                isSelected={selectedIndex === index}
+                onClick={() => handleItemClick(index)}
+              >
+                {item}
+              </DropDownItem>
+            ))}
+          </div>
         </div>
       )}
     </div>

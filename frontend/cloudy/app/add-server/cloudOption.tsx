@@ -1,12 +1,18 @@
 "use client";
 import React, { useState } from "react";
 
+type CloudType = "AWS" | "AZURE" | "GOOGLE";
+
 interface CloudOptionCardProps {
   label: string;
   icon: string;
-  value: string;
-  selectedValue: string;
-  onChange: (value: string) => void;
+  value: CloudType;
+  selectedValue: CloudType;
+  onChange: (value: CloudType) => void;
+}
+
+interface CloudOptionsProps {
+  onCloudChange: (cloudType: CloudType) => void;
 }
 
 function CloudOptionCard({
@@ -41,14 +47,23 @@ function CloudOptionCard({
   );
 }
 
-export function CloudOptions() {
-  const [selectedCloud, setSelectedCloud] = useState("aws");
+export function CloudOptions({ onCloudChange }: CloudOptionsProps) {
+  const [selectedCloud, setSelectedCloud] = useState<CloudType>("AWS");
 
   const options = [
-    { label: "aws", icon: "/images/AWS.png", value: "aws" },
-    { label: "azure", icon: "/images/Azure.png", value: "azure" },
-    { label: "google", icon: "/images/Google.png", value: "google" },
+    { label: "aws", icon: "/images/AWS.png", value: "AWS" as CloudType },
+    { label: "azure", icon: "/images/Azure.png", value: "AZURE" as CloudType },
+    {
+      label: "google",
+      icon: "/images/Google.png",
+      value: "GOOGLE" as CloudType,
+    },
   ];
+
+  const handleCloudChange = (value: CloudType) => {
+    setSelectedCloud(value);
+    onCloudChange(value);
+  };
 
   return (
     <div className="flex w-full flex-col items-start gap-10">
@@ -61,7 +76,7 @@ export function CloudOptions() {
             icon={option.icon}
             value={option.value}
             selectedValue={selectedCloud}
-            onChange={setSelectedCloud}
+            onChange={handleCloudChange}
           />
         ))}
       </div>

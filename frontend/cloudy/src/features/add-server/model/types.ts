@@ -1,13 +1,8 @@
 export interface ServerCreateRequest {
-  serverId: number;
   serverName: string;
   cloudType: string;
   instanceType: string;
   paymentType: string;
-  memory: string;
-  instanceStorage: string;
-  networkBandwidth: string;
-  cpu: string;
 }
 
 export interface ServerGetResponse {
