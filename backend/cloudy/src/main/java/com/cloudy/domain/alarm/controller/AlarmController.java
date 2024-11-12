@@ -9,6 +9,7 @@ import com.cloudy.global.response.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
 
@@ -54,4 +55,11 @@ public class AlarmController {
         alarmService.markAlarmAsRead(alarmId, memberId);
         return Response.SUCCESS(null, "알람 읽음 처리 성공");
     }
+
+    @Operation(summary = "알람 SSE 구독", description = "로그인한 사용자의 알람을 실시간으로 구독합니다.")
+    @GetMapping("/subscribe")
+    public SseEmitter subscribe(@Login Long memberId) {
+        return alarmService.subscribe(memberId);
+    }
+
 }
