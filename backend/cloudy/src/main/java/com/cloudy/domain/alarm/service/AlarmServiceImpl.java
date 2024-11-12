@@ -86,7 +86,7 @@ public class AlarmServiceImpl implements AlarmService {
     @Override
     public SseEmitter subscribe(Long memberId) {
         // SSE 연결 생성
-        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
+        SseEmitter emitter = new SseEmitter(300 * 60 * 1000L);
 
         // 연결 관리
         emitters.put(memberId, emitter);
