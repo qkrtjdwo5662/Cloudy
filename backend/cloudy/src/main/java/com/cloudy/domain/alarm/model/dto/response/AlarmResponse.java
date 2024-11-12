@@ -20,7 +20,7 @@ public class AlarmResponse {
 
     public static AlarmResponse fromEntity(Alarm alarm) {
         return AlarmResponse.builder()
-                .alarmId(alarm.getAlramId())
+                .alarmId(alarm.getAlarmId())
                 .serverName(alarm.getServerName())
                 .title(alarm.getTitle())
                 .content(alarm.getContent())
