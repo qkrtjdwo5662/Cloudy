@@ -5,7 +5,8 @@ import com.cloudy.domain.member.exception.NormalRegisterFailException;
 import com.cloudy.domain.member.exception.ReissueFailException;
 import com.cloudy.domain.member.model.Member;
 import com.cloudy.domain.member.model.dto.request.MemberLoginRequest;
-import com.cloudy.domain.member.model.dto.request.MemberCreateRequest;
+import com.cloudy.domain.member.model.dto.request.NomalMemberCreateRequest;
+import com.cloudy.domain.member.model.dto.request.SuperMemberCreateRequest;
 import com.cloudy.domain.member.model.dto.request.MemberReissueRequest;
 import com.cloudy.domain.member.model.dto.response.MemberLoginResponse;
 import com.cloudy.domain.member.model.dto.response.MemberLoginResponseOriginal;
@@ -20,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class AuthServiceImpl implements AuthService{
      * super 계정 회원가입.
      * */
     @Override
-    public void superRegister(MemberCreateRequest memberCreateRequest) {
+    public void superRegister(SuperMemberCreateRequest memberCreateRequest) {
         if(memberRepository.existsByLoginId(memberCreateRequest.getLoginId())){
             throw new NormalRegisterFailException(ErrorCode.DUPLICATED_MEMBER, "해당 ID를 가진 회원이 이미 존재합니다.");
         }
@@ -53,7 +53,7 @@ public class AuthServiceImpl implements AuthService{
     * normal 계정 회원가입.
     * */
     @Override
-    public void normalRegister(MemberCreateRequest memberCreateRequest) {
+    public void normalRegister(NomalMemberCreateRequest memberCreateRequest) {
         if(memberRepository.existsByLoginId(memberCreateRequest.getLoginId())){
             throw new NormalRegisterFailException(ErrorCode.DUPLICATED_MEMBER, "해당 ID를 가진 회원이 이미 존재합니다.");
         }
@@ -90,8 +90,6 @@ public class AuthServiceImpl implements AuthService{
             return MemberLoginResponse.of(jwtToken.getAccessToken(), jwtToken.getRefreshToken(), null, null);
         }
 
-
-
     }
 
     @Override
@@ -117,5 +115,10 @@ public class AuthServiceImpl implements AuthService{
         }
 
         return MemberReissueTokenResponse.from(jwtTokenProvider.reissue(memberReissueRequest.getAccessToken()));
+    }
+
+    @Override
+    public boolean checkBusinessNumberDuplicate(String businessRegistrationNumber) {
+        return memberRepository.existsBybusinessRegistrationNumber(businessRegistrationNumber);
     }
 }

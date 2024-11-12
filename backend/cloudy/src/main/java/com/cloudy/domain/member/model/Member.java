@@ -1,6 +1,7 @@
 package com.cloudy.domain.member.model;
 
-import com.cloudy.domain.member.model.dto.request.MemberCreateRequest;
+import com.cloudy.domain.member.model.dto.request.NomalMemberCreateRequest;
+import com.cloudy.domain.member.model.dto.request.SuperMemberCreateRequest;
 import com.cloudy.global.config.common.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -47,15 +48,15 @@ public class Member extends BaseEntity {
         this.businessRegistrationNumber = businessRegistrationNumber;
     }
 
-    public static Member of(MemberCreateRequest memberCreateRequest, String encode) {
+    public static Member of(NomalMemberCreateRequest memberCreateRequest, String encode) {
         return new Member(memberCreateRequest.getDepartmentName(),
                 memberCreateRequest.getLoginId(),
                 encode,
                 Role.NORMAL,
-                memberCreateRequest.getBusinessRegistrationNumber());
+                "-");
     }
 
-    public static Member createSuperMember(MemberCreateRequest memberCreateRequest, String encode) {
+    public static Member createSuperMember(SuperMemberCreateRequest memberCreateRequest, String encode) {
         return new Member(memberCreateRequest.getDepartmentName(),
                 memberCreateRequest.getLoginId(),
                 encode,

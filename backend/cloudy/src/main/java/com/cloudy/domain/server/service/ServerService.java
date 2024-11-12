@@ -23,4 +23,6 @@ public interface ServerService {
     ServerResponse deleteServer(Long serverId, Long memberId);
 
     MonitoringResponse monitorServer(Long serverId, int duration);
+
+    List<ThresholdResponse> getThresholds(Long memberId);
 }
