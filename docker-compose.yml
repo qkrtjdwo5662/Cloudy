@@ -71,7 +71,7 @@ services:
       - cloudy
 
   elasticsearch:
-    image: elasticsearch:8.0  
+    image: elasticsearch:8.0.0
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
@@ -85,7 +85,7 @@ services:
       - cloudy
 
   logstash:
-    image: logstash:8.0  # 필요한 Logstash 버전
+    image: logstash:8.0.0  # 필요한 Logstash 버전
     container_name: logstash
     volumes:
       - /etc/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf  # Logstash 설정 파일 경로
