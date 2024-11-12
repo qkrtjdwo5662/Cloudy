@@ -1,7 +1,7 @@
 package com.cloudy.domain.member.controller;
 
 import com.cloudy.domain.member.model.dto.request.MemberLoginRequest;
-import com.cloudy.domain.member.model.dto.request.NomalMemberCreateRequest;
+import com.cloudy.domain.member.model.dto.request.NormalMemberCreateRequest;
 import com.cloudy.domain.member.model.dto.request.SuperMemberCreateRequest;
 import com.cloudy.domain.member.model.dto.request.MemberReissueRequest;
 import com.cloudy.domain.member.model.dto.response.MemberLoginResponse;
@@ -56,13 +56,13 @@ public class AuthController {
     @SwaggerApiSuccess(description = "일반 회원 회원가입 성공")
     @SwaggerApiError({ErrorCode.DUPLICATED_MEMBER})
     @PostMapping("/register/normal")
-    public Response<?> normalRegister(@Valid @RequestBody NomalMemberCreateRequest memberCreateRequest) {
+    public Response<?> normalRegister(@Valid @RequestBody NormalMemberCreateRequest memberCreateRequest) {
         authService.normalRegister(memberCreateRequest);
         return Response.SUCCESS();
     }
 
     @Operation(summary = "슈퍼 회원 회원가입 API", description = "MemberCreateRequest로 회원가입 진행")
-    @SwaggerApiSuccess(description = "일반 회원 회원가입 성공")
+    @SwaggerApiSuccess(description = "슈퍼 회원 회원가입 성공")
     @SwaggerApiError({ErrorCode.DUPLICATED_MEMBER})
     @PostMapping("/register/super")
     public Response<?> superRegister(@Valid @RequestBody SuperMemberCreateRequest memberCreateRequest) {

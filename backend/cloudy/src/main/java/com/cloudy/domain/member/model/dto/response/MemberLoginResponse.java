@@ -28,11 +28,15 @@ public class MemberLoginResponse {
     @Schema(description = "role", example = "SUPER")
     private Role role;
 
-    public static MemberLoginResponse of(String accessToken, String refreshToken, Long serverId, String serverName, Role role) {
-        return new MemberLoginResponse(accessToken, refreshToken, serverId, serverName, role);
+    @Schema(description = "businessRegistrationNumber", example = "1111111")
+    private String registrationNumber;
+
+
+    public static MemberLoginResponse of(String accessToken, String refreshToken, Long serverId, String serverName, Role role, String registrationNumber) {
+        return new MemberLoginResponse(accessToken, refreshToken, serverId, serverName, role, registrationNumber);
     }
 
-    public static MemberLoginResponse from(JwtToken jwtToken, Server server, Role role) {
-        return new MemberLoginResponse(jwtToken.getAccessToken(), jwtToken.getRefreshToken(), server.getServerId(), server.getServerName(), role);
+    public static MemberLoginResponse from(JwtToken jwtToken, Server server, Role role, String registrationNumber) {
+        return new MemberLoginResponse(jwtToken.getAccessToken(), jwtToken.getRefreshToken(), server.getServerId(), server.getServerName(), role, registrationNumber );
     }
 }
