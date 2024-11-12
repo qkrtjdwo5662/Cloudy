@@ -3,12 +3,12 @@ import axios from "axios";
 
 export const useCheckIdDuplicate = () => {
   const [idAvailable, setIdAvailable] = useState<boolean | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [idLoading, setIdLoading] = useState<boolean>(false);
+  const [idError, setIdError] = useState<string | null>(null);
 
   const checkIdDuplicate = async (id: string) => {
-    setLoading(true);
-    setError(null);
+    setIdLoading(true);
+    setIdError(null);
 
     try {
       const response = await axios.get(
@@ -22,12 +22,12 @@ export const useCheckIdDuplicate = () => {
 
       setIdAvailable(response.data.data);
     } catch (err) {
-      setError("Failed to check ID availability.");
+      setIdError("Failed to check ID availability.");
       console.error("Error checking ID:", err);
     } finally {
-      setLoading(false);
+      setIdLoading(false);
     }
   };
 
-  return { idAvailable, loading, error, checkIdDuplicate };
+  return { idAvailable, idLoading, idError, checkIdDuplicate };
 };
