@@ -59,7 +59,7 @@ public class ServerServiceImpl implements ServerService {
         server.setServerLimit(request.getUpdatedLimitValue());
 
         // 응답 생성
-        return new ThresholdResponse(server.getServerId(), server.getServerLimit(), request.isUseAlarm(), LocalDateTime.now().toString());
+        return new ThresholdResponse(server.getServerId(), server.getServerName() , server.getServerLimit(), request.isUseAlarm(), LocalDateTime.now());
     }
 
     @Override
@@ -110,5 +110,20 @@ public class ServerServiceImpl implements ServerService {
 
 
         return null;
+    }
+
+    @Override
+    public List<ThresholdResponse> getThresholds(Long memberId) {
+        List<Server> servers = serverRepository.findByMember_MemberId(memberId);
+
+        // 2. DTO로 변환하여 반환
+        return servers.stream()
+                .map(server -> ThresholdResponse.builder()
+                        .serverId(server.getServerId())
+                        .serverName(server.getServerName())
+                        .serverLimit(server.getServerLimit())
+                        .updatedAt(server.getUpdatedAt())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

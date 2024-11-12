@@ -1,7 +1,8 @@
 package com.cloudy.domain.member.controller;
 
 import com.cloudy.domain.member.model.dto.request.MemberLoginRequest;
-import com.cloudy.domain.member.model.dto.request.MemberCreateRequest;
+import com.cloudy.domain.member.model.dto.request.NomalMemberCreateRequest;
+import com.cloudy.domain.member.model.dto.request.SuperMemberCreateRequest;
 import com.cloudy.domain.member.model.dto.request.MemberReissueRequest;
 import com.cloudy.domain.member.model.dto.response.MemberLoginResponse;
 import com.cloudy.domain.member.model.dto.response.MemberLoginResponseOriginal;
@@ -55,7 +56,7 @@ public class AuthController {
     @SwaggerApiSuccess(description = "일반 회원 회원가입 성공")
     @SwaggerApiError({ErrorCode.DUPLICATED_MEMBER})
     @PostMapping("/register/normal")
-    public Response<?> normalRegister(@Valid @RequestBody MemberCreateRequest memberCreateRequest) {
+    public Response<?> normalRegister(@Valid @RequestBody NomalMemberCreateRequest memberCreateRequest) {
         authService.normalRegister(memberCreateRequest);
         return Response.SUCCESS();
     }
@@ -64,7 +65,7 @@ public class AuthController {
     @SwaggerApiSuccess(description = "일반 회원 회원가입 성공")
     @SwaggerApiError({ErrorCode.DUPLICATED_MEMBER})
     @PostMapping("/register/super")
-    public Response<?> superRegister(@Valid @RequestBody MemberCreateRequest memberCreateRequest) {
+    public Response<?> superRegister(@Valid @RequestBody SuperMemberCreateRequest memberCreateRequest) {
         authService.superRegister(memberCreateRequest);
         return Response.SUCCESS();
     }
@@ -82,5 +83,13 @@ public class AuthController {
     @GetMapping("/duplicate/loginid")
     public Response<Boolean> registerValidateDuplicate(@RequestParam("loginId") String loginId) {
         return Response.SUCCESS(authService.checkDuplicatedId((loginId)));
+    }
+
+    @Operation(summary = "사업자번호 중복체크 API", description = "사업자번호가 중복이면 true, 중복이 아니면 false를 반환합니다.")
+    @GetMapping("/duplicate/businessnumber")
+    public Response<Boolean> checkBusinessNumberDuplicate(
+            @RequestParam("businessRegistrationNumber") String businessRegistrationNumber) {
+        boolean isDuplicate = authService.checkBusinessNumberDuplicate(businessRegistrationNumber);
+        return Response.SUCCESS(isDuplicate, "사업자번호 중복체크 성공");
     }
 }

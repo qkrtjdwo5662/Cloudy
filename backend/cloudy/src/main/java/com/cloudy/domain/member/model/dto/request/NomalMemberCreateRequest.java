@@ -3,7 +3,6 @@ package com.cloudy.domain.member.model.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @Getter
-public class MemberCreateRequest {
+public class NomalMemberCreateRequest {
 
     @Schema(description = "아이디", example = "asdf")
     @NotEmpty(message = "아이디를 입력하세요")
@@ -26,8 +25,4 @@ public class MemberCreateRequest {
     @Schema(description = "부서명", example = "부서명")
     @NotEmpty(message = "부서명을 입력하세요.")
     private String departmentName;
-
-    @Schema(description = "사업자 등록 번호", example = "1145930")
-    @NotBlank
-    private String businessRegistrationNumber; // 사업자 등록번호
 }
