@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { useAuthStore } from "@/shared/stores/authStore";
 
 interface Server {
@@ -17,14 +18,16 @@ export const useFetchServers = () => {
     const fetchServers = async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://k11a606.p.ssafy.io:8081/servers", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            Accept: "*/*",
+        const response = await axios.get(
+          "http://k11a606.p.ssafy.io:8081/servers",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              Accept: "*/*",
+            },
           },
-        });
-        const data = await response.json();
-        setServers(data.data);
+        );
+        setServers(response.data.data);
       } catch (error) {
         console.error("Failed to fetch servers", error);
       } finally {

@@ -12,6 +12,7 @@ interface InputProps {
   type?: "text" | "password";
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onButtonClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const Input = ({
@@ -25,6 +26,7 @@ export const Input = ({
   type,
   value,
   onChange,
+  onButtonClick,
 }: InputProps) => {
   return (
     <div className="flex flex-col gap-4">
@@ -50,11 +52,12 @@ export const Input = ({
               design="fill"
               mainText={buttonContent}
               type={buttonType as ClickType}
+              onClick={onButtonClick}
             />
           </div>
         )}
       </div>
-      {warning && <p className="pl-6 text-sm text-red-500">warning</p>}
+      {warning && <p className="pl-6 text-sm text-red-500">{warning}</p>}
     </div>
   );
 };
