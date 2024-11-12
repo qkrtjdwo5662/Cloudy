@@ -85,9 +85,9 @@ public class AuthServiceImpl implements AuthService{
         Server server = null;
         if(!serverList.isEmpty()){
             server = serverList.getFirst();
-            return MemberLoginResponse.from(jwtToken, server);
+            return MemberLoginResponse.from(jwtToken, server, member.getRole());
         }else{
-            return MemberLoginResponse.of(jwtToken.getAccessToken(), jwtToken.getRefreshToken(), null, null);
+            return MemberLoginResponse.of(jwtToken.getAccessToken(), jwtToken.getRefreshToken(), null, null, member.getRole());
         }
 
     }
