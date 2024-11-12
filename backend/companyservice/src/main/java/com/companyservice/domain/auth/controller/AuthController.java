@@ -15,29 +15,31 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     @PostMapping("/sms/send")
-    public ResponseEntity<?> sendSms(){
-        log.info("{{\"method\":\"sendSms\", \"API\":\"/auth/sms/send\", \"http_method\":\"POST\", \"external_service\": true}}");
+    public ResponseEntity<?> sendSms() {
+        log.info("method: {}, API: {}, http_method: {}, external_service: {}",
+                "sendSms", "/auth/sms/send", "POST", true);
         return ResponseEntity.ok("Post Request");
     }
 
     @PostMapping("/sms/verify")
-    public ResponseEntity<?> verifySms(){
-        log.info("{{\"method\":\"verifySms\", \"API\":\"/auth/sms/verify\", \"http_method\":\"POST\", \"external_service\": true}}");
+    public ResponseEntity<?> verifySms() {
+        log.info("method: {}, API: {}, http_method: {}, external_service: {}",
+                "verifySms", "/auth/sms/verify", "POST", true);
         return ResponseEntity.ok("Post Request");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(){
-        log.info("{{\"method\":\"login\", \"API\":\"/auth/login\", \"http_method\":\"POST\", \"external_service\": false}}");
+    public ResponseEntity<?> login() {
+        log.info("method: {}, API: {}, http_method: {}, external_service: {}",
+                "login", "/auth/login", "POST", false);
         return ResponseEntity.ok("Post Request");
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(){
-        log.info("{{\"method\":\"register\", \"API\":\"/auth/register\", \"http_method\":\"POST\", \"external_service\": false}}");
+    public ResponseEntity<?> register() {
+        log.info("method: {}, API: {}, http_method: {}, external_service: {}",
+                "register", "/auth/register", "POST", false);
         return ResponseEntity.ok("Post Request");
     }
-
-
 
 }
