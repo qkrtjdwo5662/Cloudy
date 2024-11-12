@@ -24,18 +24,19 @@ public class BoardController {
 
     @GetMapping
     public ResponseEntity<?> getBoard(){
-        log.info("method: getBoard, API: /boards");
+        log.info("{{\"method\":\"getBoard\", \"API\":\"/boards\", \"http_method\":\"GET\", \"external_service\": false}}");
         return ResponseEntity.ok("Get Request");
     }
 
     @PostMapping
     public ResponseEntity<?> createBoard(){
+        log.info("{{\"method\":\"createBoard\", \"API\":\"/boards\", \"http_method\":\"POST\", \"external_service\": false}}");
         return ResponseEntity.ok("Post Request");
     }
 
     @GetMapping("/external-data/get")
     public Mono<String> getExternalData() {
-        log.info("method: getExternalData, API: /external-data/get");
+        log.info("{{\"method\":\"getExternalData\", \"API\":\"/external-data/get\", \"http_method\":\"GET\", \"external_service\": true}}");
         return webClient.get()
                 .uri("/api/get")
                 .retrieve()
@@ -44,6 +45,7 @@ public class BoardController {
 
     @PostMapping("/external-data/post")
     public Mono<String> postExternalData() {
+        log.info("{{\"method\":\"postExternalData\", \"API\":\"/external-data/post\", \"http_method\":\"POST\", \"external_service\": true}}");
         return webClient.get()
                 .uri("/api/post")
                 .retrieve()
