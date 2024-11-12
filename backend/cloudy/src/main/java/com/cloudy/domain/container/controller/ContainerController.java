@@ -14,11 +14,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.Map;
+
 @Tag(name = "컨테이너 관련 API")
 @RestController
 @Slf4j
-@RequestMapping("/containers")
+    @RequestMapping("/containers")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class ContainerController {
 
     private final ContainerService containerService;
@@ -26,11 +30,15 @@ public class ContainerController {
     @Operation(summary = "서버 전체 컨테이너 사용량 조회 API", description = "서버 전체 컨테이너 사용량을 전체 조회합니다.")
     @SwaggerApiSuccess(description = "서버 전체 컨테이너 사용량 조회를 성공했습니다.")
     @GetMapping("/usage")
-    public Response<ContainerGetUsagesResponses> getContainerUsages(@Parameter(name = "서버 id", example = "1") @RequestParam Long serverId,
+    public Response<Map<String,Long>> getContainerUsages(@Parameter(name = "서버 id", example = "1") @RequestParam Long serverId,
                                           @Login Long memberId,
                                           @Parameter(name = "시작일시", example = "2024-11-03 14:27:00") @RequestParam String startDateTime,
-                                          @Parameter(name = "종료일시", example = "2024-11-04 14:27:00") @RequestParam String endDateTime) {
-        ContainerGetUsagesResponses response = containerService.getContainerUsages(new ContainerGetUsagesRequest(serverId, memberId, startDateTime, endDateTime));
+                                          @Parameter(name = "종료일시", example = "2024-11-04 14:27:00") @RequestParam String endDateTime) throws IOException {
+        System.out.println("server : " + serverId);
+        Map<String,Long> response = containerService.getContainerUsages(new ContainerGetUsagesRequest(serverId, memberId, startDateTime, endDateTime));
+        for (String key : response.keySet()) {
+            System.out.println(key + ":" + response.get(key));
+        }
         return Response.SUCCESS(response);
     }
 
