@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Slf4j
@@ -41,7 +38,7 @@ public class ContainerServiceImpl implements ContainerService {
     @Override
     public Map<String,Long> getContainerUsages(ContainerGetUsagesRequest request) throws IOException {
         // 다중 인덱스 로그를 가져온다.
-        Map<String, Long> hm = new HashMap<>();
+        Map<String, Long> hm = new TreeMap<>();
         // 1. 현재 타임스탬프를 가져온다.
         LocalDateTime now = LocalDateTime.now();
 
