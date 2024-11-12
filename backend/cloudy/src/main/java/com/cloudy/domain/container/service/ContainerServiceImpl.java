@@ -1,6 +1,12 @@
 package com.cloudy.domain.container.service;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.query_dsl.MatchAllQuery;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.TotalHits;
 import com.cloudy.domain.container.model.Container;
+import com.cloudy.domain.container.model.ContainerLog;
 import com.cloudy.domain.container.model.dto.request.*;
 import com.cloudy.domain.container.model.dto.response.*;
 import com.cloudy.domain.container.repository.ContainerRepository;
@@ -8,18 +14,71 @@ import com.cloudy.domain.server.model.Server;
 import com.cloudy.domain.server.repository.ServerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ContainerServiceImpl implements ContainerService {
+    @Autowired
     private final ServerRepository serverRepository;
+    @Autowired
     private final ContainerRepository containerRepository;
+    @Autowired
+    private final ElasticsearchClient elasticsearchClient;
+
+
     @Override
-    public ContainerGetUsagesResponses getContainerUsages(ContainerGetUsagesRequest request) {
-        return null;
+    public Map<String,Long> getContainerUsages(ContainerGetUsagesRequest request) throws IOException {
+        // 다중 인덱스 로그를 가져온다.
+        Map<String, Long> hm = new HashMap<>();
+        // 1. 현재 타임스탬프를 가져온다.
+        LocalDateTime now = LocalDateTime.now();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM");
+
+        // 2. curFormatDate에서 1년전 데이터 ~~~~ Array 만들기~~
+        List<String> logs = new ArrayList<>();
+
+        for (int i =0; i< 12 ; i++) {
+            LocalDateTime pastDate = now.minusMonths(i);
+            String tempDate = "server-logs-"+pastDate.format(formatter);
+            logs.add(tempDate);
+        }
+
+        // 3. 위 로그로, 모든 데이터 조회
+        for (String log: logs){
+            // 3-1. 문서기준
+            try {
+                SearchResponse<ContainerLog> sr = elasticsearchClient.search(s -> s
+                        .index(log+"*") // 인덱스 지정
+                        .query(q -> q.matchAll(t->t)), ContainerLog.class);
+
+
+                long total = sr.hits().total().value();
+                hm.put(log,total);
+            }catch (Exception e){
+                if (e.getMessage().contains("index_not_found_exception")) {
+                    System.out.println("Index not found, skipping: " + log);
+                } else {
+                    e.printStackTrace();
+                }
+            }
+
+
+        }
+
+        return hm;
     }
 
     @Override
