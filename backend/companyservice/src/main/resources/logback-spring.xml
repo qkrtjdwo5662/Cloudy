@@ -12,6 +12,10 @@
         <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
 
         <reconnectionDelay>10000</reconnectionDelay>
+        <!-- DEBUG 이상 레벨만 Logstash로 전송 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
     </appender>
 
     <root level="INFO">
