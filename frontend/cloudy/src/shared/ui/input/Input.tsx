@@ -13,6 +13,7 @@ interface InputProps {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onButtonClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  maxLength?: number;
 }
 
 export const Input = ({
@@ -27,6 +28,7 @@ export const Input = ({
   value,
   onChange,
   onButtonClick,
+  maxLength,
 }: InputProps) => {
   return (
     <div className="flex flex-col gap-4">
@@ -43,6 +45,7 @@ export const Input = ({
           className="h-40 w-full rounded-8 border border-gray-200 p-16"
           onChange={onChange}
           value={value}
+          maxLength={maxLength}
         />
         {showButton && (
           <div>
