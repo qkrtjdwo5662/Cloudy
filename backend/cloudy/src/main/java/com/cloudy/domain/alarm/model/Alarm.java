@@ -15,7 +15,7 @@ public class Alarm extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long alramId;
+    private Long alarmId;
 
     @Column(length = 100, nullable = false)
     private String serverName;
