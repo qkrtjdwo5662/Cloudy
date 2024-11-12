@@ -1,4 +1,4 @@
-import { fetchAlarm } from "../lib";
+import { fetchAlarm } from "../lib/fetchers";
 import { AlarmGetResponses } from "../model/types";
 import { useQuery } from "@tanstack/react-query";
 

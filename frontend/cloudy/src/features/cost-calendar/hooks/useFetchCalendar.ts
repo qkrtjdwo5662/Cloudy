@@ -1,4 +1,4 @@
-import { fetchCalendar } from "../lib";
+import { fetchCalendar } from "../lib/fetchers";
 import { CostCalendarResponse } from "../model/types";
 import { useQuery } from "@tanstack/react-query";
 

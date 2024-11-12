@@ -3,7 +3,7 @@ import Table from "../server-usage/table";
 import CostBarChart from "./barChart";
 import Calendar from "../dashboard/Calendar";
 import { Title } from "@/shared/ui";
-import { useFetchCalendar } from "@/features/cost-calendar/hooks/fetchCalendar";
+import { useFetchCalendar } from "@/features/cost-calendar";
 
 const sampleData = [
   { containerName: "컨테이너1", callCount: "14회" },
