@@ -1,12 +1,18 @@
 package com.cloudy.domain.member.controller;
 
+import com.cloudy.domain.member.model.dto.response.NormalMemberGetResponses;
 import com.cloudy.domain.member.service.MemberService;
+import com.cloudy.global.config.guard.Login;
+import com.cloudy.global.config.swagger.SwaggerApiError;
+import com.cloudy.global.config.swagger.SwaggerApiSuccess;
+import com.cloudy.global.error.ErrorCode;
 import com.cloudy.global.response.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,5 +37,13 @@ public class MemberController {
     @GetMapping("/super/test")
     public Response<?> superTest() {
         return Response.SUCCESS();
+    }
+
+    @Operation(summary = "일반 회원 조회 api", description = "일반 회원 조회 get")
+    @SwaggerApiSuccess(description = "일반 회원 조회 api")
+    @GetMapping("/normal")
+    public Response<NormalMemberGetResponses> getNormalMember(@Login Long memberId){
+        NormalMemberGetResponses responses = memberService.getNormalMembers(memberId);
+        return Response.SUCCESS(responses, "일반회원 리스트 조회 성공");
     }
 }

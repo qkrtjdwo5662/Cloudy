@@ -5,7 +5,7 @@ import com.cloudy.domain.member.exception.NormalRegisterFailException;
 import com.cloudy.domain.member.exception.ReissueFailException;
 import com.cloudy.domain.member.model.Member;
 import com.cloudy.domain.member.model.dto.request.MemberLoginRequest;
-import com.cloudy.domain.member.model.dto.request.NomalMemberCreateRequest;
+import com.cloudy.domain.member.model.dto.request.NormalMemberCreateRequest;
 import com.cloudy.domain.member.model.dto.request.SuperMemberCreateRequest;
 import com.cloudy.domain.member.model.dto.request.MemberReissueRequest;
 import com.cloudy.domain.member.model.dto.response.MemberLoginResponse;
@@ -53,7 +53,7 @@ public class AuthServiceImpl implements AuthService{
     * normal 계정 회원가입.
     * */
     @Override
-    public void normalRegister(NomalMemberCreateRequest memberCreateRequest) {
+    public void normalRegister(NormalMemberCreateRequest memberCreateRequest) {
         if(memberRepository.existsByLoginId(memberCreateRequest.getLoginId())){
             throw new NormalRegisterFailException(ErrorCode.DUPLICATED_MEMBER, "해당 ID를 가진 회원이 이미 존재합니다.");
         }
@@ -85,9 +85,9 @@ public class AuthServiceImpl implements AuthService{
         Server server = null;
         if(!serverList.isEmpty()){
             server = serverList.getFirst();
-            return MemberLoginResponse.from(jwtToken, server, member.getRole());
+            return MemberLoginResponse.from(jwtToken, server, member.getRole(), member.getBusinessRegistrationNumber());
         }else{
-            return MemberLoginResponse.of(jwtToken.getAccessToken(), jwtToken.getRefreshToken(), null, null, member.getRole());
+            return MemberLoginResponse.of(jwtToken.getAccessToken(), jwtToken.getRefreshToken(), null, null, member.getRole(), member.getBusinessRegistrationNumber());
         }
 
     }
@@ -95,7 +95,7 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public MemberLoginResponseOriginal loginOriginal(MemberLoginRequest request) {
         Member member = memberRepository.findByLoginId(request.getLoginId())
-                .orElseThrow(()->new LoginFailException(ErrorCode.NOT_EXIST_MEMBER,"해당하는 계정이 존재하지 않습니다."));
+                .orElseThrow(()->new LoginFailException(ErrorCode.NOT_EXIST_MEMBER, "해당하는 계정이 존재하지 않습니다."));
 
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new LoginFailException(ErrorCode.NOT_MATCH_PASSWORD, "아이디와 비밀번호 정보가 일치하지 않습니다.");
