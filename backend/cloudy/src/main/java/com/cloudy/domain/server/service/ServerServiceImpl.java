@@ -149,7 +149,10 @@ public class ServerServiceImpl implements ServerService {
                 double userCpuPercent = Double.parseDouble(userCpu.split(" ")[0]);
                 double sysCpuPercent = Double.parseDouble(sysCpu.split(" ")[0]);
                 double cpuUsage = userCpuPercent + sysCpuPercent; // 전체 CPU 사용률
+                System.out.println("user Cpu : " + userCpu + " sysCpu" + sysCpu);
+                System.out.println(cpuUsage);
                 usage.setCpuPercent(cpuUsage);
+
             }
 
             if (line.contains("MiB Mem :")) {
@@ -162,6 +165,8 @@ public class ServerServiceImpl implements ServerService {
                 // total과 free 값에서 숫자만 추출
                 double total = Double.parseDouble(totalPart.split(" ")[0].trim());
                 double memuse = Double.parseDouble(usagePart.split(" ")[0].trim());
+                System.out.println("total part" + totalPart + " usagePart" + usagePart);
+                System.out.println(total + " " + memuse);
                 usage.setMemUsage(memuse);
                 usage.setMemLimit(total);
             }
