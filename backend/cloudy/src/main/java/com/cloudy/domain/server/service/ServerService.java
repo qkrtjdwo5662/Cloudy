@@ -1,13 +1,11 @@
 package com.cloudy.domain.server.service;
 
-import com.cloudy.domain.server.model.dto.request.ServerCreateRequest;
-import com.cloudy.domain.server.model.dto.request.ServerUpdateRequest;
-import com.cloudy.domain.server.model.dto.request.ThresholdCreateRequest;
-import com.cloudy.domain.server.model.dto.request.ThresholdUpdateRequest;
+import com.cloudy.domain.server.model.dto.request.*;
 import com.cloudy.domain.server.model.dto.response.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public interface ServerService {
     ServerResponse createServer(ServerCreateRequest request, Long memberId);
@@ -26,4 +24,9 @@ public interface ServerService {
 
     CpuUsage getCPUData(Long containerId) throws IOException;
 
+    ServerMonthCostResponse monthServerCost(ServerMonthCostRequest request);
+
+    ServerDailyCostResponse dailyServerCost(ServerDailyCostRequest request);
+
+    Map<String, Double> weeklyServerCost(ServerRecentlyWeekCostRequest request);
 }

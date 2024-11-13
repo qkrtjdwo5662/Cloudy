@@ -1,29 +1,35 @@
 package com.cloudy.domain.server.service;
 
-import co.elastic.clients.elasticsearch.nodes.Cpu;
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.cloudy.domain.instance.model.Instance;
 import com.cloudy.domain.instance.repository.InstanceRepository;
 import com.cloudy.domain.member.model.Member;
 import com.cloudy.domain.member.repository.MemberRepository;
 import com.cloudy.domain.server.model.Server;
-import com.cloudy.domain.server.model.dto.request.ServerCreateRequest;
-import com.cloudy.domain.server.model.dto.request.ServerUpdateRequest;
-import com.cloudy.domain.server.model.dto.request.ThresholdCreateRequest;
-import com.cloudy.domain.server.model.dto.request.ThresholdUpdateRequest;
+import com.cloudy.domain.server.model.dto.request.*;
 import com.cloudy.domain.server.model.dto.response.*;
 import com.cloudy.domain.server.repository.ServerRepository;
-import com.cloudy.global.util.DockerStatsParser;
+import com.cloudy.domain.serviceusage.model.ServiceUsage;
+import com.cloudy.domain.serviceusage.repository.ServiceUsageRepository;
 import jakarta.transaction.Transactional;
-import jdk.jfr.Threshold;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -36,6 +42,8 @@ public class ServerServiceImpl implements ServerService {
     private final ServerRepository serverRepository;
     private final MemberRepository memberRepository;
     private final InstanceRepository instanceRepository;
+    private final ElasticsearchClient elasticsearchClient;
+    private final ServiceUsageRepository serviceUsageRepository;
 
     @Override
     public ServerResponse createServer(ServerCreateRequest request, Long memberId) {
@@ -180,6 +188,208 @@ public class ServerServiceImpl implements ServerService {
         return usage;
     }
 
+    @Override
+    public ServerMonthCostResponse monthServerCost(ServerMonthCostRequest request) {
+        Map<String, Long> apiUsageMap = new TreeMap<>();
 
+        // 오늘 날짜로 인덱스 설정
+        String date = request.getDate().format(DateTimeFormatter.ofPattern("yyyy.MM"));
+        String searchIndex = "server-logs-" + date + "*";
+
+        System.out.println(searchIndex);
+
+        try {
+            SearchResponse<Map> searchResponse = elasticsearchClient.search(s -> s
+                            .index(searchIndex)
+                            .query(q -> q
+                                    .matchPhrase(m -> m
+                                            .field("message")
+                                            .query("external_service: true")
+                                    )
+                            ),
+                    Map.class
+            );
+
+            for (Hit<Map> hit : searchResponse.hits().hits()) {
+                // 각 히트의 소스에서 `message` 필드를 가져옴
+                Map<String, Object> sourceMap = hit.source();
+                if (sourceMap != null && sourceMap.containsKey("message")) {
+                    String message = sourceMap.get("message").toString();
+                    System.out.println("Message: " + message);
+
+                    // message에서 API 경로 추출하여 호출 횟수를 기록
+                    String apiPath = extractApiPath(message);
+                    apiUsageMap.put(apiPath, apiUsageMap.getOrDefault(apiPath, 0L) + 1);
+                } else {
+                    System.out.println("Message field is missing or source is null");
+                }
+            }
+
+        } catch (Exception e) {
+            if (e.getMessage().contains("index_not_found_exception")) {
+                e.printStackTrace();
+            } else {
+                e.printStackTrace();
+            }
+        }
+
+        Server server = serverRepository.findById(Long.valueOf(request.getServerId())).orElseThrow(()-> new NotFoundException("not found"));
+        Instance instance = server.getInstance();
+
+        double accumulatedCost = instance.getCostPerHour() * 24 * request.getDate().getDayOfMonth();
+        // 인스턴스 누적 비용
+
+        double expectedCost = instance.getCostPerHour() * 24 * 30;
+        // 인스턴스 예상 월 비용
+
+        double serviceCost = 0;
+
+        for(String api : apiUsageMap.keySet()){
+            ServiceUsage serviceUsage = serviceUsageRepository.findServiceUsageByServiceName(api);
+            Long count = apiUsageMap.get(api);
+            serviceCost += serviceUsage.getServiceCost() * count;
+        }
+
+        accumulatedCost += serviceCost;
+        expectedCost += (serviceCost / request.getDate().getDayOfMonth() )* 30;
+
+        return new ServerMonthCostResponse(Double.parseDouble(String.format("%.3f", accumulatedCost))
+                , Double.parseDouble(String.format("%.3f", expectedCost)));
+    }
+
+    @Override
+    public ServerDailyCostResponse dailyServerCost(ServerDailyCostRequest request) {
+        Map<String, Long> apiUsageMap = new TreeMap<>();
+
+        // 오늘 날짜로 인덱스 설정
+        String date = request.getDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        String searchIndex = "server-logs-" + date + "*";
+
+        try {
+            SearchResponse<Map> searchResponse = elasticsearchClient.search(s -> s
+                            .index(searchIndex)
+                            .query(q -> q
+                                    .matchPhrase(m -> m
+                                            .field("message")
+                                            .query("external_service: true")
+                                    )
+                            ),
+                    Map.class
+            );
+
+            for (Hit<Map> hit : searchResponse.hits().hits()) {
+                // 각 히트의 소스에서 `message` 필드를 가져옴
+                Map<String, Object> sourceMap = hit.source();
+                if (sourceMap != null && sourceMap.containsKey("message")) {
+                    String message = sourceMap.get("message").toString();
+                    System.out.println("Message: " + message);
+
+                    // message에서 API 경로 추출하여 호출 횟수를 기록
+                    String apiPath = extractApiPath(message);
+                    apiUsageMap.put(apiPath, apiUsageMap.getOrDefault(apiPath, 0L) + 1);
+                } else {
+                    System.out.println("Message field is missing or source is null");
+                }
+            }
+
+        } catch (Exception e) {
+            if (e.getMessage().contains("index_not_found_exception")) {
+                e.printStackTrace();
+            } else {
+                e.printStackTrace();
+            }
+        }
+
+        Server server = serverRepository.findById(Long.valueOf(request.getServerId())).orElseThrow(()-> new NotFoundException("not found"));
+        Instance instance = server.getInstance();
+
+        double cost = instance.getCostPerHour() * 24;
+
+        for(String api : apiUsageMap.keySet()){
+            ServiceUsage serviceUsage = serviceUsageRepository.findServiceUsageByServiceName(api);
+            System.out.println(api);
+            Long count = apiUsageMap.get(api);
+            cost += serviceUsage.getServiceCost() * count;
+        }
+
+        return new ServerDailyCostResponse(Double.parseDouble(String.format("%.3f", cost)));
+    }
+
+
+    @Override
+    public Map<String, Double> weeklyServerCost(ServerRecentlyWeekCostRequest request) {
+        Map<String, Double> dailyCosts = new TreeMap<>();
+
+        // 요청 날짜로부터 일주일간의 날짜 설정
+        LocalDate endDate = request.getDate();
+        LocalDate startDate = endDate.minusDays(6);
+
+        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+            String formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+            String searchIndex = "server-logs-" + formattedDate + "*";
+            Map<String, Long> apiUsageMap = new TreeMap<>();
+
+            try {
+                // Elasticsearch 검색 요청
+                SearchResponse<Map> searchResponse = elasticsearchClient.search(s -> s
+                                .index(searchIndex)
+                                .query(q -> q
+                                        .matchPhrase(m -> m
+                                                .field("message")
+                                                .query("external_service: true")
+                                        )
+                                ),
+                        Map.class
+                );
+
+                for (Hit<Map> hit : searchResponse.hits().hits()) {
+                    Map<String, Object> sourceMap = hit.source();
+                    if (sourceMap != null && sourceMap.containsKey("message")) {
+                        String message = sourceMap.get("message").toString();
+                        String apiPath = extractApiPath(message);
+                        apiUsageMap.put(apiPath, apiUsageMap.getOrDefault(apiPath, 0L) + 1);
+                    } else {
+                        System.out.println("Message field is missing or source is null");
+                    }
+                }
+
+            } catch (Exception e) {
+                if (e.getMessage().contains("index_not_found_exception")) {
+                    System.out.println("Index not found for date: " + formattedDate);
+                } else {
+                    e.printStackTrace();
+                }
+            }
+
+            // 서버 인스턴스 비용 계산
+            Server server = serverRepository.findById(Long.valueOf(request.getServerId()))
+                    .orElseThrow(() -> new NotFoundException("Server not found"));
+            Instance instance = server.getInstance();
+            double dailyCost = instance.getCostPerHour() * 24;
+
+            // API 사용 비용 계산
+            for (String api : apiUsageMap.keySet()) {
+                ServiceUsage serviceUsage = serviceUsageRepository.findServiceUsageByServiceName(api);
+                Long count = apiUsageMap.get(api);
+                dailyCost += serviceUsage.getServiceCost() * count;
+            }
+
+            // 날짜별 비용 저장 (소수점 3자리까지 반올림)
+            dailyCosts.put(formattedDate, Double.parseDouble(String.format("%.3f", dailyCost)));
+        }
+
+        return dailyCosts;
+    }
+
+
+    // API 경로 추출 메서드
+    private String extractApiPath(String message) {
+        Pattern pattern = Pattern.compile("API: (/[^,]+)");
+        Matcher matcher = pattern.matcher(message);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return "unknown";
+    }
 
 }

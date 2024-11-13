@@ -1,6 +1,9 @@
 package com.cloudy.domain.serviceusage.controller;
 
+import com.cloudy.domain.serviceusage.model.dto.request.ServiceUsageCreateRequest;
+import com.cloudy.domain.serviceusage.model.dto.request.ServiceUsageGetServiceCostRequest;
 import com.cloudy.domain.serviceusage.model.dto.request.ServiceUsageRequest;
+import com.cloudy.domain.serviceusage.model.dto.response.ServiceUsageGetServiceCostResponse;
 import com.cloudy.domain.serviceusage.model.dto.response.ServiceUsageResponse;
 import com.cloudy.domain.serviceusage.service.ServiceUsageService;
 import com.cloudy.global.config.guard.Login;
@@ -32,5 +35,24 @@ public class ServiceUsageController {
         ServiceUsageResponse response = serviceUsageService.updateServiceUsage(request, memberId);
         return Response.SUCCESS(response, "Service usage updated successfully");
     }
+
+    @Operation(summary = "서비스 생성", description = "내/외부 서비스 생성 api")
+    @SwaggerApiSuccess(description = "서비스 생성 성공")
+    @PostMapping("/create")
+    public Response<ServiceUsageResponse> createService(
+            @Valid @RequestBody ServiceUsageCreateRequest request) {
+        ServiceUsageResponse response = serviceUsageService.createService(request);
+        return Response.SUCCESS(response, "서비스 생성 성공");
+    }
+
+    @Operation(summary = "서비스 비용 호출", description = "외부 서비스 비용 호출")
+    @SwaggerApiSuccess(description = "외부 서비스 비용 호출")
+    @PostMapping("/external/cost")
+    public Response<ServiceUsageGetServiceCostResponse> getServiceCost(
+            @Valid @RequestBody ServiceUsageGetServiceCostRequest request) {
+        ServiceUsageGetServiceCostResponse response = serviceUsageService.getServiceCost(request);
+        return Response.SUCCESS(response, "서비스 생성 성공");
+    }
+
 
 }
