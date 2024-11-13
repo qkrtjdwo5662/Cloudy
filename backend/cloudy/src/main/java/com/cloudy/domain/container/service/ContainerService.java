@@ -35,4 +35,6 @@ public interface ContainerService {
 
     void createContainer(ContainerCreateRequest containerCreateRequest, Long serverId);
 
+    // Week , Daily에 맞게 사용량 리턴.
+    Map<String, Long> getContainerUsageAgg(ContainerGetUsageDailyRequest request);
 }
