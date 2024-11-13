@@ -10,11 +10,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-@Schema(name = "서버 일자별 비용 요약 요청", description = "서버 일자별 비용 요약 요청 dto")
+@Schema(name = "서버 최근 일주일 비용 요약 요청", description = "서버 최근 일주일 비용 요약 요청 dto")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @Getter
-public class ServerDailyCostRequest {
+public class ServerRecentlyWeekCostRequest {
     @Schema(description = "서버 Id", example = "1")
     @NotNull(message = "서버 아이디를 입력하세요.")
     private Long serverId;

@@ -22,6 +22,7 @@ import org.webjars.NotFoundException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -195,6 +196,8 @@ public class ServerServiceImpl implements ServerService {
         String date = request.getDate().format(DateTimeFormatter.ofPattern("yyyy.MM"));
         String searchIndex = "server-logs-" + date + "*";
 
+        System.out.println(searchIndex);
+
         try {
             SearchResponse<Map> searchResponse = elasticsearchClient.search(s -> s
                             .index(searchIndex)
@@ -243,7 +246,6 @@ public class ServerServiceImpl implements ServerService {
 
         for(String api : apiUsageMap.keySet()){
             ServiceUsage serviceUsage = serviceUsageRepository.findServiceUsageByServiceName(api);
-            System.out.println(api);
             Long count = apiUsageMap.get(api);
             serviceCost += serviceUsage.getServiceCost() * count;
         }
@@ -311,6 +313,72 @@ public class ServerServiceImpl implements ServerService {
         }
 
         return new ServerDailyCostResponse(Double.parseDouble(String.format("%.3f", cost)));
+    }
+
+
+    @Override
+    public Map<String, Double> weeklyServerCost(ServerRecentlyWeekCostRequest request) {
+        Map<String, Double> dailyCosts = new TreeMap<>();
+
+        // 요청 날짜로부터 일주일간의 날짜 설정
+        LocalDate endDate = request.getDate();
+        LocalDate startDate = endDate.minusDays(6);
+
+        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+            String formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+            String searchIndex = "server-logs-" + formattedDate + "*";
+            Map<String, Long> apiUsageMap = new TreeMap<>();
+
+            try {
+                // Elasticsearch 검색 요청
+                SearchResponse<Map> searchResponse = elasticsearchClient.search(s -> s
+                                .index(searchIndex)
+                                .query(q -> q
+                                        .matchPhrase(m -> m
+                                                .field("message")
+                                                .query("external_service: true")
+                                        )
+                                ),
+                        Map.class
+                );
+
+                for (Hit<Map> hit : searchResponse.hits().hits()) {
+                    Map<String, Object> sourceMap = hit.source();
+                    if (sourceMap != null && sourceMap.containsKey("message")) {
+                        String message = sourceMap.get("message").toString();
+                        String apiPath = extractApiPath(message);
+                        apiUsageMap.put(apiPath, apiUsageMap.getOrDefault(apiPath, 0L) + 1);
+                    } else {
+                        System.out.println("Message field is missing or source is null");
+                    }
+                }
+
+            } catch (Exception e) {
+                if (e.getMessage().contains("index_not_found_exception")) {
+                    System.out.println("Index not found for date: " + formattedDate);
+                } else {
+                    e.printStackTrace();
+                }
+            }
+
+            // 서버 인스턴스 비용 계산
+            Server server = serverRepository.findById(Long.valueOf(request.getServerId()))
+                    .orElseThrow(() -> new NotFoundException("Server not found"));
+            Instance instance = server.getInstance();
+            double dailyCost = instance.getCostPerHour() * 24;
+
+            // API 사용 비용 계산
+            for (String api : apiUsageMap.keySet()) {
+                ServiceUsage serviceUsage = serviceUsageRepository.findServiceUsageByServiceName(api);
+                Long count = apiUsageMap.get(api);
+                dailyCost += serviceUsage.getServiceCost() * count;
+            }
+
+            // 날짜별 비용 저장 (소수점 3자리까지 반올림)
+            dailyCosts.put(formattedDate, Double.parseDouble(String.format("%.3f", dailyCost)));
+        }
+
+        return dailyCosts;
     }
 
 

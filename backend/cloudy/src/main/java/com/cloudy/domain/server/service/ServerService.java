@@ -5,6 +5,7 @@ import com.cloudy.domain.server.model.dto.response.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public interface ServerService {
     ServerResponse createServer(ServerCreateRequest request, Long memberId);
@@ -26,4 +27,6 @@ public interface ServerService {
     ServerMonthCostResponse monthServerCost(ServerMonthCostRequest request);
 
     ServerDailyCostResponse dailyServerCost(ServerDailyCostRequest request);
+
+    Map<String, Double> weeklyServerCost(ServerRecentlyWeekCostRequest request);
 }
