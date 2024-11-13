@@ -24,6 +24,7 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/servers")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class ServerController {
 
     private final ServerService serverService;
