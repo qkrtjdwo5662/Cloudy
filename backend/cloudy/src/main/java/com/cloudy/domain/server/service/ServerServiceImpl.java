@@ -132,7 +132,7 @@ public class ServerServiceImpl implements ServerService {
     @Override
     public CpuUsage getCPUData(Long containerId) throws IOException {
         // process Builder로 docker image stats 가져오기
-        String[] commands = {"top","-n","1"}; // 이건 나중에 하드코딩 풀어야함.
+        String[] commands = {"top", "-b", "-n", "1"}; // 이건 나중에 하드코딩 풀어야함.
 
         ProcessBuilder processBuilder = new ProcessBuilder(commands);
         Process result = processBuilder.start();
@@ -141,6 +141,7 @@ public class ServerServiceImpl implements ServerService {
         String line;
         CpuUsage usage = new CpuUsage();
         while ((line = reader.readLine()) != null) {
+            System.out.println("cur Line : " + line);
             if (line.contains("%Cpu(s):")) {
                 // CPU 사용률 추출
                 String[] cpuParts = line.split(",");
