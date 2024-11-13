@@ -44,12 +44,14 @@ public class MemberController {
         return Response.SUCCESS(responses, "일반회원 리스트 조회 성공");
     }
 
-    @Operation(summary = "일반 회원 조회 api", description = "일반 회원 조회 get")
-    @SwaggerApiSuccess(description = "일반 회원 조회 api")
+    @Operation(summary = "일반 회원 삭제 api", description = "일반 회원 삭제")
+    @SwaggerApiSuccess(description = "일반 회원 삭제 api")
     @DeleteMapping("/delete")
-    public Response<NormalMemberGetResponses> deleteNormalMember(@Login Long memberId){
-        NormalMemberGetResponses responses = memberService.getNormalMembers(memberId);
-        return Response.SUCCESS(responses, "일반회원 리스트 조회 성공");
+    public Response<NormalMemberGetResponses> deleteNormalMember(
+            @Login Long sueprMemberId,
+            @RequestParam Long nomalMemberId){
+        memberService.deleteNormalMember(sueprMemberId, nomalMemberId);
+        return Response.SUCCESS(null, "일반회원 삭제 성공");
     }
 
 }
