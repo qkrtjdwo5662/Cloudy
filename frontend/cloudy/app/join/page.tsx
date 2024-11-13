@@ -21,6 +21,7 @@ export default function JoinPage() {
   const [idWarning, setIdWarning] = useState("");
   const [idChecked, setIdChecked] = useState(false);
   const [numberChecked, setNumberChecked] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const { idAvailable, idLoading, idError, checkIdDuplicate } =
     useCheckIdDuplicate();
@@ -85,6 +86,33 @@ export default function JoinPage() {
       setNumberChecked(false);
     }
   }, [idAvailable, idLoading, idError, numberAvailable, numLoading, numError]);
+
+  useEffect(() => {
+    const isValid =
+      !idWarning &&
+      !companyWarning &&
+      !numberWarning &&
+      !passwordWarning &&
+      idChecked &&
+      numberChecked &&
+      companyName.length > 0 &&
+      number.length > 0 &&
+      password.length > 0 &&
+      confirmPassword.length > 0;
+
+    setIsFormValid(isValid);
+  }, [
+    idWarning,
+    companyWarning,
+    numberWarning,
+    passwordWarning,
+    idChecked,
+    numberChecked,
+    companyName,
+    number,
+    password,
+    confirmPassword,
+  ]);
 
   useEffect(() => {
     if (
@@ -199,7 +227,7 @@ export default function JoinPage() {
             design="fill"
             mainText={loading ? "회원 가입 중..." : "회원 가입"}
             type="submit"
-            disabled={loading}
+            disabled={!isFormValid || loading}
           />
           {error && <p className="text-red-500">{error}</p>}
         </form>
