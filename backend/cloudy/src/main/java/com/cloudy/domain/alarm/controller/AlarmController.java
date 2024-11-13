@@ -8,6 +8,7 @@ import com.cloudy.global.config.swagger.SwaggerApiSuccess;
 import com.cloudy.global.response.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -60,6 +61,13 @@ public class AlarmController {
     @GetMapping("/subscribe")
     public SseEmitter subscribe(@Login Long memberId) {
         return alarmService.subscribe(memberId);
+    }
+
+    @Operation(summary = "모든 SSE 연결 해제", description = "서버에서 모든 SSE 연결을 강제 종료합니다.")
+    @PostMapping("/disconnect-all")
+    public ResponseEntity<String> disconnectAllEmitters() {
+        alarmService.disconnectAllEmitters(); // 모든 연결 해제
+        return ResponseEntity.ok("모든 SSE 연결이 강제 종료되었습니다.");
     }
 
 }

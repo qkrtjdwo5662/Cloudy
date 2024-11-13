@@ -122,4 +122,18 @@ public class AlarmServiceImpl implements AlarmService {
         }
     }
 
+    @Override
+    public void disconnectAllEmitters() {
+        emitters.forEach((memberId, emitter) -> {
+            try {
+                emitter.complete(); // 연결 정상 종료
+            } catch (Exception e) {
+//                log.error("SSE 연결 종료 중 오류 발생: Member ID - {}", memberId, e);
+            } finally {
+                emitters.remove(memberId); // 연결 해제 후 제거
+            }
+        });
+//        log.info("모든 SSE 연결이 강제 종료되었습니다.");
+    }
+
 }
