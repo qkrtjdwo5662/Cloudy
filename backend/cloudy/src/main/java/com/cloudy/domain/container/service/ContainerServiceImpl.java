@@ -120,7 +120,7 @@ public class ContainerServiceImpl implements ContainerService {
             logs = generateDateList.getIndexBasedOnDate(now);
         }else if (request.getSortTypes().equals("Week")) {
             logs = generateDateList.getIndexBasedOnWeek(now);
-        }else {
+        } else {
             return null;
         }
 
