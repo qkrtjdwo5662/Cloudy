@@ -132,20 +132,41 @@ public class ServerServiceImpl implements ServerService {
     @Override
     public CpuUsage getCPUData(Long containerId) throws IOException {
         // process Builder로 docker image stats 가져오기
-        String[] commands = {"docker","stats","--no-stream","companyservice-be"}; // 이건 나중에 하드코딩 풀어야함.
+        String[] commands = {"top","-n","1"}; // 이건 나중에 하드코딩 풀어야함.
 
         ProcessBuilder processBuilder = new ProcessBuilder(commands);
         Process result = processBuilder.start();
         BufferedReader reader = new BufferedReader(new InputStreamReader(result.getInputStream()));
         reader.readLine(); // 첫번째 줄 날리기
-        String line = reader.readLine();
-        String[] parts = line.split("\\s+");
-        CpuUsage cpuUsage = CpuUsage.builder().cpuPercent(DockerStatsParser.parseCpuUsage(parts[2]))
-                .memUsage(DockerStatsParser.parseMemory(parts[3]))
-                .memUsage(DockerStatsParser.parseMemory(parts[4]))
-                .memPercent(DockerStatsParser.parseCpuUsage(parts[5]))
-                .build();
-        return cpuUsage;
+        String line;
+        CpuUsage usage = new CpuUsage();
+        while ((line = reader.readLine()) != null) {
+            if (line.contains("%Cpu(s):")) {
+                // CPU 사용률 추출
+                String[] cpuParts = line.split(",");
+                String userCpu = cpuParts[0].split(":")[1].trim(); // us (사용자 모드 CPU)
+                String sysCpu = cpuParts[1].trim();  // sy (시스템 모드 CPU)
+                double userCpuPercent = Double.parseDouble(userCpu.split(" ")[0]);
+                double sysCpuPercent = Double.parseDouble(sysCpu.split(" ")[0]);
+                double cpuUsage = userCpuPercent + sysCpuPercent; // 전체 CPU 사용률
+                usage.setCpuPercent(cpuUsage);
+            }
+
+            if (line.contains("MiB Mem :")) {
+                // 메모리 사용량 추출
+                String[] memParts = line.split(",");
+                // total과 free 값 추출
+                String totalPart = memParts[0].trim(); // "15986.8 total"
+                String usagePart = memParts[2].trim();  // "1186.5 free"
+
+                // total과 free 값에서 숫자만 추출
+                double total = Double.parseDouble(totalPart.split(" ")[0].trim());
+                double memuse = Double.parseDouble(usagePart.split(" ")[0].trim());
+                usage.setMemUsage(memuse);
+                usage.setMemLimit(total);
+            }
+        }
+        return usage;
     }
 
 
