@@ -11,6 +11,9 @@ import lombok.Getter;
 @Getter
 public class NormalMemberGetResponse {
 
+    @Schema(description = "member id", example = "1")
+    private Long memberId;
+
     @Schema(description = "department name", example = "developer")
     private String departmentName;
 
@@ -18,6 +21,6 @@ public class NormalMemberGetResponse {
     private String loginId;
 
     public static NormalMemberGetResponse from(Member member){
-        return new NormalMemberGetResponse(member.getDepartmentName(), member.getLoginId());
+        return new NormalMemberGetResponse(member.getMemberId(), member.getDepartmentName(), member.getLoginId());
     }
 }
