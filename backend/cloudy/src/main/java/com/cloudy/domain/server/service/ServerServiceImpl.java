@@ -1,5 +1,6 @@
 package com.cloudy.domain.server.service;
 
+import co.elastic.clients.elasticsearch.nodes.Cpu;
 import com.cloudy.domain.instance.model.Instance;
 import com.cloudy.domain.instance.repository.InstanceRepository;
 import com.cloudy.domain.member.model.Member;
@@ -9,17 +10,18 @@ import com.cloudy.domain.server.model.dto.request.ServerCreateRequest;
 import com.cloudy.domain.server.model.dto.request.ServerUpdateRequest;
 import com.cloudy.domain.server.model.dto.request.ThresholdCreateRequest;
 import com.cloudy.domain.server.model.dto.request.ThresholdUpdateRequest;
-import com.cloudy.domain.server.model.dto.response.MonitoringResponse;
-import com.cloudy.domain.server.model.dto.response.ServerDetailResponse;
-import com.cloudy.domain.server.model.dto.response.ServerResponse;
-import com.cloudy.domain.server.model.dto.response.ThresholdResponse;
+import com.cloudy.domain.server.model.dto.response.*;
 import com.cloudy.domain.server.repository.ServerRepository;
+import com.cloudy.global.util.DockerStatsParser;
 import jakarta.transaction.Transactional;
 import jdk.jfr.Threshold;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -126,4 +128,58 @@ public class ServerServiceImpl implements ServerService {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public CpuUsage getCPUData(Long containerId) throws IOException {
+        // process Builder로 docker image stats 가져오기
+        String[] commands = {"top", "-b", "-n", "1"}; // 이건 나중에 하드코딩 풀어야함.
+
+        ProcessBuilder processBuilder = new ProcessBuilder(commands);
+        Process result = processBuilder.start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(result.getInputStream()));
+        reader.readLine(); // 첫번째 줄 날리기
+        String line;
+        CpuUsage usage = new CpuUsage();
+        boolean memoryCheck = false;
+        while ((line = reader.readLine()) != null) {
+            System.out.println("cur Line : " + line);
+            if (line.contains("%Cpu(s):")) {
+                // CPU 사용률 추출
+                String[] cpuParts = line.split(",");
+                String userCpu = cpuParts[0].split(":")[1].trim(); // us (사용자 모드 CPU)
+                String sysCpu = cpuParts[1].trim();  // sy (시스템 모드 CPU)
+                double userCpuPercent = Double.parseDouble(userCpu.split(" ")[0]);
+                double sysCpuPercent = Double.parseDouble(sysCpu.split(" ")[0]);
+                double cpuUsage = userCpuPercent + sysCpuPercent; // 전체 CPU 사용률
+                System.out.println("user Cpu : " + userCpu + " sysCpu" + sysCpu);
+                System.out.println(cpuUsage);
+                usage.setCpuPercent(cpuUsage);
+
+            }
+
+            if (line.contains("MiB Mem :")) {
+                // 메모리 사용량 추출
+                String[] parts = line.split(":");
+                String[] memParts = parts[1].split(",");
+                // total과 free 값 추출
+                String totalPart = memParts[0].trim(); // "15986.8 total"
+                String usagePart = memParts[2].trim();  // "1186.5 free"
+                System.out.println("total part : " + totalPart + " usagePart : " + usagePart);
+                // total과 free 값에서 숫자만 추출
+                double total = Double.parseDouble(totalPart.split(" ")[0].trim());
+                double memuse = Double.parseDouble(usagePart.split(" ")[0].trim());
+                System.out.println(total + " " + memuse);
+                usage.setMemUsage(memuse);
+                usage.setMemLimit(total);
+                memoryCheck = true;
+            }
+            if (memoryCheck){
+                break;
+            }
+        }
+        return usage;
+    }
+
+
+
 }

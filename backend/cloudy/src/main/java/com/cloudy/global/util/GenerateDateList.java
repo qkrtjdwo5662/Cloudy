@@ -37,4 +37,28 @@ public final class GenerateDateList {
 
         return logs;
     }
+
+    public List<String> getIndexRecentWeek(LocalDate timeIndex){
+        // 특정 LocalDateTime 부터 -7일까지 리턴
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+
+        List<String> logs = new ArrayList<>();
+
+        for (int i =0; i< 7; i++){
+            // time index부터 1년전 데이터 리턴
+            LocalDate startWeek = timeIndex.minusDays(i);
+            logs.add(prefix+startWeek.format(formatter));
+        }
+        return logs;
+
+    }
+
+    public List<String> getIndex(LocalDate timeIndex){
+        // 특정 LocalDateTime Index 리턴.
+        List<String> logs = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        logs.add(prefix+timeIndex.format(formatter));
+        return logs;
+
+    }
 }
