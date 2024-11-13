@@ -4,11 +4,9 @@ import com.cloudy.domain.server.model.dto.request.ServerCreateRequest;
 import com.cloudy.domain.server.model.dto.request.ServerUpdateRequest;
 import com.cloudy.domain.server.model.dto.request.ThresholdCreateRequest;
 import com.cloudy.domain.server.model.dto.request.ThresholdUpdateRequest;
-import com.cloudy.domain.server.model.dto.response.MonitoringResponse;
-import com.cloudy.domain.server.model.dto.response.ServerDetailResponse;
-import com.cloudy.domain.server.model.dto.response.ServerResponse;
-import com.cloudy.domain.server.model.dto.response.ThresholdResponse;
+import com.cloudy.domain.server.model.dto.response.*;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ServerService {
@@ -25,4 +23,7 @@ public interface ServerService {
     MonitoringResponse monitorServer(Long serverId, int duration);
 
     List<ThresholdResponse> getThresholds(Long memberId);
+
+    CpuUsage getCPUData(Long containerId) throws IOException;
+
 }

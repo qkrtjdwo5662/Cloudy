@@ -1,5 +1,6 @@
 package com.cloudy.domain.server.service;
 
+import co.elastic.clients.elasticsearch.nodes.Cpu;
 import com.cloudy.domain.instance.model.Instance;
 import com.cloudy.domain.instance.repository.InstanceRepository;
 import com.cloudy.domain.member.model.Member;
@@ -9,17 +10,18 @@ import com.cloudy.domain.server.model.dto.request.ServerCreateRequest;
 import com.cloudy.domain.server.model.dto.request.ServerUpdateRequest;
 import com.cloudy.domain.server.model.dto.request.ThresholdCreateRequest;
 import com.cloudy.domain.server.model.dto.request.ThresholdUpdateRequest;
-import com.cloudy.domain.server.model.dto.response.MonitoringResponse;
-import com.cloudy.domain.server.model.dto.response.ServerDetailResponse;
-import com.cloudy.domain.server.model.dto.response.ServerResponse;
-import com.cloudy.domain.server.model.dto.response.ThresholdResponse;
+import com.cloudy.domain.server.model.dto.response.*;
 import com.cloudy.domain.server.repository.ServerRepository;
+import com.cloudy.global.util.DockerStatsParser;
 import jakarta.transaction.Transactional;
 import jdk.jfr.Threshold;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -126,4 +128,26 @@ public class ServerServiceImpl implements ServerService {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public CpuUsage getCPUData(Long containerId) throws IOException {
+        // process Builder로 docker image stats 가져오기
+        String[] commands = {"docker","stats","--no-stream","companyservice-be"}; // 이건 나중에 하드코딩 풀어야함.
+
+        ProcessBuilder processBuilder = new ProcessBuilder(commands);
+        Process result = processBuilder.start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(result.getInputStream()));
+        reader.readLine(); // 첫번째 줄 날리기
+        String line = reader.readLine();
+        String[] parts = line.split("\\s+");
+        CpuUsage cpuUsage = CpuUsage.builder().cpuPercent(DockerStatsParser.parseCpuUsage(parts[2]))
+                .memUsage(DockerStatsParser.parseMemory(parts[3]))
+                .memUsage(DockerStatsParser.parseMemory(parts[4]))
+                .memPercent(DockerStatsParser.parseCpuUsage(parts[5]))
+                .build();
+        return cpuUsage;
+    }
+
+
+
 }
