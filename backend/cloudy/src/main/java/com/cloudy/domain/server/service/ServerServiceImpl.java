@@ -159,11 +159,12 @@ public class ServerServiceImpl implements ServerService {
 
             if (line.contains("MiB Mem :")) {
                 // 메모리 사용량 추출
-                String[] memParts = line.split(",");
+                String[] parts = line.split(":");
+                String[] memParts = parts[1].split(",");
                 // total과 free 값 추출
                 String totalPart = memParts[0].trim(); // "15986.8 total"
                 String usagePart = memParts[2].trim();  // "1186.5 free"
-                System.out.println("total part" + totalPart + " usagePart" + usagePart);
+                System.out.println("total part : " + totalPart + " usagePart : " + usagePart);
                 // total과 free 값에서 숫자만 추출
                 double total = Double.parseDouble(totalPart.split(" ")[0].trim());
                 double memuse = Double.parseDouble(usagePart.split(" ")[0].trim());
