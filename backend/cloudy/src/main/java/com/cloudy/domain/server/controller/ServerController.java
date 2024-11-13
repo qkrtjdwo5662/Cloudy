@@ -1,11 +1,10 @@
 package com.cloudy.domain.server.controller;
 
+import com.cloudy.domain.server.model.dto.request.ServerDailyCostRequest;
+import com.cloudy.domain.server.model.dto.request.ServerMonthCostRequest;
 import com.cloudy.domain.server.model.dto.request.ServerCreateRequest;
 import com.cloudy.domain.server.model.dto.request.ThresholdUpdateRequest;
-import com.cloudy.domain.server.model.dto.response.CpuUsage;
-import com.cloudy.domain.server.model.dto.response.MonitoringResponse;
-import com.cloudy.domain.server.model.dto.response.ServerResponse;
-import com.cloudy.domain.server.model.dto.response.ThresholdResponse;
+import com.cloudy.domain.server.model.dto.response.*;
 import com.cloudy.domain.server.service.ServerService;
 import com.cloudy.global.config.guard.Login;
 import com.cloudy.global.config.swagger.SwaggerApiSuccess;
@@ -38,15 +37,6 @@ public class ServerController {
         ServerResponse response = serverService.createServer(request, memberId);
         return Response.SUCCESS(response, "Server created successfully");
     }
-
-//    @Operation(summary = "임계치 생성", description = "서버의 임계치를 설정")
-//    @SwaggerApiSuccess(description = "임계치 생성 성공")
-//    @PostMapping("/limit/create")
-//    public Response<ThresholdResponse> createThreshold(@Valid @RequestBody ThresholdCreateRequest request,
-//                                                       @Login Long memberId) {
-//        ThresholdResponse response = serverService.createThreshold(request, memberId);
-//        return Response.SUCCESS(response, "Threshold created successfully");
-//    }
 
     @Operation(summary = "임계치 수정", description = "서버의 임계치를 수정")
     @SwaggerApiSuccess(description = "임계치 수정 성공")
@@ -110,5 +100,25 @@ public class ServerController {
             @Parameter(description = "serverId", example = "123") @RequestParam Long serverId) throws IOException {
         CpuUsage response = serverService.getCPUData(serverId);
         return Response.SUCCESS(response, "Monitoring data retrieved successfully");
+    }
+
+    @Operation(summary = "서버 월 비용 조회", description = "서버 비용 조회")
+    @SwaggerApiSuccess(description = "서버 비용 조회 성공")
+    @PostMapping("/month-cost")
+    public Response<ServerMonthCostResponse> monthServerCost(
+            @Valid @RequestBody ServerMonthCostRequest request)  {
+
+        ServerMonthCostResponse response = serverService.monthServerCost(request);
+        return Response.SUCCESS(response, "서버 월 비용 조회 성공");
+    }
+
+    @Operation(summary = "서버 일자별 비용 조회", description = "서버 일자별 비용 조회")
+    @SwaggerApiSuccess(description = "서버 일자별 비용 조회 성공")
+    @PostMapping("/daily-cost")
+    public Response<ServerDailyCostResponse> monthServerCost(
+            @Valid @RequestBody ServerDailyCostRequest request)  {
+
+        ServerDailyCostResponse response = serverService.dailyServerCost(request);
+        return Response.SUCCESS(response, "서버 일자별 비용 조회 성공");
     }
 }
