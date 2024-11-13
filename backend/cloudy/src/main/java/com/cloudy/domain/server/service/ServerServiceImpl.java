@@ -140,6 +140,7 @@ public class ServerServiceImpl implements ServerService {
         reader.readLine(); // 첫번째 줄 날리기
         String line;
         CpuUsage usage = new CpuUsage();
+        boolean memoryCheck = false;
         while ((line = reader.readLine()) != null) {
             System.out.println("cur Line : " + line);
             if (line.contains("%Cpu(s):")) {
@@ -169,6 +170,10 @@ public class ServerServiceImpl implements ServerService {
                 System.out.println(total + " " + memuse);
                 usage.setMemUsage(memuse);
                 usage.setMemLimit(total);
+                memoryCheck = true;
+            }
+            if (memoryCheck){
+                break;
             }
         }
         return usage;
