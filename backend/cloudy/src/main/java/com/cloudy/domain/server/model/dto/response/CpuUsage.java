@@ -12,5 +12,4 @@ public class CpuUsage {
     private double cpuPercent;
     private double memUsage;
     private double memLimit;
-    private double memPercent;
 }
