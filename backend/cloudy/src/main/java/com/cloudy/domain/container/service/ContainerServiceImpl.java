@@ -12,12 +12,14 @@ import com.cloudy.domain.container.model.dto.response.*;
 import com.cloudy.domain.container.repository.ContainerRepository;
 import com.cloudy.domain.server.model.Server;
 import com.cloudy.domain.server.repository.ServerRepository;
+import com.cloudy.global.util.GenerateDateList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -33,7 +35,6 @@ public class ContainerServiceImpl implements ContainerService {
     private final ContainerRepository containerRepository;
     @Autowired
     private final ElasticsearchClient elasticsearchClient;
-
 
     @Override
     public Map<String,Long> getContainerUsages(ContainerGetUsagesRequest request) throws IOException {
@@ -66,7 +67,7 @@ public class ContainerServiceImpl implements ContainerService {
                 hm.put(log,total);
             }catch (Exception e){
                 if (e.getMessage().contains("index_not_found_exception")) {
-                    System.out.println("Index not found, skipping: " + log);
+//                    System.out.println("Index not found, skipping: " + log);
                 } else {
                     e.printStackTrace();
                 }
@@ -103,5 +104,60 @@ public class ContainerServiceImpl implements ContainerService {
         Server server = serverRepository.findById(serverId).orElseThrow(() -> new IllegalArgumentException("Invalid server ID"));;
         Container container = new Container(containerCreateRequest.getContainerName(), server);
         containerRepository.save(container);
+    }
+
+    @Override
+    public Map<String, Long> getContainerUsageAgg(ContainerGetUsageDailyRequest request) {
+        // request의 sortValues에 맞게 수행
+        // 다중 인덱스 로그를 가져온다.
+        Map<String, Long> hm = new TreeMap<>();
+        // 1. 현재 년 월 일를 가져온다.
+        LocalDate now = LocalDate.now();
+        List<String> logs;
+
+        GenerateDateList generateDateList = new GenerateDateList();
+        if (request.getSortTypes().equals("Daily")){
+            logs = generateDateList.getIndexBasedOnDate(now);
+        }else if (request.getSortTypes().equals("Week")) {
+            logs = generateDateList.getIndexBasedOnWeek(now);
+        }else {
+            return null;
+        }
+
+        // 3. 위 로그로, 모든 데이터 조회
+        for (String log: logs){
+            // 3-1. 문서기준
+            String searchIndex = request.getSortTypes().equals("Week")? log+"*" : log;
+            try {
+                SearchResponse<ContainerLog> sr = elasticsearchClient.search(s -> s
+                        .index(searchIndex) // 인덱스 지정
+                                .query(q -> q
+                                        .matchPhrase(m -> m
+                                                .field("message")
+                                                .query("external_service: true")
+                                        )
+                                ),
+                        ContainerLog.class
+                );
+//                        .query(q -> q.matchAll(t->t)), ContainerLog.class);
+
+
+
+                long total = sr.hits().total().value();
+                hm.put(log,total);
+            }catch (Exception e){
+                if (e.getMessage().contains("index_not_found_exception")) {
+//                    System.out.println("Index not found, skipping: " + log);
+                    hm.put(log,0L);
+                } else {
+                    e.printStackTrace();
+                }
+            }
+
+
+        }
+
+        
+        return hm;
     }
 }
