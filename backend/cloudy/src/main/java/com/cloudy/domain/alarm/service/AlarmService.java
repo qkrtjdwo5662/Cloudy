@@ -13,4 +13,6 @@ public interface AlarmService {
     void markAlarmAsRead(Long alarmId, Long memberId); // 알람 읽음 처리
     SseEmitter subscribe(Long memberId);
     void sendAlarm(Long memberId, AlarmResponse alarmResponse);
+
+    void disconnectAllEmitters();
 }
