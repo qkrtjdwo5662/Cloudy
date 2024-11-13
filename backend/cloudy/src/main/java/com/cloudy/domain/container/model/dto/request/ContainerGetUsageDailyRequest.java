@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -24,11 +25,10 @@ public class ContainerGetUsageDailyRequest {
     @NotNull(message = "회원 id를 입력하세요.")
     private Long memberId;
 
-    @NotNull(message = "Daily, Weeks 중 하나 선택")
+    @NotNull(message = "Today,Daily, Week 중 하나 선택")
     private String sortTypes;
 
-
-    public ContainerGetUsageDailyRequest(Long serverId, Long memberId, String sortTypes) {
+    public ContainerGetUsageDailyRequest(Long serverId, Long memberId,String sortTypes) {
         this.serverId = serverId;
         this.memberId = memberId;
         this.sortTypes = sortTypes;

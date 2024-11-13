@@ -12,9 +12,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Map;
 
 @Tag(name = "컨테이너 관련 API")
@@ -38,17 +40,17 @@ public class ContainerController {
         return Response.SUCCESS(response);
     }
 
-    @Operation(summary = "서버 전체 컨테이너 사용량 조회 API", description = "하루당 서버 전체 컨테이너 사용량을 전체 조회합니다.")
+    @Operation(summary = "서버 전체 컨테이너 하루당 사용량 조회 API", description = "하루당 서버 전체 컨테이너 사용량을 전체 조회합니다.")
     @SwaggerApiSuccess(description = "하루당 서버 전체 컨테이너 사용량 조회를 성공했습니다.")
     @GetMapping("/usage/daily")
     public Response<Map<String,Long>> getContainerUsageDaily(@Parameter(name = "서버 id", example = "1") @RequestParam Long serverId,
                                                          @Login Long memberId) throws IOException {
 
-        Map<String,Long> response = containerService.getContainerUsageAgg(new ContainerGetUsageDailyRequest(serverId, memberId, "Daily"));
+        Map<String,Long> response = containerService.getContainerUsageAgg(new ContainerGetUsageDailyRequest(serverId, memberId , "Daily"));
         return Response.SUCCESS(response);
     }
 
-    @Operation(summary = "서버 전체 컨테이너 사용량 조회 API", description = "주당 서버 전체 컨테이너 사용량을 전체 조회합니다.")
+    @Operation(summary = "서버 전체 컨테이너 주별 사용량 조회 API", description = "주당 서버 전체 컨테이너 사용량을 전체 조회합니다.")
     @SwaggerApiSuccess(description = "주당 서버 전체 컨테이너 사용량 조회를 성공했습니다.")
     @GetMapping("/usage/week")
     public Response<Map<String,Long>> getContainerUsageWeek(@Parameter(name = "서버 id", example = "1") @RequestParam Long serverId,
@@ -57,9 +59,18 @@ public class ContainerController {
         return Response.SUCCESS(response);
     }
 
+    @Operation(summary = "서버 전체 컨테이너 사용량 조회 API", description = "오늘 컨테이너 사용량을 전체 조회합니다.")
+    @SwaggerApiSuccess(description = "오늘 서버 전체 컨테이너 사용량 조회를 성공했습니다.")
+    @GetMapping("/usage/today")
+    public Response<Map<String,Long>> getContainerUsageToday(@Parameter(name = "서버 id", example = "1") @RequestParam Long serverId,
+                                                            @Login Long memberId) throws IOException {
+        Map<String,Long> response = containerService.getContainerUsageAgg(new ContainerGetUsageDailyRequest(serverId, memberId, "Today"));
+        return Response.SUCCESS(response);
+    }
+
 
     @Operation(summary = "컨테이너 비용 캘린더 조회 API", description = "해당 일자까지의 일자별 전체 비용을 조회합니다.")
-    @SwaggerApiSuccess(description = "컨테이너 비용 캘린더 조회를 성공했습니다.")
+    @SwaggerApiSuccess(description = "컨테이너 월간 비용 캘린더 조회를 성공했습니다.")
     @GetMapping("/{containerId}/monthly-costs")
     public Response<ContainerGetMonthlyCostResponse> getContainerMonthlyCosts(@Login Long memberId,
                                           @Parameter(name = "컨테이너 id", example = "1") @PathVariable Long containerId,
@@ -69,7 +80,7 @@ public class ContainerController {
     }
 
     @Operation(summary = "컨테이너별 비용 조회 API", description = "해당 일자의 컨테이너별 전체 서비스 비용을 조회합니다.")
-    @SwaggerApiSuccess(description = "컨테이너별 전체 서비스 비용 조회를 성공했습니다.")
+    @SwaggerApiSuccess(description = "컨테이너별 날짜간 서비스 비용 조회를 성공했습니다.")
     @GetMapping("/{serverId}/daily-costs")
     public Response<ContainerGetDailyCostResponses> getContainerDailyCosts(@Login Long memberId,
                                                 @Parameter(name = "서버 id", example = "1") @PathVariable Long serverId,
