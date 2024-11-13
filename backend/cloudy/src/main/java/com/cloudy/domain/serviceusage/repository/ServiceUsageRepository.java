@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ServiceUsageRepository extends JpaRepository<ServiceUsage, Long> {
     ServiceUsage findServiceUsageByServiceNameAndServiceType(String name, String type);
+    ServiceUsage findServiceUsageByServiceName(String name);
 }
