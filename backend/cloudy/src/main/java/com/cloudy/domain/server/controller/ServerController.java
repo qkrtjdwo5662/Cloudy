@@ -2,6 +2,7 @@ package com.cloudy.domain.server.controller;
 
 import com.cloudy.domain.server.model.dto.request.ServerCreateRequest;
 import com.cloudy.domain.server.model.dto.request.ThresholdUpdateRequest;
+import com.cloudy.domain.server.model.dto.response.CpuUsage;
 import com.cloudy.domain.server.model.dto.response.MonitoringResponse;
 import com.cloudy.domain.server.model.dto.response.ServerResponse;
 import com.cloudy.domain.server.model.dto.response.ThresholdResponse;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -97,6 +99,15 @@ public class ServerController {
             @Parameter(description = "서버 ID", example = "123") @RequestParam Long serverId,
             @Parameter(description = "모니터링 기간", example = "7") @RequestParam int duration) {
         MonitoringResponse response = serverService.monitorServer(serverId, duration);
+        return Response.SUCCESS(response, "Monitoring data retrieved successfully");
+    }
+
+    @Operation(summary = "서버 사용량", description = "서버 사용량을 조회")
+    @SwaggerApiSuccess(description = "서버 사용량 조회 성공")
+    @GetMapping("/monitoring/usage")
+    public Response<CpuUsage> monitorServer(
+            @Parameter(description = "serverId", example = "123") @RequestParam Long serverId) throws IOException {
+        CpuUsage response = serverService.getCPUData(serverId);
         return Response.SUCCESS(response, "Monitoring data retrieved successfully");
     }
 }
