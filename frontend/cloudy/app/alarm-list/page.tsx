@@ -11,6 +11,8 @@ export default function AlarmList() {
 
   const alarmData: AlarmGetResponse[] = Array.isArray(data) ? data : [];
 
+  console.log(alarmData);
+
   return (
     <div className="flex h-full w-full">
       <div className="flex h-full w-full flex-col gap-6 p-20">
@@ -42,8 +44,9 @@ export default function AlarmList() {
                   {alarm.serverName}
                 </div>
                 <div className="flex w-3/5 items-center justify-center border-b border-gray-200 px-20 py-10">
-                  {alarm.content}
+                  {alarm.title}
                 </div>
+
                 <div className="flex w-1/5 items-center justify-center border-b border-gray-200 px-20 py-10">
                   {new Date(alarm.createdAt).toLocaleString()}
                 </div>

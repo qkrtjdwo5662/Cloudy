@@ -7,6 +7,7 @@ import GaugeChart from "./gaugeChart";
 import ServerOption from "./serverOption";
 import CostSummary from "./costSummary";
 import Calendar from "./Calendar";
+import RealTimeChart from "./test";
 
 export default function DashBoardPage() {
   return (
@@ -17,7 +18,8 @@ export default function DashBoardPage() {
           <section className="flex h-1/2 w-full gap-6">
             <article className="flex h-full w-3/4 overflow-hidden rounded-5 border border-gray-200 bg-white p-20">
               <div className="flex h-full w-full">
-                <MainLineChart />
+                {/* <MainLineChart /> */}
+                <RealTimeChart />
               </div>
             </article>
             <aside className="flex h-full w-1/4 overflow-hidden rounded-5 border border-gray-200 bg-white p-20">
