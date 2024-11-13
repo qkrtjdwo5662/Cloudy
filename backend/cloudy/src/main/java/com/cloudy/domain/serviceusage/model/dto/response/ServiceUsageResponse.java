@@ -1,5 +1,6 @@
 package com.cloudy.domain.serviceusage.model.dto.response;
 
+import com.cloudy.domain.serviceusage.model.ServiceUsage;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -10,12 +11,19 @@ import lombok.*;
 @Builder
 public class ServiceUsageResponse {
 
-    @Schema(description = "멤버 ID", example = "member@company.com")
-    private String memberId;
+    @Schema(description = "서비스 ID", example = "1")
+    private Long serviceUsageId;
 
-    @Schema(description = "부서명", example = "기술부")
-    private String departmentName;
+    @Schema(description = "서비스 유형", example = "external")
+    private String serviceType;
 
-    @Schema(description = "멤버 계정 생성 성공 여부", example = "true")
-    private boolean isSuccess;
+    @Schema(description = "서비스 이름", example = "/boards")
+    private String serviceName;
+
+    @Schema(description = "서비스 비용", example = "100.0")
+    private Double serviceCost;
+
+    public static ServiceUsageResponse from(ServiceUsage serviceUsage){
+        return new ServiceUsageResponse(serviceUsage.getServiceUsageId(), serviceUsage.getServiceType(), serviceUsage.getServiceName(), serviceUsage.getServiceCost());
+    }
 }
