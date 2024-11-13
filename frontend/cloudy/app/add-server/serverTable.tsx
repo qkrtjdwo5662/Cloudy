@@ -92,11 +92,19 @@ const TableRow = ({
 
 const TableContainer = ({ servers, isLoading }: TableContainerProps) => {
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex h-full w-full items-center justify-center text-lg">
+        로딩중...
+      </div>
+    );
   }
 
   if (!servers || servers.length === 0) {
-    return <div>No servers found.</div>;
+    return (
+      <div className="flex h-full w-full items-center justify-center text-lg">
+        등록된 서버가 없습니다.
+      </div>
+    );
   }
 
   return (
