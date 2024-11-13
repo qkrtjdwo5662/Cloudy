@@ -11,7 +11,7 @@ import {
   ChangeEventHandler,
   useEffect,
 } from "react";
-import { useAuthStore } from "@/shared/stores/authStore"; // zustand 스토어 import
+import { useAuthStore } from "@/shared/stores/authStore";
 
 export default function JoinPage() {
   const [loginId, setLoginId] = useState("");
@@ -20,10 +20,13 @@ export default function JoinPage() {
   const mutation = useLogin();
   const router = useRouter();
 
-  // Zustand 상태 설정 함수
   const setAccessToken = useAuthStore((state) => state.setAccessToken);
   const setEmail = useAuthStore((state) => state.setEmail);
-  const setServerId = useAuthStore((state) => state.setServerId); // 서버 ID 설정 함수
+  const setServerId = useAuthStore((state) => state.setServerId);
+  const setRole = useAuthStore((state) => state.setRole);
+  const setRegistrationNumber = useAuthStore(
+    (state) => state.setRegistrationNumber,
+  );
 
   useEffect(() => {
     setMounted(true);
@@ -37,13 +40,13 @@ export default function JoinPage() {
       const response = await mutation.mutateAsync({ loginId, password });
 
       if (response.accessToken) {
-        console.log(response);
-
-        // 로그인 성공 시 zustand 상태에 저장
         setAccessToken(response.accessToken);
         setEmail(loginId);
-        setServerId(response.serverId); // 서버 ID 설정
+        setServerId(response.serverId);
+        setRegistrationNumber(response.registrationNumber);
+        setRole(response.role);
       }
+      console.log("서버아이디", response.serverId);
 
       router.push("/dashboard");
     } catch (error) {
