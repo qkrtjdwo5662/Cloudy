@@ -138,14 +138,20 @@ public class ServerServiceImpl implements ServerService {
     public Map<String, Long> monitorServer(Long serverId, LocalDateTime dateTime, ChronoUnit unit, int interval, int count) {
         Map<String, Long> requestCountsMap = new TreeMap<>();
 
-        List<LocalDateTime> timeSlots = generateTimeSlots(dateTime, unit, interval, count);
+        // 9시간 보정된 시간 생성
+        LocalDateTime adjustedDateTime = dateTime.minusHours(9);
+
+        // 시간 구간 생성
+        List<LocalDateTime> timeSlots = generateTimeSlots(adjustedDateTime, unit, interval, count);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         DateTimeFormatter esTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'");
 
+        // 인덱스는 dateTime의 날짜 기준으로 설정
+        String indexDate = dateTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        String searchIndex = "server-logs-" + indexDate + "*";
+
         for (LocalDateTime timeSlot : timeSlots) {
-            String formattedTime = timeSlot.format(formatter);
-            String searchIndex = "server-logs-" + timeSlot.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")) + "*";
-            System.out.println(searchIndex);
+            String formattedTime = timeSlot.plusHours(9).format(formatter);
 
             try {
 
@@ -250,11 +256,11 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public ServerMonthCostResponse monthServerCost(ServerMonthCostRequest request) {
+    public ServerMonthCostResponse monthServerCost(Long serverId, LocalDate localDate) {
         Map<String, Long> apiUsageMap = new TreeMap<>();
 
         // 오늘 날짜로 인덱스 설정
-        String date = request.getDate().format(DateTimeFormatter.ofPattern("yyyy.MM"));
+        String date = localDate.format(DateTimeFormatter.ofPattern("yyyy.MM"));
         String searchIndex = "server-logs-" + date + "*";
 
         System.out.println(searchIndex);
@@ -294,10 +300,10 @@ public class ServerServiceImpl implements ServerService {
             }
         }
 
-        Server server = serverRepository.findById(Long.valueOf(request.getServerId())).orElseThrow(()-> new NotFoundException("not found"));
+        Server server = serverRepository.findById(serverId).orElseThrow(()-> new NotFoundException("not found"));
         Instance instance = server.getInstance();
 
-        double accumulatedCost = instance.getCostPerHour() * 24 * request.getDate().getDayOfMonth();
+        double accumulatedCost = instance.getCostPerHour() * 24 * localDate.getDayOfMonth();
         // 인스턴스 누적 비용
 
         double expectedCost = instance.getCostPerHour() * 24 * 30;
@@ -312,18 +318,18 @@ public class ServerServiceImpl implements ServerService {
         }
 
         accumulatedCost += serviceCost;
-        expectedCost += (serviceCost / request.getDate().getDayOfMonth() )* 30;
+        expectedCost += (serviceCost / localDate.getDayOfMonth() )* 30;
 
         return new ServerMonthCostResponse(Double.parseDouble(String.format("%.3f", accumulatedCost))
                 , Double.parseDouble(String.format("%.3f", expectedCost)));
     }
 
     @Override
-    public ServerDailyCostResponse dailyServerCost(ServerDailyCostRequest request) {
+    public ServerDailyCostResponse dailyServerCost(Long serverId, LocalDate localDate) {
         Map<String, Long> apiUsageMap = new TreeMap<>();
 
         // 오늘 날짜로 인덱스 설정
-        String date = request.getDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        String date = localDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         String searchIndex = "server-logs-" + date + "*";
 
         try {
@@ -361,7 +367,7 @@ public class ServerServiceImpl implements ServerService {
             }
         }
 
-        Server server = serverRepository.findById(Long.valueOf(request.getServerId())).orElseThrow(()-> new NotFoundException("not found"));
+        Server server = serverRepository.findById(serverId).orElseThrow(()-> new NotFoundException("not found"));
         Instance instance = server.getInstance();
 
         double cost = instance.getCostPerHour() * 24;
@@ -378,11 +384,11 @@ public class ServerServiceImpl implements ServerService {
 
 
     @Override
-    public Map<String, Double> weeklyServerCost(ServerRecentlyWeekCostRequest request) {
+    public Map<String, Double> weeklyServerCost(Long serverId, LocalDate localDate) {
         Map<String, Double> dailyCosts = new TreeMap<>();
 
         // 요청 날짜로부터 일주일간의 날짜 설정
-        LocalDate endDate = request.getDate();
+        LocalDate endDate = localDate;
         LocalDate startDate = endDate.minusDays(6);
 
         for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
@@ -423,7 +429,7 @@ public class ServerServiceImpl implements ServerService {
             }
 
             // 서버 인스턴스 비용 계산
-            Server server = serverRepository.findById(Long.valueOf(request.getServerId()))
+            Server server = serverRepository.findById(serverId)
                     .orElseThrow(() -> new NotFoundException("Server not found"));
             Instance instance = server.getInstance();
             double dailyCost = instance.getCostPerHour() * 24;
