@@ -4,6 +4,7 @@ import com.cloudy.domain.server.model.dto.request.*;
 import com.cloudy.domain.server.model.dto.response.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -26,9 +27,9 @@ public interface ServerService {
 
     CpuUsage getCPUData(Long containerId) throws IOException;
 
-    ServerMonthCostResponse monthServerCost(ServerMonthCostRequest request);
+    ServerMonthCostResponse monthServerCost(Long serverId, LocalDate date);
 
-    ServerDailyCostResponse dailyServerCost(ServerDailyCostRequest request);
+    ServerDailyCostResponse dailyServerCost(Long serverId, LocalDate date);
 
-    Map<String, Double> weeklyServerCost(ServerRecentlyWeekCostRequest request);
+    Map<String, Double> weeklyServerCost(Long serverId, LocalDate date);
 }

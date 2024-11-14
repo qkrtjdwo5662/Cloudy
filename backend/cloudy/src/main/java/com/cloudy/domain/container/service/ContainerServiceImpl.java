@@ -49,18 +49,18 @@ public class ContainerServiceImpl implements ContainerService {
         List<Container> containerList = containerRepository.findContainersByServerId(server);
 
         // 전체 기간의 시작 시간과 끝 시간 계산
-        LocalDateTime startTime = dateTime.minus(interval * (count - 1), unit);
-        LocalDateTime endTime = dateTime;
+        LocalDateTime adjustedDateTime = dateTime.minusHours(9); // 9시간 차이 보정
+        LocalDateTime startTime = adjustedDateTime.minus(interval * (count - 1), unit);
+        LocalDateTime endTime = adjustedDateTime;
 
         DateTimeFormatter esTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'");
         DateTimeFormatter indexFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
         String gteTime = startTime.format(esTimeFormatter);
         String ltTime = endTime.format(esTimeFormatter);
 
-        // 시작 날짜와 끝 날짜에 따른 인덱스 범위 설정
-        String startIndex = "server-logs-" + startTime.format(indexFormatter);
-        String endIndex = "server-logs-" + endTime.format(indexFormatter);
-        String searchIndexPattern = startIndex.equals(endIndex) ? startIndex + "*" : "server-logs-*";
+        // 인덱스 패턴은 dateTime의 날짜 기준으로 설정
+        String indexDate = dateTime.format(indexFormatter);
+        String searchIndexPattern = "server-logs-" + indexDate + "*";
 
         List<ContainerGetUseResponse> containerResponses = containerList.stream()
                 .map(container -> {

@@ -87,7 +87,7 @@ public class ServerController {
     @Operation(summary = "서버 모니터링", description = "서버 모니터링 정보를 SSE를 통해 실시간으로 조회")
     @SwaggerApiSuccess(description = "서버 모니터링 조회 성공")
     @GetMapping("/monitoring")
-    public Response<Map<String, Long>> monitorServer(
+    public Response<Map<String, Long>> monitoringServer(
             @Parameter(description = "서버 ID", example = "1") @RequestParam Long serverId,
             @Parameter(description = "오늘 날짜와 시간(분 단위)", example = "2024-11-14 15:30") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") @RequestParam LocalDateTime dateTime,
             @Parameter(description = "시간 단위 (SECONDS, MINUTES, HOURS)", example = "MINUTES") @RequestParam String unit,
@@ -109,31 +109,34 @@ public class ServerController {
 
     @Operation(summary = "서버 비용 요약 조회", description = "서버 비용 요약 조회")
     @SwaggerApiSuccess(description = "서버 비용 요약 조회 성공")
-    @PostMapping("/cost/summary")
-    public Response<ServerMonthCostResponse> monthServerCost(
-            @Valid @RequestBody ServerMonthCostRequest request)  {
+    @GetMapping("/cost/summary")
+    public Response<ServerMonthCostResponse> summaryCost(
+            @Parameter(description = "서버 ID", example = "1") @RequestParam Long serverId,
+            @Parameter(description = "오늘 날짜와 시간(분 단위)", example = "2024-11-15") @DateTimeFormat(pattern = "yyyy-MM") @RequestParam LocalDate dateTime)  {
 
-        ServerMonthCostResponse response = serverService.monthServerCost(request);
+        ServerMonthCostResponse response = serverService.monthServerCost(serverId, dateTime);
         return Response.SUCCESS(response, "서버 비용 요약 조회 성공");
     }
 
     @Operation(summary = "서버 일자별 비용 조회", description = "서버 일자별 비용 조회")
     @SwaggerApiSuccess(description = "서버 일자별 비용 조회 성공")
-    @PostMapping("/daily-cost")
+    @GetMapping("/daily-cost")
     public Response<ServerDailyCostResponse> monthServerCost(
-            @Valid @RequestBody ServerDailyCostRequest request)  {
+            @Parameter(description = "서버 ID", example = "1") @RequestParam Long serverId,
+            @Parameter(description = "오늘 날짜와 시간(분 단위)", example = "2024-11-15") @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam LocalDate dateTime)  {
 
-        ServerDailyCostResponse response = serverService.dailyServerCost(request);
+        ServerDailyCostResponse response = serverService.dailyServerCost(serverId, dateTime);
         return Response.SUCCESS(response, "서버 일자별 비용 조회 성공");
     }
 
     @Operation(summary = "서버 최근 일주일 비용 조회", description = "서버 최근 일주일 비용 조회")
     @SwaggerApiSuccess(description = "서버 최근 일주일 비용 조회 성공")
-    @PostMapping("/week-cost")
+    @GetMapping("/week-cost")
     public Response<Map<String, Double>> recentlyWeekServerCost(
-            @Valid @RequestBody ServerRecentlyWeekCostRequest request)  {
+            @Parameter(description = "서버 ID", example = "1") @RequestParam Long serverId,
+            @Parameter(description = "오늘 날짜와 시간(분 단위)", example = "2024-11-15") @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam LocalDate dateTime)  {
 
-        Map<String, Double> response = serverService.weeklyServerCost(request);
+        Map<String, Double> response = serverService.weeklyServerCost(serverId, dateTime);
         return Response.SUCCESS(response, "서버 최근 일주일 비용 조회 성공");
     }
 }
