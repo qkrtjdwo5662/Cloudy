@@ -1,9 +1,11 @@
 "use client";
+
+import { useState, useEffect } from "react";
 import Table from "../server-usage/table";
 import CostBarChart from "./barChart";
 import Calendar from "../dashboard/Calendar";
 import { Title } from "@/shared/ui";
-import { useFetchCalendar } from "@/features/cost-calendar";
+import { useFetchDailyCost } from "@/features/cost-calendar";
 
 const sampleData = [
   { containerName: "컨테이너1", callCount: "14회" },
@@ -14,8 +16,19 @@ const sampleData = [
 ];
 
 export default function CostCalendarPage() {
-  const { data, error, isLoading } = useFetchCalendar("1");
-  console.log(data);
+  const [selectedDate, setSelectedDate] = useState("2024-11-13");
+  const { cost, loading, error, fetchDailyCost } = useFetchDailyCost();
+
+  useEffect(() => {
+    fetchDailyCost(selectedDate);
+  }, [selectedDate, fetchDailyCost]);
+
+  console.log("Cost", selectedDate, cost);
+
+  const handleDateChange = (date: string) => {
+    setSelectedDate(date);
+    console.log("selected", selectedDate);
+  };
 
   return (
     <div className="flex h-full w-full">
@@ -25,7 +38,7 @@ export default function CostCalendarPage() {
         <div className="flex h-full flex-col gap-6 pt-10">
           <section className="flex h-1/2 w-full flex-row gap-6">
             <div className="flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white p-20">
-              <Calendar />
+              <Calendar onDateChange={handleDateChange} />
             </div>
             <div className="flex w-full rounded-lg border border-gray-200 bg-white p-16">
               <Table rows={sampleData} />
