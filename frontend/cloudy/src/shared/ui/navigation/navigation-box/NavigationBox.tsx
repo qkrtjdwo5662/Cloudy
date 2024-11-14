@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { NavigationItem } from "../navigation-item/NavigationItem";
 import { useAuthStore } from "@/shared/stores/authStore";
 import { useFetchServers } from "@/features/server/hooks/useFetchServers";
-import { AddDropDownBox } from "@/shared/ui/drop-down/drop-down-box/dropDown"; // AddDropDownBox 컴포넌트 임포트
+import { AddDropDownBox } from "@/shared/ui/drop-down/drop-down-box/dropDown";
 
 const NAVIGATION_ITEMS = [
   {
@@ -32,10 +32,10 @@ export const NavigationBox = () => {
   const pathname = usePathname();
   const { servers, loading } = useFetchServers();
   const email = useAuthStore((state) => state.email);
-  const serverId = useAuthStore((state) => state.serverId); // 현재 선택된 serverId
-  const setServerId = useAuthStore((state) => state.setServerId); // serverId 업데이트 함수
+  const serverId = useAuthStore((state) => state.serverId);
+  const setServerId = useAuthStore((state) => state.setServerId);
+  const role = useAuthStore((state) => state.role); // role 상태 가져오기
   const hasHydrated = useAuthStore((state) => state.hasHydrated);
-  console.log(serverId);
 
   const [openIndex, setOpenIndex] = useState<number | null>(() => {
     const initialIndex = NAVIGATION_ITEMS.findIndex((item) =>
@@ -106,11 +106,13 @@ export const NavigationBox = () => {
           </div>
         ))}
       </div>
-      <div className="flex border-t border-gray-200 px-12 pt-12">
-        <NavigationItem leftIcon="settings" to="/add-server">
-          settings
-        </NavigationItem>
-      </div>
+      {role !== "NORMAL" && (
+        <div className="flex border-t border-gray-200 px-12 pt-12">
+          <NavigationItem leftIcon="settings" to="/add-server">
+            settings
+          </NavigationItem>
+        </div>
+      )}
     </div>
   );
 };

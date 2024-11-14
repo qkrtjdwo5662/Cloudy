@@ -78,13 +78,13 @@ export default function JoinPage() {
         >
           <Input
             label="아이디"
-            placeholder="placeholder"
+            placeholder="아이디"
             onChange={onChangeloginId}
             value={loginId}
           />
           <Input
             label="비밀번호"
-            placeholder="placeholder"
+            placeholder="비밀번호"
             type="password"
             onChange={onChangePassword}
             value={password}
