@@ -7,7 +7,6 @@ import "../dashboard/style.css";
 export default function Component() {
   const [date, setDate] = React.useState<Date | null>(null);
 
-  // 클라이언트에서만 초기화
   React.useEffect(() => {
     setDate(new Date());
   }, []);
@@ -16,10 +15,13 @@ export default function Component() {
 
   return (
     <div className="h-full w-full">
-      {/* 최소 높이만 지정하여 4주일 때는 여백이 생기고, 5~6주일 경우 크기 확장 */}
       <div className="max-h-[150px] rounded-lg bg-white">
         <Calendar
-          onChange={setDate}
+          onChange={(value) => {
+            if (value instanceof Date) {
+              setDate(value);
+            }
+          }}
           value={date}
           className="rounded-lg"
           locale="ko-KR"

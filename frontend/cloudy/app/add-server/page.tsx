@@ -46,7 +46,11 @@ export default function AddServer() {
 
   const { data, error, isLoading } = useFetchInstance(selectedCloud);
   const { mutate: createServer } = useCreateServer();
-  const { data: serverList, isLoading: isServerLoading } = useFetchServer();
+  const {
+    data: serverList,
+    isLoading: isServerLoading,
+    refetch: refetchServers,
+  } = useFetchServer();
 
   const instanceOptions = Array.isArray(data)
     ? data.map((instance: Instance) => instance.instanceName)
@@ -111,6 +115,8 @@ export default function AddServer() {
         setSelectedCloud("AWS");
         setSelectedInstance("");
         setSelectedCostType("ON");
+
+        refetchServers();
       },
       onError: (error) => {
         alert("서버 생성 중 오류가 발생했습니다.");
@@ -131,6 +137,7 @@ export default function AddServer() {
         storage: server.instanceStorage || "-",
         networkBandwidth: server.networkBandwidth,
         paymentPlan: server.paymentType,
+        refetchServers,
       }))
     : [];
 
@@ -197,6 +204,7 @@ export default function AddServer() {
               <TableContainer
                 servers={serverData}
                 isLoading={isServerLoading}
+                refetchServers={refetchServers}
               />
             </div>
           </section>

@@ -15,14 +15,15 @@ interface TableRowProps {
   storage: string | null;
   networkBandwidth: string;
   paymentPlan: string;
+  refetchServers: () => void;
 }
 
 interface TableContainerProps {
   servers: TableRowProps[];
   isLoading: boolean;
+  refetchServers: () => void;
 }
 
-// 결제 방식 맵핑 (역변환)
 const COST_TYPE_DISPLAY_MAPPING = {
   ON: "온디멘드(시간당)",
   ONE: "1년(예약)",
@@ -40,12 +41,22 @@ const TableRow = ({
   storage,
   networkBandwidth,
   paymentPlan,
+  refetchServers, // refetchServers 추가
 }: TableRowProps) => {
   const { mutate: deleteServer } = useDeleteServer();
 
   const handleDelete = () => {
     if (confirm("정말로 이 서버를 삭제하시겠습니까?")) {
-      deleteServer(serverId);
+      deleteServer(serverId, {
+        onSuccess: () => {
+          alert("서버가 성공적으로 삭제되었습니다.");
+          refetchServers();
+        },
+        onError: (error) => {
+          alert("서버 삭제 중 오류가 발생했습니다.");
+          console.error("Error deleting server:", error);
+        },
+      });
     }
   };
 
@@ -90,7 +101,11 @@ const TableRow = ({
   );
 };
 
-const TableContainer = ({ servers, isLoading }: TableContainerProps) => {
+const TableContainer = ({
+  servers,
+  isLoading,
+  refetchServers,
+}: TableContainerProps) => {
   if (isLoading) {
     return (
       <div className="flex h-full w-full items-center justify-center text-lg">
@@ -143,7 +158,11 @@ const TableContainer = ({ servers, isLoading }: TableContainerProps) => {
         </thead>
         <tbody>
           {servers.map((server) => (
-            <TableRow key={server.serverId} {...server} />
+            <TableRow
+              key={server.serverId}
+              {...server}
+              refetchServers={refetchServers}
+            />
           ))}
         </tbody>
       </table>
