@@ -87,19 +87,19 @@ public class ServerController {
     @Operation(summary = "서버 모니터링", description = "서버 모니터링 정보를 SSE를 통해 실시간으로 조회")
     @SwaggerApiSuccess(description = "서버 모니터링 조회 성공")
     @GetMapping("/monitoring")
-    public Response<?> monitorServer(
+    public Response<Map<String, Long>> monitorServer(
             @Parameter(description = "서버 ID", example = "1") @RequestParam Long serverId,
             @Parameter(description = "오늘 날짜와 시간(분 단위)", example = "2024-11-14 15:30") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") @RequestParam LocalDateTime dateTime,
             @Parameter(description = "시간 단위 (SECONDS, MINUTES, HOURS)", example = "MINUTES") @RequestParam String unit,
             @Parameter(description = "간격 (단위당 시간 간격)", example = "30") @RequestParam int interval,
             @Parameter(description = "개수 (반환할 리스트 크기)", example = "30") @RequestParam int count) {
 
-        serverService.monitorServer(serverId, dateTime, ChronoUnit.valueOf(unit.toUpperCase()), interval, count);
-        return Response.SUCCESS(null, "Monitoring data retrieved successfully");
+        Map<String, Long> response = serverService.monitorServer(serverId, dateTime, ChronoUnit.valueOf(unit.toUpperCase()), interval, count);
+        return Response.SUCCESS(response, "Monitoring data retrieved successfully");
     }
 
     @Operation(summary = "서버 자원 사용량", description = "서버 자원(CPU, MEMORY) 사용량을 조회")
-    @SwaggerApiSuccess(description = "서버 사용량 조회 성공")
+    @SwaggerApiSuccess(description = "서버 자원 사용량 조회 성공")
     @GetMapping("/monitoring/usage")
     public Response<CpuUsage> monitorServer(
             @Parameter(description = "serverId", example = "1") @RequestParam Long serverId) throws IOException {

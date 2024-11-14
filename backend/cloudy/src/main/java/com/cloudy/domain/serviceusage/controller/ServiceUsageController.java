@@ -42,6 +42,7 @@ public class ServiceUsageController {
     public Response<ServiceUsageResponse> createService(
             @Valid @RequestBody ServiceUsageCreateRequest request) {
         ServiceUsageResponse response = serviceUsageService.createService(request);
+
         return Response.SUCCESS(response, "서비스 생성 성공");
     }
 
