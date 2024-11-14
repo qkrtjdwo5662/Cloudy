@@ -19,4 +19,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsBybusinessRegistrationNumber(String businessRegistrationNumber);
 
     List<Member> findMembersByBusinessRegistrationNumberAndRole(@NotBlank String businessRegistrationNumber, @NotBlank Role role);
+
+    Member findMemberByBusinessRegistrationNumberAndRole(String businessRegistrationNumber, Role role);
 }

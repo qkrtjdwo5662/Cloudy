@@ -6,6 +6,7 @@ import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.cloudy.domain.instance.model.Instance;
 import com.cloudy.domain.instance.repository.InstanceRepository;
 import com.cloudy.domain.member.model.Member;
+import com.cloudy.domain.member.model.Role;
 import com.cloudy.domain.member.repository.MemberRepository;
 import com.cloudy.domain.server.model.Server;
 import com.cloudy.domain.server.model.dto.request.*;
@@ -74,7 +75,18 @@ public class ServerServiceImpl implements ServerService {
 
     @Override
     public List<ServerResponse> getServers(Long memberId) {
-        List<Server> servers = serverRepository.findByMember_MemberId(memberId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException("Member Not Found"));
+        List<Server> servers = List.of();
+
+        if(member.getRole().equals(Role.SUPER)){
+            servers = serverRepository.findByMember_MemberId(memberId);
+        }else if(member.getRole().equals(Role.NORMAL)){
+            Member superMember = memberRepository.findMemberByBusinessRegistrationNumberAndRole(member.getBusinessRegistrationNumber(), Role.SUPER);
+            servers = serverRepository.findByMember_MemberId(superMember.getMemberId());
+        }
+
+
 
         return servers.stream()
                 .map(ServerResponse::fromEntity)
