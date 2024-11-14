@@ -57,7 +57,7 @@ const RealTimeChart = () => {
   const { data } = useQuery({
     queryKey: ["realTimeData"],
     queryFn: fetchData,
-    refetchInterval: 1500,
+    refetchInterval: 500,
   });
 
   React.useEffect(() => {
@@ -86,7 +86,7 @@ const RealTimeChart = () => {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false, // 부모 div의 크기에 맞춰지도록 설정
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top" as const,
@@ -94,11 +94,14 @@ const RealTimeChart = () => {
     },
     scales: {
       x: {
-        type: "category",
+        type: "category" as const,
         ticks: {
           maxTicksLimit: 30,
         },
       },
+    },
+    animation: {
+      duration: 0,
     },
   };
 
