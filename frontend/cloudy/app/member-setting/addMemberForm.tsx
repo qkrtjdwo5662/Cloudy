@@ -3,8 +3,17 @@ import { useState, useEffect } from "react";
 import { Button } from "@/shared/ui/button/Button";
 import { Input } from "@/shared/ui/input/Input";
 import { useCheckIdDuplicate } from "@/features/join/hooks/useCheckIdDuplicate";
+import {
+  registerNormalMember,
+  RegisterMemberRequest,
+} from "@/features/member-setting/hooks/useRegisterMember";
+import { useAuthStore } from "@/shared/stores/authStore";
 
-export default function AddMemberForm() {
+interface AddMemberFormProps {
+  onAddMember: (newMember: RegisterMemberRequest) => Promise<void>;
+}
+
+export default function AddMemberForm({ onAddMember }: AddMemberFormProps) {
   const [departmentName, setDepartmentName] = useState("");
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
@@ -15,9 +24,12 @@ export default function AddMemberForm() {
   const [passwordWarning, setPasswordWarning] = useState("");
   const [confirmPasswordWarning, setConfirmPasswordWarning] = useState("");
   const [idChecked, setIdChecked] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const { idAvailable, idLoading, idError, checkIdDuplicate } =
-    useCheckIdDuplicate();
+  const { idAvailable, idError, checkIdDuplicate } = useCheckIdDuplicate();
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const registrationNumber = useAuthStore((state) => state.registrationNumber);
 
   const handleCheckIdClick = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -43,19 +55,40 @@ export default function AddMemberForm() {
     }
   }, [idAvailable, idError]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (
-      !departmentWarning &&
-      !idWarning &&
-      !passwordWarning &&
-      !confirmPasswordWarning
-    ) {
-      alert("회원 추가가 완료되었습니다!");
+    if (!isFormValid || !accessToken || !registrationNumber) return;
+
+    const requestData: RegisterMemberRequest = {
+      loginId: id,
+      password,
+      departmentName,
+      businessRegistrationNumber: registrationNumber,
+    };
+
+    setLoading(true);
+
+    try {
+      await onAddMember(requestData);
+      setDepartmentName("");
+      setId("");
+      setPassword("");
+      setConfirmPassword("");
+      setIdChecked(false);
+    } catch (error: any) {
+      if (error.response?.status === 400) {
+        alert("요청이 잘못되었습니다. 입력값을 확인하세요.");
+      } else if (error.response?.status === 500) {
+        alert("서버 오류가 발생했습니다. 나중에 다시 시도하세요.");
+      } else {
+        alert("알 수 없는 오류가 발생했습니다.");
+      }
+      console.error("회원 추가 중 오류 발생:", error);
+    } finally {
+      setLoading(false);
     }
   };
-
   useEffect(() => {
     if (
       departmentName.length > 0 &&
@@ -80,7 +113,30 @@ export default function AddMemberForm() {
     } else {
       setConfirmPasswordWarning("");
     }
-  }, [departmentName, password, confirmPassword]);
+
+    const isValid =
+      departmentName.length > 0 &&
+      id.length > 0 &&
+      password.length > 0 &&
+      confirmPassword.length > 0 &&
+      !departmentWarning &&
+      !idWarning &&
+      !passwordWarning &&
+      !confirmPasswordWarning &&
+      idChecked;
+
+    setIsFormValid(isValid);
+  }, [
+    departmentName,
+    id,
+    password,
+    confirmPassword,
+    departmentWarning,
+    idWarning,
+    passwordWarning,
+    confirmPasswordWarning,
+    idChecked,
+  ]);
 
   return (
     <div className="flex flex-col pt-20">
@@ -99,7 +155,7 @@ export default function AddMemberForm() {
           warning={idWarning}
           showButton
           showStar={true}
-          buttonContent={idAvailable === false ? "확인완료" : "중복확인"}
+          buttonContent={idChecked ? "확인완료" : "중복확인"}
           buttonType="button"
           value={id}
           onChange={(e) => {
@@ -131,8 +187,9 @@ export default function AddMemberForm() {
           size="l"
           variant="primary"
           design="fill"
-          mainText="추가하기"
+          mainText={loading ? "추가 중..." : "추가하기"}
           type="submit"
+          disabled={!isFormValid || loading}
         />
       </form>
     </div>
