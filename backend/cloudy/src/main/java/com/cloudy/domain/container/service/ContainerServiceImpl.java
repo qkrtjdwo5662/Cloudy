@@ -1,10 +1,8 @@
 package com.cloudy.domain.container.service;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import co.elastic.clients.elasticsearch._types.query_dsl.MatchAllQuery;
-import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
-import co.elastic.clients.elasticsearch.core.search.TotalHits;
+import co.elastic.clients.json.JsonData;
 import com.cloudy.domain.container.model.Container;
 import com.cloudy.domain.container.model.ContainerLog;
 import com.cloudy.domain.container.model.dto.request.*;
@@ -15,13 +13,14 @@ import com.cloudy.domain.server.repository.ServerRepository;
 import com.cloudy.global.util.GenerateDateList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 
@@ -29,12 +28,97 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class ContainerServiceImpl implements ContainerService {
-    @Autowired
     private final ServerRepository serverRepository;
-    @Autowired
     private final ContainerRepository containerRepository;
-    @Autowired
     private final ElasticsearchClient elasticsearchClient;
+
+    private List<LocalDateTime> generateTimeSlots(LocalDateTime dateTime, ChronoUnit unit, int interval, int count) {
+        List<LocalDateTime> timeSlots = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            timeSlots.add(dateTime.minus(i * interval, unit));
+        }
+        Collections.reverse(timeSlots); // 오름차순 정렬
+        return timeSlots;
+    }
+
+    @Override
+    public ContainerGetUseResponses getContainersUse(Long serverId, LocalDateTime dateTime, ChronoUnit unit, int interval, int count) {
+        Server server = serverRepository.findById(serverId)
+                .orElseThrow(() -> new NotFoundException("Server not found with ID: " + serverId));
+
+        List<Container> containerList = containerRepository.findContainersByServerId(server);
+
+        // 전체 기간의 시작 시간과 끝 시간 계산
+        LocalDateTime startTime = dateTime.minus(interval * (count - 1), unit);
+        LocalDateTime endTime = dateTime;
+
+        DateTimeFormatter esTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'");
+        DateTimeFormatter indexFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        String gteTime = startTime.format(esTimeFormatter);
+        String ltTime = endTime.format(esTimeFormatter);
+
+        // 시작 날짜와 끝 날짜에 따른 인덱스 범위 설정
+        String startIndex = "server-logs-" + startTime.format(indexFormatter);
+        String endIndex = "server-logs-" + endTime.format(indexFormatter);
+        String searchIndexPattern = startIndex.equals(endIndex) ? startIndex + "*" : "server-logs-*";
+
+        List<ContainerGetUseResponse> containerResponses = containerList.stream()
+                .map(container -> {
+                    String containerName = container.getContainerName();
+
+                    try {
+                        // Elasticsearch 쿼리 설정
+                        SearchResponse<Map> searchResponse = elasticsearchClient.search(s -> s
+                                        .index(searchIndexPattern)
+                                        .query(q -> q
+                                                .bool(b -> b
+                                                        .filter(f -> f
+                                                                .range(r -> r
+                                                                        .field("@timestamp")
+                                                                        .gte(JsonData.of(gteTime))
+                                                                        .lt(JsonData.of(ltTime))
+                                                                ))
+                                                        .must(m -> m
+                                                                .matchPhrase(mp -> mp
+                                                                        .field("message")
+                                                                        .query("container: " + containerName)
+                                                                ))
+                                                )
+                                        ),
+                                Map.class
+                        );
+
+                        // 총 히트 수 가져오기
+                        long totalHits = searchResponse.hits().total().value();
+
+                        return ContainerGetUseResponse.of(
+                                container.getContainerId(),
+                                containerName,
+                                totalHits
+                        );
+
+                    } catch (Exception e) {
+                        if (e.getMessage().contains("index_not_found_exception")) {
+                            return ContainerGetUseResponse.of(
+                                    container.getContainerId(),
+                                    containerName,
+                                    0L // 인덱스가 없을 경우 0으로 설정
+                            );
+                        } else {
+                            e.printStackTrace();
+                            return ContainerGetUseResponse.of(
+                                    container.getContainerId(),
+                                    containerName,
+                                    0L
+                            );
+                        }
+                    }
+                })
+                .toList();
+
+        return ContainerGetUseResponses.from(containerResponses);
+    }
+
 
     @Override
     public Map<String,Long> getContainerUsages(ContainerGetUsagesRequest request) throws IOException {

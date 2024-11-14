@@ -3,6 +3,7 @@ package com.cloudy.domain.server.service;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.json.JsonData;
 import com.cloudy.domain.instance.model.Instance;
 import com.cloudy.domain.instance.repository.InstanceRepository;
 import com.cloudy.domain.member.model.Member;
@@ -26,9 +27,8 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -125,14 +125,63 @@ public class ServerServiceImpl implements ServerService {
         return ServerResponse.fromEntity(server);
     }
 
-    // todo: 얘는 나중에 데이터 넣어보고 구현해봐야됨
-    @Override
-    public MonitoringResponse monitorServer(Long serverId, int duration) {
-
-
-
-        return null;
+    private List<LocalDateTime> generateTimeSlots(LocalDateTime dateTime, ChronoUnit unit, int interval, int count) {
+        List<LocalDateTime> timeSlots = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            timeSlots.add(dateTime.minus(i * interval, unit));
+        }
+        Collections.reverse(timeSlots); // 오름차순 정렬
+        return timeSlots;
     }
+
+    @Override
+    public Map<String, Long> monitorServer(Long serverId, LocalDateTime dateTime, ChronoUnit unit, int interval, int count) {
+        Map<String, Long> requestCountsMap = new TreeMap<>();
+
+        List<LocalDateTime> timeSlots = generateTimeSlots(dateTime, unit, interval, count);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter esTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'");
+
+        for (LocalDateTime timeSlot : timeSlots) {
+            String formattedTime = timeSlot.format(formatter);
+            String searchIndex = "server-logs-" + timeSlot.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")) + "*";
+            System.out.println(searchIndex);
+
+            try {
+
+                String gteTime = timeSlot.minus(interval, unit).format(esTimeFormatter);
+                String ltTime = timeSlot.format(esTimeFormatter);
+
+                // Elasticsearch 쿼리 설정
+                SearchResponse<Map> searchResponse = elasticsearchClient.search(s -> s
+                                .index(searchIndex)
+                                .query(q -> q
+                                        .range(r -> r
+                                                .field("@timestamp")
+                                                .gte(JsonData.of(gteTime))
+                                                .lt(JsonData.of(ltTime))
+                                        )
+                                ),
+                        Map.class
+                );
+
+                // 총 히트 수 가져오기
+                long totalHits = searchResponse.hits().total().value();
+                requestCountsMap.put(formattedTime, totalHits);
+
+            } catch (Exception e) {
+                if (e.getMessage().contains("index_not_found_exception")) {
+                    requestCountsMap.put(formattedTime, 0L); // 인덱스가 없을 경우 0으로 설정
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        System.out.println(requestCountsMap);
+        return requestCountsMap;
+    }
+
 
     @Override
     public List<ThresholdResponse> getThresholds(Long memberId) {

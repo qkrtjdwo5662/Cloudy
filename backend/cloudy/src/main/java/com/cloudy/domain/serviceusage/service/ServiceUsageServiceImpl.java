@@ -1,5 +1,7 @@
 package com.cloudy.domain.serviceusage.service;
 
+import com.cloudy.domain.container.model.Container;
+import com.cloudy.domain.container.repository.ContainerRepository;
 import com.cloudy.domain.serviceusage.model.ServiceUsage;
 import com.cloudy.domain.serviceusage.model.dto.request.ServiceUsageCreateRequest;
 import com.cloudy.domain.serviceusage.model.dto.request.ServiceUsageGetServiceCostRequest;
@@ -10,6 +12,7 @@ import com.cloudy.domain.serviceusage.repository.ServiceUsageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 
 @Slf4j
@@ -17,7 +20,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ServiceUsageServiceImpl implements ServiceUsageService {
     private final ServiceUsageRepository serviceUsageRepository;
-
+    private final ContainerRepository containerRepository;
     @Override
     public ServiceUsageResponse updateServiceUsage(ServiceUsageRequest request, Long memberId) {
         return null;
@@ -25,7 +28,8 @@ public class ServiceUsageServiceImpl implements ServiceUsageService {
 
     @Override
     public ServiceUsageResponse createService(ServiceUsageCreateRequest request) {
-        ServiceUsage serviceUsage = new ServiceUsage(request.getServiceType(), request.getServiceName(), request.getServiceCost());
+        Container container = containerRepository.findById(request.getContainerID()).orElseThrow(()-> new NotFoundException("not found"));
+        ServiceUsage serviceUsage = new ServiceUsage(request.getServiceType(), request.getServiceName(), request.getServiceCost(), container);
         serviceUsageRepository.save(serviceUsage);
 
         return null;

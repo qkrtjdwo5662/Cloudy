@@ -36,7 +36,6 @@ public class Member extends BaseEntity {
     private Role role;
 
     @NotBlank
-    @Column(unique = true, length = 20)
     private String businessRegistrationNumber; // 사업자 등록번호
 
     public Member(String departmentName, String loginId, String password, Role role, String businessRegistrationNumber) {
