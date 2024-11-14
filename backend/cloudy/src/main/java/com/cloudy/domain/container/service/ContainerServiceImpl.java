@@ -17,24 +17,42 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ContainerServiceImpl implements ContainerService {
-    @Autowired
     private final ServerRepository serverRepository;
-    @Autowired
     private final ContainerRepository containerRepository;
-    @Autowired
     private final ElasticsearchClient elasticsearchClient;
+
+    @Override
+    public ContainerGetUseResponses getContainerUse(Long serverId) {
+        Server server = serverRepository.findById(serverId)
+                .orElseThrow(() -> new NotFoundException("Server not found with ID: " + serverId));
+
+        List<Container> containerList = containerRepository.findContainersByServerId(server);
+
+        List<ContainerGetUseResponse> containerResponses = containerList.stream()
+                .map(container -> ContainerGetUseResponse.of(
+                        container.getContainerId(),
+                        container.getContainerName(),
+                        0L
+                ))
+                .toList();
+
+        return ContainerGetUseResponses.from(containerResponses);
+    }
 
     @Override
     public Map<String,Long> getContainerUsages(ContainerGetUsagesRequest request) throws IOException {

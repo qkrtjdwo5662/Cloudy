@@ -23,4 +23,8 @@ public class ServiceUsageCreateRequest {
     @Schema(description = "서비스 비용", example = "100.0")
     @NotEmpty(message = "서비스 비용을 입력하세요.")
     private Double serviceCost;
+
+    @Schema(description = "컨테이너 ID", example = "1")
+    @NotEmpty(message = "컨테이너 ID 입력하세요.")
+    private Long containerID;
 }

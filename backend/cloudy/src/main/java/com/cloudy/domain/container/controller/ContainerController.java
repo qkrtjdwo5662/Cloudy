@@ -22,12 +22,21 @@ import java.util.Map;
 @Tag(name = "컨테이너 관련 API")
 @RestController
 @Slf4j
-    @RequestMapping("/containers")
+@RequestMapping("/containers")
 @RequiredArgsConstructor
 @CrossOrigin("*")
 public class ContainerController {
 
     private final ContainerService containerService;
+
+    @Operation(summary = "서버의 전체 컨테이너와 사용량 조회 API", description = "서버의 전체 컨테이너 사용량을 전체 조회합니다.")
+    @SwaggerApiSuccess(description = "서버 전체 컨테이너 사용량 조회를 성공했습니다.")
+    @GetMapping("/{serverId}")
+    public Response<ContainerGetUseResponses> getContainers(@PathVariable Long serverId) {
+        ContainerGetUseResponses response = containerService.getContainerUse(serverId);
+        return Response.SUCCESS(response, "OK");
+    }
+
 
     @Operation(summary = "서버 전체 컨테이너 사용량 조회 API", description = "서버 전체 컨테이너 사용량을 전체 조회합니다.")
     @SwaggerApiSuccess(description = "서버 전체 컨테이너 사용량 조회를 성공했습니다.")
