@@ -119,6 +119,76 @@ public class ContainerServiceImpl implements ContainerService {
         return ContainerGetUseResponses.from(containerResponses);
     }
 
+    @Override
+    public ContainerGetUseResponses getContainersUseRecentlyWeek(Long serverId, LocalDate date) {
+        Server server = serverRepository.findById(serverId)
+                .orElseThrow(() -> new NotFoundException("Server not found with ID: " + serverId));
+
+        List<Container> containerList = containerRepository.findContainersByServerId(server);
+
+        // 최근 1주일의 시작일과 종료일 계산
+        LocalDate startDate = date.minusDays(6);  // 최근 일주일 (7일간의 데이터)
+        LocalDate endDate = date;
+
+        DateTimeFormatter esTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'");
+        DateTimeFormatter indexFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+
+        List<ContainerGetUseResponse> containerResponses = containerList.stream()
+                .map(container -> {
+                    String containerName = container.getContainerName();
+                    long totalHits = 0;
+
+                    // 시작날부터 끝날까지 매일 인덱스를 조회하여 호출 수 누적
+                    for (LocalDate currentDate = startDate; !currentDate.isAfter(endDate); currentDate = currentDate.plusDays(1)) {
+                        String searchIndex = "server-logs-" + currentDate.format(indexFormatter) + "*";
+
+                        // Elasticsearch 쿼리 시간 범위 설정
+                        String gteTime = currentDate.atStartOfDay().minusHours(9).format(esTimeFormatter);
+                        String ltTime = currentDate.plusDays(1).atStartOfDay().minusHours(9).format(esTimeFormatter);
+
+                        try {
+                            // Elasticsearch 쿼리 설정: 해당 날짜의 컨테이너 호출 수 조회
+                            SearchResponse<Map> searchResponse = elasticsearchClient.search(s -> s
+                                            .index(searchIndex)
+                                            .query(q -> q
+                                                    .bool(b -> b
+                                                            .filter(f -> f
+                                                                    .range(r -> r
+                                                                            .field("@timestamp")
+                                                                            .gte(JsonData.of(gteTime))
+                                                                            .lt(JsonData.of(ltTime))
+                                                                    ))
+                                                            .must(m -> m
+                                                                    .matchPhrase(mp -> mp
+                                                                            .field("message")
+                                                                            .query("container: " + containerName)
+                                                                    ))
+                                                    )
+                                            ),
+                                    Map.class
+                            );
+
+                            // 해당 날짜의 히트 수 누적
+                            totalHits += searchResponse.hits().total().value();
+
+                        } catch (Exception e) {
+                            if (!e.getMessage().contains("index_not_found_exception")) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    return ContainerGetUseResponse.of(
+                            container.getContainerId(),
+                            containerName,
+                            totalHits
+                    );
+                })
+                .toList();
+
+        return ContainerGetUseResponses.from(containerResponses);
+    }
+
 
     @Override
     public Map<String,Long> getContainerUsages(ContainerGetUsagesRequest request) throws IOException {
