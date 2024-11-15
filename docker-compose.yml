@@ -24,7 +24,11 @@ services:
     restart: "always"
     networks:
       - cloudy
-
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      
   companyservice-be:
     image: companyservice-be:latest
     container_name: companyservice-be
@@ -42,6 +46,25 @@ services:
     restart: "always"
     networks:
       - cloudy
+
+  commercial-be:
+    image: commercial-be:latest
+    container_name: commercial-be
+    ports:
+      - "8083:8083"
+    restart: "always"
+    networks:
+      - cloudy
+  
+  ssafy-be:
+    image: ssafy-be:latest
+    container_name: ssafy-be
+    ports:
+      - "8084:8084"
+    restart: "always"
+    networks:
+      - cloudy
+
 
   nginx-reverse:
     image: nginx:latest
