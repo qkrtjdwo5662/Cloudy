@@ -44,6 +44,17 @@ public class ContainerController {
         return Response.SUCCESS(response, "OK");
     }
 
+
+    @Operation(summary = "서버의 전체 컨테이너와 최근 일주일 사용량 조회 API", description = "서버의 전체 컨테이너 최근 일주일 사용량을 전체 조회합니다.")
+    @SwaggerApiSuccess(description = "서버 전체 컨테이너 최근 일주일 사용량 조회를 성공했습니다.")
+    @GetMapping("/usage-week")
+    public Response<ContainerGetUseResponses> getContainersRecentlyWeek(
+            @Parameter(description = "서버 ID", example = "1") @RequestParam Long serverId,
+            @Parameter(description = "년,월,일", example = "2024-11-15") @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam LocalDate date) {
+        ContainerGetUseResponses response = containerService.getContainersUseRecentlyWeek(serverId, date);
+        return Response.SUCCESS(response, "OK");
+    }
+
     @Operation(summary = "컨테이너 생성", description = "서버의 컨테이너를 생성합니다.")
     @SwaggerApiSuccess(description = "컨테이너 생성을 성공하였습니다.")
     @PostMapping("/{serverId}/create")

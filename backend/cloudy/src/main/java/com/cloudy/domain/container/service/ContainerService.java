@@ -4,6 +4,7 @@ import com.cloudy.domain.container.model.dto.request.*;
 import com.cloudy.domain.container.model.dto.response.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -21,6 +22,8 @@ public interface ContainerService {
     **/
 
     ContainerGetUseResponses getContainersUse(Long serverId, LocalDateTime dateTime, ChronoUnit unit, int interval, int count);
+
+    ContainerGetUseResponses getContainersUseRecentlyWeek(Long serverId, LocalDate date);
 
     //전체 컨테이너의 내/외부 서비스 사용량 조회, 전체 사용량 많은 순서로 정렬해서 보내줄 것.
     Map<String,Long> getContainerUsages(ContainerGetUsagesRequest request) throws IOException;

@@ -112,7 +112,7 @@ public class ServerController {
     @GetMapping("/cost/summary")
     public Response<ServerMonthCostResponse> summaryCost(
             @Parameter(description = "서버 ID", example = "1") @RequestParam Long serverId,
-            @Parameter(description = "오늘 날짜와 시간(분 단위)", example = "2024-11-15") @DateTimeFormat(pattern = "yyyy-MM") @RequestParam LocalDate dateTime)  {
+            @Parameter(description = "년,월,일", example = "2024-11-15") @DateTimeFormat(pattern = "yyyy-MM") @RequestParam LocalDate dateTime)  {
 
         ServerMonthCostResponse response = serverService.monthServerCost(serverId, dateTime);
         return Response.SUCCESS(response, "서버 비용 요약 조회 성공");
@@ -123,7 +123,7 @@ public class ServerController {
     @GetMapping("/daily-cost")
     public Response<ServerDailyCostResponse> monthServerCost(
             @Parameter(description = "서버 ID", example = "1") @RequestParam Long serverId,
-            @Parameter(description = "오늘 날짜와 시간(분 단위)", example = "2024-11-15") @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam LocalDate dateTime)  {
+            @Parameter(description = "년,월,일", example = "2024-11-15") @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam LocalDate dateTime)  {
 
         ServerDailyCostResponse response = serverService.dailyServerCost(serverId, dateTime);
         return Response.SUCCESS(response, "서버 일자별 비용 조회 성공");
@@ -134,7 +134,7 @@ public class ServerController {
     @GetMapping("/week-cost")
     public Response<Map<String, Double>> recentlyWeekServerCost(
             @Parameter(description = "서버 ID", example = "1") @RequestParam Long serverId,
-            @Parameter(description = "오늘 날짜와 시간(분 단위)", example = "2024-11-15") @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam LocalDate dateTime)  {
+            @Parameter(description = "년,월,일", example = "2024-11-15") @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam LocalDate dateTime)  {
 
         Map<String, Double> response = serverService.weeklyServerCost(serverId, dateTime);
         return Response.SUCCESS(response, "서버 최근 일주일 비용 조회 성공");
