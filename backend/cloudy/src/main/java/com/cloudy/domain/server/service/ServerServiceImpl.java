@@ -15,6 +15,7 @@ import com.cloudy.domain.server.model.dto.response.*;
 import com.cloudy.domain.server.repository.ServerRepository;
 import com.cloudy.domain.serviceusage.model.ServiceUsage;
 import com.cloudy.domain.serviceusage.repository.ServiceUsageRepository;
+import com.cloudy.global.util.DockerStatsParser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -208,7 +209,6 @@ public class ServerServiceImpl implements ServerService {
     public CpuUsage getCPUData(Long containerId) throws IOException {
         // process Builder로 docker image stats 가져오기
         String[] commands = {"top", "-b", "-n", "1"}; // 이건 나중에 하드코딩 풀어야함.
-
         ProcessBuilder processBuilder = new ProcessBuilder(commands);
         Process result = processBuilder.start();
         BufferedReader reader = new BufferedReader(new InputStreamReader(result.getInputStream()));
@@ -446,6 +446,42 @@ public class ServerServiceImpl implements ServerService {
         }
 
         return dailyCosts;
+    }
+
+    @Override
+    public CpuUsage getAllMemoryData() throws IOException {
+        String[] commands = {"docker","stats","--no-stream"};
+        ProcessBuilder processBuilder = new ProcessBuilder(commands);
+        Process result = processBuilder.start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(result.getInputStream()));
+        reader.readLine(); // 첫번째 줄 날리기
+        String line;
+        CpuUsage usage = new CpuUsage();
+        boolean memoryCheck = false;
+        double totalCpuUsage = 0;
+        double totalMemoryUsage = 0;
+        double totalMemoryLimit = 0;
+        double numContainer = 0;
+        while ((line = reader.readLine()) != null) {
+            numContainer++;
+            System.out.println("cur Line : " + line);
+            String[] containerData = line.trim().split("\\s+");
+
+            String containerId = containerData[0];
+            String name = containerData[1];
+            double cpuUsage = Double.parseDouble(containerData[2].replace("%", ""));
+            double memUsage = DockerStatsParser.parseMemory(Double.parseDouble(containerData[3].replaceAll("[^\\d.]", "")), containerData[3]);
+            double memLimit = DockerStatsParser.parseMemory(Double.parseDouble(containerData[5].replaceAll("[^\\d.]", "")), containerData[5]);
+            totalCpuUsage += cpuUsage;
+            totalMemoryUsage += memUsage;
+            totalMemoryLimit += memLimit;
+        }
+        if (numContainer == 0) return usage;
+
+        usage.setMemUsage(totalMemoryUsage);
+        usage.setMemLimit(totalMemoryLimit);
+        usage.setCpuPercent(totalCpuUsage / numContainer);
+        return usage;
     }
 
 

@@ -103,7 +103,8 @@ public class ServerController {
     @GetMapping("/monitoring/usage")
     public Response<CpuUsage> monitorServer(
             @Parameter(description = "serverId", example = "1") @RequestParam Long serverId) throws IOException {
-        CpuUsage response = serverService.getCPUData(serverId);
+//        CpuUsage response = serverService.getCPUData(serverId);
+        CpuUsage response = serverService.getAllMemoryData();
         return Response.SUCCESS(response, "Monitoring data retrieved successfully");
     }
 
