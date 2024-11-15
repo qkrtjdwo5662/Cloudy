@@ -32,4 +32,6 @@ public interface ServerService {
     ServerDailyCostResponse dailyServerCost(Long serverId, LocalDate date);
 
     Map<String, Double> weeklyServerCost(Long serverId, LocalDate date);
+
+    CpuUsage getAllMemoryData() throws IOException;
 }
