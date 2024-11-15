@@ -16,11 +16,11 @@ public final class DockerStatsParser {
     public static double parseMemory(double memory,String memorySt) {
         try {
             if (memorySt.contains("GiB")) {
-                return memory * 1024; // GiB를 MB로 변환
+                return memory * 1024*1024; // GiB를 MB로 변환
             } else if (memorySt.contains("MiB")) {
-                return memory; // 이미 MiB 단위이므로 그대로 사용
+                return memory * 1024; // 이미 MiB 단위이므로 그대로 사용
             } else {
-                return memory; // 기본적으로 MB 단위로 처리
+                return memory*1024; // 기본적으로 MB 단위로 처리
             }
         } catch (NumberFormatException e) {
             return 0.0; // 에러 발생 시 0으로 반환
