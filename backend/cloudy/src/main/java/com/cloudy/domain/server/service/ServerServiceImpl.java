@@ -147,9 +147,11 @@ public class ServerServiceImpl implements ServerService {
         // 9시간 보정된 시간 생성
         LocalDateTime adjustedDateTime = dateTime.minusHours(9);
 
-        // 시간 구간 생성
+        // 시간 구간 생성 (unit이 초 또는 분으로 처리 가능)
         List<LocalDateTime> timeSlots = generateTimeSlots(adjustedDateTime, unit, interval, count);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = unit == ChronoUnit.SECONDS
+                ? DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                : DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         DateTimeFormatter esTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'");
 
         // 인덱스는 dateTime의 날짜 기준으로 설정
@@ -160,7 +162,6 @@ public class ServerServiceImpl implements ServerService {
             String formattedTime = timeSlot.plusHours(9).format(formatter);
 
             try {
-
                 String gteTime = timeSlot.minus(interval, unit).format(esTimeFormatter);
                 String ltTime = timeSlot.format(esTimeFormatter);
 
@@ -193,10 +194,10 @@ public class ServerServiceImpl implements ServerService {
         System.out.println(requestCountsMap);
 
         List<Long> countList = new ArrayList<>();
-
-        for(String key: requestCountsMap.keySet()){
+        for (String key : requestCountsMap.keySet()) {
             countList.add(requestCountsMap.get(key));
         }
+
         return countList;
     }
 
