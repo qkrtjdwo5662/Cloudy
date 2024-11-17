@@ -314,11 +314,17 @@ public class ServerServiceImpl implements ServerService {
 
         double serviceCost = 0;
 
-        for(String api : apiUsageMap.keySet()){
-            ServiceUsage serviceUsage = serviceUsageRepository.findServiceUsageByServiceName(api);
-            Long count = apiUsageMap.get(api);
-            serviceCost += serviceUsage.getServiceCost() * count;
+        List<Container> containerList = containerRepository.findContainersByServerId(server);
+        for (int i = 0; i < containerList.size(); i++) {
+            Container container = containerList.get(i);
+
+            for (String api : apiUsageMap.keySet()) {
+                ServiceUsage serviceUsage = serviceUsageRepository.findServiceUsageByServiceNameAndContainer(api, container);
+                Long count = apiUsageMap.get(api);
+                serviceCost += serviceUsage.getServiceCost() * count;
+            }
         }
+
 
         accumulatedCost += serviceCost;
         expectedCost += (serviceCost / localDate.getDayOfMonth() )* 30;
@@ -375,12 +381,17 @@ public class ServerServiceImpl implements ServerService {
 
         double cost = instance.getCostPerHour() * 24;
 
-        for(String api : apiUsageMap.keySet()){
-            ServiceUsage serviceUsage = serviceUsageRepository.findServiceUsageByServiceName(api);
-            System.out.println(api);
-            Long count = apiUsageMap.get(api);
-            cost += serviceUsage.getServiceCost() * count;
+        List<Container> containerList = containerRepository.findContainersByServerId(server);
+        for (int i = 0; i < containerList.size(); i++) {
+            Container container = containerList.get(i);
+
+            for (String api : apiUsageMap.keySet()) {
+                ServiceUsage serviceUsage = serviceUsageRepository.findServiceUsageByServiceNameAndContainer(api, container);
+                Long count = apiUsageMap.get(api);
+                cost += serviceUsage.getServiceCost() * count;
+            }
         }
+
 
         return new ServerDailyCostResponse(Double.parseDouble(String.format("%.3f", cost)));
     }
