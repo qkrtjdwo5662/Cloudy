@@ -1,4 +1,4 @@
-import Button from "@/shared/ui/Button/Button";
+// import Button from "@/shared/ui/button/Button";
 
 export default function Home() {
   return (

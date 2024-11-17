@@ -13,7 +13,7 @@ interface ChipsProps {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const Chips = ({
+export const Chips = ({
   size,
   color,
   design = "fill",
@@ -72,5 +72,3 @@ const Chips = ({
     </button>
   );
 };
-
-export default Chips;

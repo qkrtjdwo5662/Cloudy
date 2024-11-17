@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import Button from "../button/Button";
+import { Button } from "../button/Button";
 
 type Size = "l" | "m";
 
@@ -12,7 +12,7 @@ interface TitleProps {
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-const Title = ({
+export const Title = ({
   size,
   showButton,
   buttonContent,
@@ -46,5 +46,3 @@ const Title = ({
     </div>
   );
 };
-
-export default Title;

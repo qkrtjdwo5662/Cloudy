@@ -11,7 +11,7 @@ interface NavigationItemProps {
   children: ReactNode;
 }
 
-const NavigationItem = ({
+export const NavigationItem = ({
   leftIcon,
   rightIcon,
   isSubItem,
@@ -47,5 +47,3 @@ const NavigationItem = ({
     content
   );
 };
-
-export default NavigationItem;
