@@ -22,6 +22,7 @@ public interface InstanceRepository extends JpaRepository<Instance, Long> {
 
     Optional<Instance> findByInstanceNameAndInstancePeriodType(String instanceName, String InstancePeriodType);
 
+    List<Instance> findAllByInstancePeriodType(String InstancePeriodType);
     // DISTINCT를 사용하여 중복 제거
     @Query("SELECT DISTINCT i FROM Instance i WHERE i.cloudType = :cloudType")
     List<Instance> findDistinctByCloudType(@Param("cloudType") String cloudType);

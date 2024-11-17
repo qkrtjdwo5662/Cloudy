@@ -52,6 +52,10 @@ public class ServerServiceImpl implements ServerService {
     private final ServiceUsageRepository serviceUsageRepository;
     private final ContainerRepository containerRepository;
 
+    private final double upperThreshold = 80.0; // 많이 쓰니깐 업그레이드 추천.
+    private final double lowerThreshold = 20.0; // 너무 안쓰니깐 다운그레이드 추천
+
+
     @Override
     public ServerResponse createServer(ServerCreateRequest request, Long memberId) {
 //        System.out.println(request.getInstanceType() + " " +request.getPaymentType());
@@ -546,6 +550,108 @@ public class ServerServiceImpl implements ServerService {
             }
         }
 
+    }
+
+    @Override
+    public List<InstanceRecResponse> getInstanceRecommendation(long serverId) throws IOException {
+        // serverId 사용량 기준으로 instance Recommendation 보여주기
+
+        // 모든 인스턴스 가져오기
+        List<Instance> instances = instanceRepository.findAllByInstancePeriodType("ON");
+        // serverId 서버 가져오기
+        Server server = serverRepository.findById(serverId)
+                .orElseThrow(() -> new RuntimeException("Server not found with id: " + serverId));
+        Instance curInstance = server.getInstance();
+        // Elasticsearch cpu usages에서 limit 넘는 데이터 존재하는지 확인.
+        LocalDate cur = LocalDate.now();
+
+        // 오늘 달로 인덱스 설정 및 데이터 가져오기
+        String date = cur.format(DateTimeFormatter.ofPattern("yyyy.MM"));
+        String searchIndex = "cpu-usages-logs-" + date;
+        try {
+            SearchResponse<CpuUsageDto> searchData = elasticsearchClient.search(s -> s.index(searchIndex)
+                            .query(q -> q
+                                    .match(t -> t
+                                            .field("serverId")
+                                            .query(serverId)))
+                    , CpuUsageDto.class);
+
+            List<CpuUsageDto> cpuUsageDtoList = searchData.hits().hits().stream()
+                    .map(hit -> hit.source())
+                    .collect(Collectors.toList());
+
+            // cpuUsageDtoList로 server
+            double meanCpu = 0;
+            double meanMemory = 0;
+
+            // mean이 upperthreshold 보다 높을때?, 낮을때?
+            for (CpuUsageDto cud : cpuUsageDtoList){
+                meanCpu += cud.getCpuPercent();
+                meanMemory += cud.getMemPercent();
+            }
+            // 로그 갯수 만큼 나눠서 mean 가져오기
+            meanCpu /= cpuUsageDtoList.size();
+            meanMemory /= cpuUsageDtoList.size();
+
+            if (meanCpu >= upperThreshold){
+                // cpu 더 많은거 추천 3개
+                PriorityQueue<InstanceRecResponse> pq = new PriorityQueue<>(
+                        (o1,o2) -> {
+                            double dist1 = Math.abs(o1.getExpectedUsage() - 50.0);
+                            double dist2 = Math.abs(o2.getExpectedUsage() - 50.0);
+
+                            return Double.compare(dist1,dist2);
+                        }
+                );
+                for (Instance cand : instances) {
+                    double ratio = Double.parseDouble(cand.getCpu())/Double.parseDouble(curInstance.getCpu());
+                    double expectedCpuUsage = ratio * meanCpu;
+                    if (Integer.parseInt(cand.getCpu()) > Integer.parseInt(curInstance.getCpu())
+                            && expectedCpuUsage <= upperThreshold && expectedCpuUsage >= lowerThreshold) {
+                        pq.add(new InstanceRecResponse(cand.getInstanceName(), cand.getCloudType()
+                                ,cand.getCostPerHour(), expectedCpuUsage));
+                    }
+                }
+                List<InstanceRecResponse> res = new ArrayList<>();
+                int count = 3;
+                while (!pq.isEmpty() && count > 0){
+                    res.add(pq.poll());
+                    count--;
+                }
+                return res;
+            }else if (meanCpu <= lowerThreshold){
+                // cpu 더 적은거 추천 3개
+                PriorityQueue<InstanceRecResponse> pq = new PriorityQueue<>(
+                        (o1,o2) -> {
+                            double dist1 = Math.abs(o1.getExpectedUsage() - 50.0);
+                            double dist2 = Math.abs(o2.getExpectedUsage() - 50.0);
+
+                            return -Double.compare(dist1,dist2);
+                        }
+                );
+                for (Instance cand : instances) {
+                    double ratio = Double.parseDouble(cand.getCpu())/Double.parseDouble(curInstance.getCpu());
+                    double expectedCpuUsage = ratio * meanCpu;
+                    if (Integer.parseInt(cand.getCpu()) > Integer.parseInt(curInstance.getCpu())
+                            && expectedCpuUsage <= upperThreshold && expectedCpuUsage >= lowerThreshold) {
+                        pq.add(new InstanceRecResponse(cand.getInstanceName(), cand.getCloudType()
+                                ,cand.getCostPerHour(), expectedCpuUsage));
+                    }
+                }
+                List<InstanceRecResponse> res = new ArrayList<>();
+                int count = 3;
+                while (!pq.isEmpty() && count > 0){
+                    res.add(pq.poll());
+                    count--;
+                }
+                return res;
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        // 모든 인스턴스의 예상 사용량 가져오기
+        return List.of();
     }
 
 

@@ -142,6 +142,14 @@ public class ServerController {
         return Response.SUCCESS(response, "서버 최근 일주일 비용 조회 성공");
     }
 
+    @Operation(summary = "서버 추천 리턴", description = "서버 추천 리턴")
+    @SwaggerApiSuccess(description = "서버 추천 리턴 성공")
+    @GetMapping("/recommend") // servers
+    public Response<List<InstanceRecResponse>> getInstanceRecommendation(
+            @Parameter(description = "serverId", example = "1") @RequestParam Long serverId) throws IOException {
 
+        List<InstanceRecResponse> response = serverService.getInstanceRecommendation(serverId);
+        return Response.SUCCESS(response, "서버 최근 일주일 비용 조회 성공");
+    }
 
 }
