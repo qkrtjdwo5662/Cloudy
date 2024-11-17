@@ -145,7 +145,7 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public List<Long> monitorServer(Long serverId, LocalDateTime dateTime, ChronoUnit unit, int interval, int count) {
+    public ServerMonitoringResponse monitorServer(Long serverId, LocalDateTime dateTime, ChronoUnit unit, int interval, int count) {
         Map<String, Long> requestCountsMap = new TreeMap<>();
 
         // 9시간 보정된 시간 생성
@@ -196,13 +196,14 @@ public class ServerServiceImpl implements ServerService {
         }
 
         System.out.println(requestCountsMap);
-
+        List<String> timeList = new ArrayList<>();
         List<Long> countList = new ArrayList<>();
         for (String key : requestCountsMap.keySet()) {
+            timeList.add(key);
             countList.add(requestCountsMap.get(key));
         }
 
-        return countList;
+        return ServerMonitoringResponse.of(timeList, countList);
     }
 
 
