@@ -528,6 +528,7 @@ public class ServerServiceImpl implements ServerService {
         for (Server s : wholeServer){
             CpuUsage usage = getAllMemoryData(s.getServerId());
             ElasitcsearchCpuUsageSaveRequest eUsage = ElasitcsearchCpuUsageSaveRequest.builder()
+                    .serverId(s.getServerId())
                     .cpuPercent(usage.getCpuPercent())
                     .memPercent((usage.getMemUsage()/usage.getMemLimit()) * 100).build();
 
