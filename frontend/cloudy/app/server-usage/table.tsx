@@ -1,8 +1,9 @@
 import React from "react";
 
 interface TableRowProps {
+  containerId: number;
   containerName: string;
-  callCount: string;
+  serviceRequestCount: number;
 }
 
 interface TableProps {
@@ -14,10 +15,10 @@ export default function Table({ rows }: TableProps) {
     <div className="flex-1 rounded-lg bg-white p-16">
       <div className="flex bg-indigo-500 font-semibold text-white">
         <div className="flex w-1/2 items-center justify-center border-b border-gray-200 px-20 py-10">
-          컨테이너 명
+          이름
         </div>
         <div className="flex w-1/2 items-center justify-center border-b border-gray-200 px-20 py-10">
-          호출 횟수
+          호출 횟수(회)
         </div>
       </div>
 
@@ -34,7 +35,7 @@ export default function Table({ rows }: TableProps) {
               {row.containerName}
             </div>
             <div className="flex w-1/2 items-center justify-center px-20 py-10">
-              {row.callCount}
+              {row.serviceRequestCount}
             </div>
           </div>
         ))}
