@@ -128,7 +128,8 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-
+    networks:
+      - cloudy
 volumes:
   db: {}
   es_data:
