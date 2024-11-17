@@ -32,15 +32,6 @@ public class ContainerServiceImpl implements ContainerService {
     private final ContainerRepository containerRepository;
     private final ElasticsearchClient elasticsearchClient;
 
-    private List<LocalDateTime> generateTimeSlots(LocalDateTime dateTime, ChronoUnit unit, int interval, int count) {
-        List<LocalDateTime> timeSlots = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            timeSlots.add(dateTime.minus(i * interval, unit));
-        }
-        Collections.reverse(timeSlots); // 오름차순 정렬
-        return timeSlots;
-    }
-
     @Override
     public ContainerGetUseResponses getContainersUse(Long serverId, LocalDateTime dateTime, ChronoUnit unit, int interval, int count) {
         Server server = serverRepository.findById(serverId)
@@ -313,5 +304,22 @@ public class ContainerServiceImpl implements ContainerService {
 
         
         return hm;
+    }
+
+    @Override
+    public ContainerGetResponses getContainers(Long serverId) {
+        Server server = serverRepository.findById(serverId).orElseThrow(() -> new IllegalArgumentException("Invalid server ID"));
+        List<Container> containerList = containerRepository.findContainersByServerId(server);
+
+        List<ContainerGetResponse> responses = containerList.stream()
+                .map(container -> {
+                    return ContainerGetResponse.of(
+                            container.getContainerId(),
+                            container.getContainerName()
+                    );
+                })
+                .toList();
+
+        return ContainerGetResponses.from(responses);
     }
 }
