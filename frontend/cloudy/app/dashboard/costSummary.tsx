@@ -16,15 +16,15 @@ export default function CostSummary() {
     }
   }, [fetchCostSummary]);
 
-  if (loading) {
-    return (
-      <div className="max-w-xs rounded-lg bg-white p-20">
-        <div className="flex items-center px-20">
-          <span className="text-xl font-bold text-black">비용 요약</span>
-        </div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="max-w-xs rounded-lg bg-white p-20">
+  //       <div className="flex items-center px-20">
+  //         <span className="text-xl font-bold text-black">비용 요약</span>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   if (error) {
     return (

@@ -7,8 +7,22 @@ import ServerOption from "./serverOption";
 import CostSummary from "./costSummary";
 import Calendar from "./Calendar";
 import RealTimeChart from "./test";
+import { useEffect, useState } from "react";
+import { useFetchDailyCost } from "@/features/cost-calendar/hooks/useFetchDailyCost";
 
 export default function DashBoardPage() {
+  const [selectedDate, setSelectedDate] = useState("2024-11-13");
+  const { cost, loading, error, fetchDailyCost } = useFetchDailyCost();
+
+  useEffect(() => {
+    fetchDailyCost(selectedDate);
+  }, [selectedDate, fetchDailyCost]);
+
+  const handleDateChange = (date: string) => {
+    setSelectedDate(date);
+    console.log("selected", selectedDate);
+  };
+
   return (
     <div className="flex h-full w-full">
       <div className="flex h-full w-full flex-col gap-6 p-20">
@@ -47,7 +61,7 @@ export default function DashBoardPage() {
             </article>
             <article className="flex h-full w-1/4 overflow-hidden rounded-5 border border-gray-200 bg-white p-14">
               <div className="flex h-full w-full">
-                <Calendar />
+                <Calendar onDateChange={handleDateChange} />
               </div>
             </article>
           </section>

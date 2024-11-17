@@ -19,12 +19,8 @@ export const useFetchCostSummary = () => {
     setError(null);
 
     try {
-      const response = await axios.post(
-        `http://k11a606.p.ssafy.io:8081/servers/cost/summary`,
-        {
-          serverId,
-          date,
-        },
+      const response = await axios.get(
+        `http://k11a606.p.ssafy.io:8081/servers/cost/summary?serverId=${serverId}&dateTime=${date}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

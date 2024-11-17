@@ -1,9 +1,9 @@
 import { CostCalendarResponse } from "../model/types";
 import { handleApiRequest } from "@/shared/api/client";
 
-export const fetchCalendar = async (containerId: string) => {
+export const fetchCalendar = async (serverId: string) => {
   return handleApiRequest<CostCalendarResponse, "get">(
-    `/containers/${containerId}/monthly-cost`,
+    `/servers/daily-cost`,
     "get",
   );
 };
