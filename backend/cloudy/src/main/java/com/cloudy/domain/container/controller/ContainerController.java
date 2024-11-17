@@ -63,6 +63,16 @@ public class ContainerController {
         return Response.SUCCESS();
     }
 
+    @Operation(summary = "컨테이너 조회", description = "서버의 모든 컨테이너를 조회 합니다.")
+    @SwaggerApiSuccess(description = "컨테이너 조회를 성공하였습니다.")
+    @GetMapping("/{serverId}")
+    public Response<ContainerGetResponses> getContainers(@Parameter(description = "서버 ID", example = "1") @PathVariable Long serverId){
+        ContainerGetResponses response = containerService.getContainers(serverId);
+        return Response.SUCCESS(response, "컨테이너 조회를 성공하였습니다.");
+    }
+
+
+
 //    @Operation(summary = "서버 전체 컨테이너 사용량 조회 API", description = "서버 전체 컨테이너 사용량을 전체 조회합니다.")
 //    @SwaggerApiSuccess(description = "서버 전체 컨테이너 사용량 조회를 성공했습니다.")
 //    @GetMapping("/usage")
