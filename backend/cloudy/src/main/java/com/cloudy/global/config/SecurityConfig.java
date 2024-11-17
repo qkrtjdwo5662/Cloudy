@@ -62,7 +62,7 @@ public class SecurityConfig {
         ));
 
         // 인증 정보 포함 허용
-        config.setAllowCredentials(true);
+//        config.setAllowCredentials(true);
 
         // 캐시 설정 (선택 사항, 필요하면 추가)
         config.setMaxAge(3600L);
