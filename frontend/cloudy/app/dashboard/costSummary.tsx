@@ -30,7 +30,7 @@ export default function CostSummary() {
     return (
       <div className="max-w-xs rounded-lg bg-white p-20">
         <div className="flex items-center px-20">
-          <span className="text-xl font-bold text-black">비용 요약</span>
+          <span className="text-xl font-bold text-gray-600">비용 요약</span>
         </div>
         <div className="p-20">
           <p className="text-sm text-gray-500">{error}</p>
@@ -42,7 +42,7 @@ export default function CostSummary() {
   return (
     <div className="max-w-xs rounded-lg bg-white p-20">
       <div className="flex items-center px-20">
-        <span className="text-xl font-bold text-black">비용 요약</span>
+        <span className="text-xl font-bold text-gray-600">비용 요약</span>
       </div>
 
       <div className="px-20 py-20">
