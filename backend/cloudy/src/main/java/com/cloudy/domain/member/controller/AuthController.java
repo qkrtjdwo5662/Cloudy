@@ -36,6 +36,7 @@ public class AuthController {
     @Operation(summary = "로그인 API", description = "MemberLoginRequest로 로그인 진행")
     @SwaggerApiSuccess(description = "로그인 성공")
     @SwaggerApiError({ErrorCode.NOT_EXIST_MEMBER, ErrorCode.NOT_MATCH_PASSWORD})
+    @CrossOrigin(origins = "http://k11a606.p.ssafy.io:3000", allowCredentials = "true")
     @PostMapping("/login")
     public Response<MemberLoginResponse> login(@Valid @RequestBody MemberLoginRequest memberLoginRequest) {
         MemberLoginResponse memberLoginResponse = authService.login(memberLoginRequest);
