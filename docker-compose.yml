@@ -120,10 +120,13 @@ services:
       - cloudy
 
   cloudy-fe:
+    build:
+      context: ./frontend/cloudy
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     volumes:
-      - .:/app
+      - ./frontend/cloudy:/app
       - /app/node_modules
     networks:
       - cloudy
