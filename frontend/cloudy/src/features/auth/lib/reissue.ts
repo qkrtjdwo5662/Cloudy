@@ -22,6 +22,9 @@ export const reissueToken = async () => {
     {
       accessToken: currentAccessToken,
       refreshToken,
+      serverId: 1, // 예: 기본값 추가
+      role: "user", // 예: 기본값 추가
+      registrationNumber: "12345", // 예: 기본값 추가
     },
     { bypassInterceptor: true } as ApiRequestConfig,
   );

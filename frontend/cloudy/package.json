@@ -13,10 +13,10 @@
     "chart.js": "^4.4.6",
     "middleware": "^1.0.0",
     "next": "15.0.0",
-    "react": "19.0.0-rc-65a56d0e-20241020",
+    "react": "18.2.0",
     "react-calendar": "^5.1.0",
     "react-chartjs-2": "^5.2.0",
-    "react-dom": "^18.3.1",
+    "react-dom": "18.2.0",
     "tailwindcss-preset-px-to-rem": "^1.2.1",
     "zustand": "^5.0.1"
   },

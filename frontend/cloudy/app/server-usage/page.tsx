@@ -4,15 +4,26 @@ import MainLineChart from "../dashboard/mainLineChart";
 import Table from "./table";
 import BubbleChart from "./bubbleChart";
 import { Title } from "@/shared/ui";
-const sampleData = [
-  { containerName: "컨테이너1", callCount: "14회" },
-  { containerName: "컨테이너2", callCount: "10회" },
-  { containerName: "컨테이너3", callCount: "48회" },
-  { containerName: "컨테이너4", callCount: "22회" },
-  { containerName: "컨테이너5", callCount: "22회" },
-];
+import { useFetchWeeklyUsage } from "@/features/cost-calendar/hooks/useFetchWeeklyUsage";
+import { useEffect } from "react";
 
 export default function DashBoardPage() {
+  const { weeklyUsage, loading, error, fetchWeeklyUsage } =
+    useFetchWeeklyUsage();
+
+  const getTodayDate = () => {
+    const today = new Date();
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(
+      today.getDate(),
+    ).padStart(2, "0")}`;
+  };
+
+  useEffect(() => {
+    if (!loading) {
+      fetchWeeklyUsage(getTodayDate());
+      console.log("weeklyUsage", weeklyUsage);
+    }
+  }, [fetchWeeklyUsage]);
   return (
     <div className="flex h-full w-full">
       <div className="flex h-full w-full flex-col gap-6 p-20">
@@ -27,7 +38,7 @@ export default function DashBoardPage() {
 
           <aside className="flex h-full w-1/3 flex-col gap-6">
             <div className="flex h-full w-full rounded-5 border border-gray-200 bg-white">
-              <Table rows={sampleData} />
+              <Table rows={weeklyUsage} />
             </div>
             <div className="flex h-full w-full rounded-5 border border-gray-200 bg-white">
               <BubbleChart />
