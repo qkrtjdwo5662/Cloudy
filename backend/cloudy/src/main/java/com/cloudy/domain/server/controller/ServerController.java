@@ -105,7 +105,7 @@ public class ServerController {
     public Response<CpuUsage> monitorServer(
             @Parameter(description = "serverId", example = "1") @RequestParam Long serverId) throws IOException {
 //        CpuUsage response = serverService.getCPUData(serverId);
-        CpuUsage response = serverService.getAllMemoryData();
+        CpuUsage response = serverService.getAllMemoryData(serverId);
         return Response.SUCCESS(response, "Monitoring data retrieved successfully");
     }
 
@@ -141,4 +141,7 @@ public class ServerController {
         Map<String, Double> response = serverService.weeklyServerCost(serverId, dateTime);
         return Response.SUCCESS(response, "서버 최근 일주일 비용 조회 성공");
     }
+
+
+
 }

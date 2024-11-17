@@ -1,6 +1,7 @@
 package com.cloudy.domain.server.service;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.core.IndexResponse;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.json.JsonData;
@@ -21,6 +22,7 @@ import com.cloudy.global.util.DockerStatsParser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
@@ -477,7 +479,7 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public CpuUsage getAllMemoryData() throws IOException {
+    public CpuUsage getAllMemoryData(long serverId) throws IOException {
         String[] commands = {"docker","stats","--no-stream"};
         ProcessBuilder processBuilder = new ProcessBuilder(commands);
         Process result = processBuilder.start();
@@ -485,14 +487,12 @@ public class ServerServiceImpl implements ServerService {
         reader.readLine(); // 첫번째 줄 날리기
         String line;
         CpuUsage usage = new CpuUsage();
-        boolean memoryCheck = false;
         double totalCpuUsage = 0;
         double totalMemoryUsage = 0;
         double totalMemoryLimit = 0;
         double numContainer = 0;
         while ((line = reader.readLine()) != null) {
             numContainer++;
-            System.out.println("cur Line : " + line);
             String[] containerData = line.trim().split("\\s+");
 
             String containerId = containerData[0];
@@ -510,6 +510,40 @@ public class ServerServiceImpl implements ServerService {
         usage.setMemLimit(totalMemoryLimit);
         usage.setCpuPercent(totalCpuUsage / numContainer);
         return usage;
+    }
+
+    @Override
+    @Scheduled(cron = "0 0/1 * * * ?")
+    public void saveServerCPUUsage() throws IOException {
+        // 5분마다 저장하기.
+        // 서버마다 usage -> Elasticsearch에 저장
+        List<Server> wholeServer = serverRepository.findAll(); // 모든 서버 가지고오기
+        LocalDate cur = LocalDate.now();
+
+        // 오늘 날짜로 인덱스 설정
+        String date = cur.format(DateTimeFormatter.ofPattern("yyyy.MM"));
+        String insertIndex = "cpu-usages-logs-" + date;
+
+        System.out.println(insertIndex);
+        for (Server s : wholeServer){
+            CpuUsage usage = getAllMemoryData(s.getServerId());
+            ElasitcsearchCpuUsageSaveRequest eUsage = ElasitcsearchCpuUsageSaveRequest.builder()
+                    .cpuPercent(usage.getCpuPercent())
+                    .memPercent((usage.getMemUsage()/usage.getMemLimit()) * 100).build();
+
+            try {
+                IndexResponse response = elasticsearchClient.index(i->i.index(insertIndex)
+                        .document(eUsage));
+
+            } catch (Exception e) {
+                if (e.getMessage().contains("index_not_found_exception")) {
+                    e.printStackTrace();
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
 

@@ -15,4 +15,6 @@ public interface ServerRepository extends JpaRepository<Server, Long> {
 
     List<Server> findByMember_MemberIdOrderByServerId(Long memberId);
 
+
+
 }
