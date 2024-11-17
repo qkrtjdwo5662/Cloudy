@@ -6,24 +6,39 @@ import CostBarChart from "./barChart";
 import Calendar from "../dashboard/Calendar";
 import { Title } from "@/shared/ui";
 import { useFetchDailyCost } from "@/features/cost-calendar";
-
-const sampleData = [
-  { containerName: "컨테이너1", callCount: "14회" },
-  { containerName: "컨테이너2", callCount: "10회" },
-  { containerName: "컨테이너3", callCount: "48회" },
-  { containerName: "컨테이너4", callCount: "22회" },
-  { containerName: "컨테이너5", callCount: "22회" },
-];
+import { useFetchWeeklyUsage } from "@/features/cost-calendar/hooks/useFetchWeeklyUsage";
+import { useFetchWeeklyCost } from "@/features/cost-calendar/hooks/useFetchServerCost";
 
 export default function CostCalendarPage() {
-  const [selectedDate, setSelectedDate] = useState("2024-11-13");
-  const { cost, loading, error, fetchDailyCost } = useFetchDailyCost();
+  const getTodayDate = () => {
+    const today = new Date();
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(
+      today.getDate(),
+    ).padStart(2, "0")}`;
+  };
+
+  const [selectedDate, setSelectedDate] = useState(getTodayDate());
+  const { cost, fetchDailyCost } = useFetchDailyCost();
+  const { weeklyUsage, loading, error, fetchWeeklyUsage } =
+    useFetchWeeklyUsage();
+  const { weeklyCost, fetchWeeklyCost } = useFetchWeeklyCost();
 
   useEffect(() => {
-    fetchDailyCost(selectedDate);
-  }, [selectedDate, fetchDailyCost]);
+    if (!loading) {
+      fetchDailyCost(selectedDate);
+      fetchWeeklyUsage(selectedDate);
+      fetchWeeklyCost(selectedDate);
+      console.log("weeklyUsage", weeklyUsage);
+    }
+  }, [selectedDate, fetchDailyCost, fetchWeeklyUsage, fetchWeeklyCost]);
 
-  console.log("Cost", selectedDate, cost);
+  // useEffect(() => {
+  //   fetchWeeklyUsage(selectedDate);
+  // }, [selectedDate, fetchWeeklyUsage]);
+
+  // useEffect(() => {
+  //   fetchWeeklyCost(selectedDate);
+  // }, [selectedDate, fetchWeeklyCost]);
 
   const handleDateChange = (date: string) => {
     setSelectedDate(date);
@@ -40,14 +55,19 @@ export default function CostCalendarPage() {
             <div className="flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white p-20">
               <Calendar onDateChange={handleDateChange} />
             </div>
-            <div className="flex w-full rounded-lg border border-gray-200 bg-white p-16">
-              <Table rows={sampleData} />
+            <div className="flex w-full flex-col rounded-lg border border-gray-200 bg-white p-16">
+              <Table rows={weeklyUsage} />
+              {/* <div className="px-20 pt-10">
+                각 컨테이너별 최근 일주일 사용 횟수에 대한 정보입니다.
+              </div> */}
             </div>
           </section>
 
-          <div className="h-full w-full rounded-lg border border-gray-200 bg-white p-20">
-            <CostBarChart />
-          </div>
+          <section className="flex h-1/2 w-full flex-row gap-6">
+            <div className="h-full w-full rounded-lg border border-gray-200 bg-white p-20">
+              <CostBarChart weeklyCost={weeklyCost} />
+            </div>
+          </section>
         </div>
       </div>
     </div>
