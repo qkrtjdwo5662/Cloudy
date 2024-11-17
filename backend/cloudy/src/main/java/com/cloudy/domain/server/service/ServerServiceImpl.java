@@ -4,6 +4,8 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.json.JsonData;
+import com.cloudy.domain.container.model.Container;
+import com.cloudy.domain.container.repository.ContainerRepository;
 import com.cloudy.domain.instance.model.Instance;
 import com.cloudy.domain.instance.repository.InstanceRepository;
 import com.cloudy.domain.member.model.Member;
@@ -46,6 +48,7 @@ public class ServerServiceImpl implements ServerService {
     private final InstanceRepository instanceRepository;
     private final ElasticsearchClient elasticsearchClient;
     private final ServiceUsageRepository serviceUsageRepository;
+    private final ContainerRepository containerRepository;
 
     @Override
     public ServerResponse createServer(ServerCreateRequest request, Long memberId) {
@@ -431,15 +434,23 @@ public class ServerServiceImpl implements ServerService {
             // 서버 인스턴스 비용 계산
             Server server = serverRepository.findById(serverId)
                     .orElseThrow(() -> new NotFoundException("Server not found"));
+
             Instance instance = server.getInstance();
             double dailyCost = instance.getCostPerHour() * 24;
 
             // API 사용 비용 계산
-            for (String api : apiUsageMap.keySet()) {
-                ServiceUsage serviceUsage = serviceUsageRepository.findServiceUsageByServiceName(api);
-                Long count = apiUsageMap.get(api);
-                dailyCost += serviceUsage.getServiceCost() * count;
+            // 서버 아이디로 컨테이너 여러개 가져와
+            List<Container> containerList = containerRepository.findContainersByServerId(server);
+            for (int i = 0; i < containerList.size(); i++) {
+                Container container = containerList.get(i);
+
+                for (String api : apiUsageMap.keySet()) {
+                    ServiceUsage serviceUsage = serviceUsageRepository.findServiceUsageByServiceNameAndContainer(api, container);
+                    Long count = apiUsageMap.get(api);
+                    dailyCost += serviceUsage.getServiceCost() * count;
+                }
             }
+
 
             // 날짜별 비용 저장 (소수점 3자리까지 반올림)
             dailyCosts.put(formattedDate, Double.parseDouble(String.format("%.3f", dailyCost)));
