@@ -10,7 +10,7 @@ export default function CpuUsageChart() {
 
   const curr = data?.cpuPercent ?? 0;
   const max = 100;
-  const label = curr;
+  const label = curr.toFixed(3);
 
   const chartData = {
     labels: ["Current Speed", "Remaining"],
