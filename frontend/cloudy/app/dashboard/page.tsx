@@ -47,9 +47,7 @@ export default function DashBoardPage() {
               </div>
             </article>
             <article className="flex h-full w-1/4 overflow-hidden rounded-5 border border-gray-200 bg-white p-14">
-              <div className="flex h-full w-full">
-                <Calendar />
-              </div>
+              <div className="flex h-full w-full">{/* <Calendar /> */}</div>
             </article>
           </section>
         </div>
