@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,14 +32,45 @@ public class SecurityConfig {
 
     // ⭐️ CORS 설정
     CorsConfigurationSource corsConfigurationSource() {
-        return request -> {
-            CorsConfiguration config = new CorsConfiguration();
-            config.setAllowedHeaders(Collections.singletonList("*"));
-            config.setAllowedMethods(Collections.singletonList("*"));
-            config.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000", "https://i11a607.p.ssafy.io", "http://10.0.2.2:3000","https://mono-repo-practice.vercel.app/"));
-            config.setAllowCredentials(true);
-            return config;
-        };
+        CorsConfiguration config = new CorsConfiguration();
+
+        // 허용할 헤더 설정
+        config.setAllowedHeaders(Arrays.asList(
+                "Authorization",
+                "Content-Type",
+                "X-Requested-With",
+                "Accept",
+                "Origin"
+        ));
+
+        // 허용할 HTTP 메서드 설정
+        config.setAllowedMethods(Arrays.asList(
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "OPTIONS"
+        ));
+
+        // 허용할 Origin (명시적으로 정의)
+        config.setAllowedOrigins(Arrays.asList(
+                "http://k11a606.p.ssafy.io:3000",
+                "http://localhost:3000",
+                "https://i11a607.p.ssafy.io",
+                "http://10.0.2.2:3000",
+                "https://mono-repo-practice.vercel.app"
+        ));
+
+        // 인증 정보 포함 허용
+        config.setAllowCredentials(true);
+
+        // 캐시 설정 (선택 사항, 필요하면 추가)
+        config.setMaxAge(3600L);
+
+        // 경로에 대해 CORS 설정 적용
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
     // Password 인코딩 방식에 BCrypt 암호화 방식 사용
@@ -75,7 +107,8 @@ public class SecurityConfig {
                 .sessionManagement((sessionConfig) ->
                         sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
+                .cors(corsConfig ->
+                        corsConfig.configurationSource(corsConfigurationSource()))
 
                 // HTTP 요청에 대한 보안 설정
                 // todo: 보안 끄면 api 정상실행
