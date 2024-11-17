@@ -21,7 +21,7 @@ public interface ServerService {
 
     ServerResponse deleteServer(Long serverId, Long memberId);
 
-    Map<String, Long> monitorServer(Long serverId, LocalDateTime dateTime, ChronoUnit unit, int interval, int count);
+    List<Long> monitorServer(Long serverId, LocalDateTime dateTime, ChronoUnit unit, int interval, int count);
 
     List<ThresholdResponse> getThresholds(Long memberId);
 
