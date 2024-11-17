@@ -22,3 +22,9 @@ export interface ContainerUsageCostResponse {
   data: ContainerGetUsageResponse[];
   size: number;
 }
+
+export interface ServerUsageGetResponse {
+  cpuPercent: number;
+  memUsage: number;
+  memLimit: number;
+}

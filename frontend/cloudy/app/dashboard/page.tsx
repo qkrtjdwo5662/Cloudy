@@ -1,9 +1,8 @@
 "use client";
 
 import { Title } from "@/shared/ui";
-import MainLineChart from "./mainLineChart";
-import RadarChart from "./radarChart";
-import GaugeChart from "./gaugeChart";
+import ServerUsageChart from "./ServerUsageChart";
+import CpuUsageChart from "./CpuUsageChart";
 import ServerOption from "./serverOption";
 import CostSummary from "./costSummary";
 import Calendar from "./Calendar";
@@ -31,12 +30,12 @@ export default function DashBoardPage() {
           <section className="flex h-1/2 w-full gap-6">
             <article className="flex h-full w-1/4 overflow-hidden rounded-5 border border-gray-200 bg-white p-20">
               <div className="flex h-full w-full">
-                <RadarChart />
+                <CpuUsageChart />
               </div>
             </article>
             <article className="flex h-full w-1/4 overflow-hidden rounded-5 border border-gray-200 bg-white p-20">
               <div className="flex h-full w-full">
-                <GaugeChart />
+                <ServerUsageChart />
               </div>
             </article>
             <article className="flex h-full w-1/4 flex-col overflow-hidden rounded-5 border border-gray-200 bg-white p-20">
