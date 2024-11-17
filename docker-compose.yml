@@ -1,20 +1,18 @@
 version: '3.9'
 
 services:
-
   mysql:
     image: mysql:8
     container_name: cloudy-mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=cloudy
-      - MYSQL_DATABASE=cloudy1234!
+    env_file:
+      - /etc/mysql/.env
     ports:
-      - "3306:3306" # MySQL 기본 포트를 외부에 노출
+      - "3306:3306" 
     volumes:
-      - db:/var/lib/mysql # MySQL 데이터를 영구적으로 저장
+      - db:/var/lib/mysql 
     networks:
       - cloudy
-    restart: "always"
+    restart: "no"
 
   cloudy-be:
     image: cloudy-be:latest
@@ -26,15 +24,56 @@ services:
     restart: "always"
     networks:
       - cloudy
-
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - "80:80"
-      - "443:443"
     volumes:
-      - /etc/nginx:/etc/nginx  # nginx 설정 파일 경로
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      
+  companyservice-be:
+    image: companyservice-be:latest
+    container_name: companyservice-be
+    ports:
+      - "8082:8082"
+    restart: "always"
+    networks:
+      - cloudy
+      
+  externalservice-be:
+    image: externalservice-be:latest
+    container_name: externalservice-be
+    ports:
+      - "4041:4041"
+    restart: "always"
+    networks:
+      - cloudy
+
+  commercial-be:
+    image: commercial-be:latest
+    container_name: commercial-be
+    ports:
+      - "8083:8083"
+    restart: "always"
+    networks:
+      - cloudy
+  
+  ssafy-be:
+    image: ssafy-be:latest
+    container_name: ssafy-be
+    ports:
+      - "8084:8084"
+    restart: "always"
+    networks:
+      - cloudy
+
+
+  nginx-reverse:
+    image: nginx:latest
+    container_name: nginx-reverse
+    ports:
+      - "80:80"       # 리버스 프록시용 HTTP 포트
+      - "443:443"     # 리버스 프록시용 HTTPS 포트
+    volumes:
+      - /etc/nginx/reverse:/etc/nginx  # 리버스 프록시 설정 파일 경로
       - /var/www/html:/var/www/html  # 정적 파일 제공을 위한 경로
       - /etc/letsencrypt:/etc/letsencrypt  # SSL 인증서 경로
     depends_on:
@@ -43,8 +82,47 @@ services:
     networks:
       - cloudy
 
+  nginx-forward:
+    image: nginx:latest
+    container_name: nginx-forward
+    ports:
+      - "8888:8888"  # 포워드 프록시용 포트 (클라이언트에서 포워드 프록시로 요청할 포트)
+    volumes:
+      - /etc/nginx/forward:/etc/nginx  # 포워드 프록시 설정 파일 경로
+    restart: "always"
+    networks:
+      - cloudy
+
+  elasticsearch:
+    image: elasticsearch:8.15.3
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m  # 메모리
+      - network.host=0.0.0.0
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - cloudy
+
+  logstash:
+    image: logstash:8.15.3  # 필요한 Logstash 버전
+    container_name: logstash
+    volumes:
+      - /etc/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf  # Logstash 설정 파일 경로
+    ports:
+      - "5044:5044"
+    depends_on:
+      - elasticsearch
+    networks:
+      - cloudy
+
+
 volumes:
   db: {}
+  es_data:
 
 networks:
   cloudy:

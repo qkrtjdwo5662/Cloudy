@@ -1,0 +1,30 @@
+<configuration>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>logstash:5044</destination>
+
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+
+        <reconnectionDelay>10000</reconnectionDelay>
+        <!-- DEBUG 이상 레벨만 Logstash로 전송 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="LOGSTASH" />
+    </root>
+
+    <logger name="com.example.controller" level="DEBUG" additivity="false">
+        <appender-ref ref="LOGSTASH" />
+    </logger>
+
+</configuration>
