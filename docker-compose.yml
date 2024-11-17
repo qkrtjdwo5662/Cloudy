@@ -120,6 +120,7 @@ services:
       - cloudy
 
   cloudy-fe:
+    image: cloudy-fe:latest
     build:
       context: ./frontend/cloudy
       dockerfile: Dockerfile
@@ -130,6 +131,7 @@ services:
       - /app/node_modules
     networks:
       - cloudy
+  
 volumes:
   db: {}
   es_data:
