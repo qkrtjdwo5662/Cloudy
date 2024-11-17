@@ -20,12 +20,8 @@ export const useFetchDailyCost = () => {
       setError(null);
 
       try {
-        const response = await axios.post(
-          `http://k11a606.p.ssafy.io:8081/servers/daily-cost`,
-          {
-            serverId,
-            date,
-          },
+        const response = await axios.get(
+          `http://k11a606.p.ssafy.io:8081/servers/daily-cost?serverId=${serverId}&dateTime=${date}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -41,7 +37,7 @@ export const useFetchDailyCost = () => {
         setLoading(false);
       }
     },
-    [accessToken, serverId], // 의존성 관리
+    [accessToken, serverId],
   );
 
   return {

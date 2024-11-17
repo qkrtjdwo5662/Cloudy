@@ -27,6 +27,10 @@ export default function Component({ onDateChange }: CalendarComponentProps) {
       onDateChange(formattedDate);
       fetchDailyCost(formattedDate);
       console.log("초기화된 날짜:", today);
+    } else {
+      const formattedDate = formatDateToString(date);
+      onDateChange(formattedDate);
+      fetchDailyCost(formattedDate);
     }
   }, [date, onDateChange, fetchDailyCost]);
 
@@ -79,10 +83,13 @@ export default function Component({ onDateChange }: CalendarComponentProps) {
           showNeighboringMonth={false}
         />
         <div className="mt-10 text-center">
-          {loading && <p>비용을 불러오는 중...</p>}
-          {error && <p>비용을 불러오는 데 실패했습니다.</p>}
+          {/* {loading && <p>비용을 불러오는 중...</p>} */}
+          {!loading && error && <p>비용을 불러오는 데 실패했습니다.</p>}
           {!loading && !error && cost !== null && (
-            <p className="text-m">선택한 날짜의 비용: ${cost}</p>
+            <p className="text-m">
+              선택한 날짜의 비용은{" "}
+              <span className="text-indigo-500">${cost}</span> 입니다.
+            </p>
           )}
         </div>
       </div>
