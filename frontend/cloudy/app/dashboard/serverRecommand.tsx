@@ -1,49 +1,45 @@
 "use client";
+import { useEffect } from "react";
 import ServerOption from "./serverOption";
-
-interface Option {
-  title: string;
-  description: string;
-  link: string;
-}
-
-const options: Option[] = [
-  {
-    title: "AWS",
-    description:
-      "Amazon Web Services는 신뢰할 수 있고 확장 가능하며 저렴한 클라우드 컴퓨팅 서비스를 제공합니다.",
-    link: "https://aws.amazon.com/",
-  },
-  {
-    title: "Google Cloud Platform",
-    description:
-      "Google Cloud는 Google의 인프라에서 실행되는 클라우드 컴퓨팅 서비스 모음을 제공합니다.",
-    link: "https://cloud.google.com/",
-  },
-  {
-    title: "Microsoft Azure",
-    description:
-      "Microsoft Azure는 조직의 비즈니스 과제를 해결할 수 있도록 도와주는 확장 가능한 클라우드 서비스 모음입니다.",
-    link: "https://azure.microsoft.com/",
-  },
-];
+import { useFetchServerRecommend } from "@/features/dashboard/hooks/useFetchServerRecommend";
 
 export default function ServerRecommand() {
+  const { serverRecommend, loading, error, fetchServerRecommend } =
+    useFetchServerRecommend();
+
+  const cloudLinks: Record<string, string> = {
+    AWS: "https://aws.amazon.com/",
+    GCP: "https://cloud.google.com/",
+    AZURE: "https://azure.microsoft.com/",
+  };
+
+  useEffect(() => {
+    fetchServerRecommend();
+  }, [fetchServerRecommend]);
+
+  if (loading) {
+    return <div className="text-center text-gray-600">로딩 중...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center text-red-500">{error}</div>;
+  }
+
   return (
     <div className="main m-5 flex flex-col">
       <div className="header">
-        <div className="mb-4 p-20 text-3xl font-bold text-gray-600">
-          서버 추천
-        </div>
+        <div className="mb-10 text-xl font-bold text-gray-600">서버 추천</div>
       </div>
-      {options.map((option, index) => (
-        <ServerOption
-          key={index}
-          title={option.title}
-          description={option.description}
-          link={option.link}
-        />
-      ))}
+      <div className="options flex flex-col gap-4">
+        {serverRecommend.map((option, index) => (
+          <ServerOption
+            key={index}
+            title={`${option.instanceName} - ${option.cloudType}`}
+            description={`시간당 비용: $${option.costPerHour.toFixed(2)}`}
+            link={cloudLinks[option.cloudType] || "#"}
+          />
+        ))}
+      </div>
     </div>
   );
 }

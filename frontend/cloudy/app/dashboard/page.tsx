@@ -9,6 +9,7 @@ import Calendar from "./Calendar";
 import RealTimeChart from "./test";
 import { useEffect, useState } from "react";
 import { useFetchDailyCost } from "@/features/cost-calendar/hooks/useFetchDailyCost";
+import ServerRecommand from "./serverRecommand";
 
 export default function DashBoardPage() {
   const [selectedDate, setSelectedDate] = useState("2024-11-13");
@@ -52,11 +53,12 @@ export default function DashBoardPage() {
                 <ServerUsageChart />
               </div>
             </article>
-            <article className="flex h-full w-1/4 flex-col overflow-hidden rounded-5 border border-gray-200 bg-white p-20">
+            <article className="flex h-full w-1/4 flex-col overflow-hidden rounded-5 border border-gray-200 bg-white px-20 pt-20">
               <div className="flex h-full w-full flex-col">
+                <ServerRecommand />
+                {/* <ServerOption title="qwer" description="qwer" link="/" />
                 <ServerOption title="qwer" description="qwer" link="/" />
-                <ServerOption title="qwer" description="qwer" link="/" />
-                <ServerOption title="qwer" description="qwer" link="/" />
+                <ServerOption title="qwer" description="qwer" link="/" /> */}
               </div>
             </article>
             <article className="flex h-full w-1/4 overflow-hidden rounded-5 border border-gray-200 bg-white p-14">
