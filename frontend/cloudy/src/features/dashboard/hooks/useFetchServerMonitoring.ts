@@ -4,15 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 
 export const useFetchServerMonitoring = (
   serverId: number,
-  dateTime: string,
   unit: string,
   interval: number,
   count: number,
 ) => {
   return useQuery<ServerMonitoringResponse, Error>({
-    queryKey: ["ServerMonitoring", serverId, dateTime, unit, interval, count],
-    queryFn: () =>
-      fetchServerMonitoring(serverId, dateTime, unit, interval, count),
+    queryKey: ["ServerMonitoring", serverId, unit, interval, count],
+    queryFn: () => fetchServerMonitoring(serverId, unit, interval, count),
     refetchInterval: 5000,
   });
 };

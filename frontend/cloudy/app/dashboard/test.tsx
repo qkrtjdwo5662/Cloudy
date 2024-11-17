@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import { useQuery } from "@tanstack/react-query";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -35,28 +34,18 @@ type ChartData = {
 };
 
 const RealTimeChart = () => {
-  const getCurrentDateTime = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const day = String(now.getDate()).padStart(2, "0");
-    const hours = String(now.getHours()).padStart(2, "0");
-    const minutes = String(now.getMinutes()).padStart(2, "0");
-    const seconds = String(now.getSeconds()).padStart(2, "0");
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  };
-
+  const interval = 30;
   const {
     data: monitoringData,
     error,
     isLoading,
-  } = useFetchServerMonitoring(1, getCurrentDateTime(), "SECONDS", 5, 30);
+  } = useFetchServerMonitoring(1, "SECONDS", 5, interval);
 
   const [chartData, setChartData] = useState<ChartData>({
     labels: [],
     datasets: [
       {
-        label: "Real-Time Monitoring Data",
+        label: "서버 호출 횟수",
         data: [],
         borderColor: "rgba(99, 102, 241, 1)",
         borderWidth: 2,
@@ -66,31 +55,29 @@ const RealTimeChart = () => {
   });
 
   useEffect(() => {
-    if (monitoringData) {
-      setChartData((prevData) => {
-        const newLabels = [...prevData.labels];
-        const newValues = [...prevData.datasets[0].data];
+    if (
+      monitoringData &&
+      Array.isArray(monitoringData.timeList) &&
+      Array.isArray(monitoringData.countList)
+    ) {
+      const { timeList, countList } = monitoringData;
 
-        // 새로운 데이터를 차트에 추가
-        monitoringData.forEach((dataPoint, index) => {
-          newLabels.push(new Date().toLocaleTimeString()); // 현재 시간을 라벨로 사용
-          newValues.push(dataPoint); // 모니터링 데이터를 추가
-        });
+      const formattedLabels = timeList.map((time: string) => {
+        const date = new Date(time);
+        return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+      });
 
-        if (newLabels.length > 15) {
-          newLabels.splice(0, newLabels.length - 15);
-          newValues.splice(0, newValues.length - 15);
-        }
-
-        return {
-          labels: newLabels,
-          datasets: [
-            {
-              ...prevData.datasets[0],
-              data: newValues,
-            },
-          ],
-        };
+      setChartData({
+        labels: formattedLabels,
+        datasets: [
+          {
+            label: "서버 호출 횟수",
+            data: countList,
+            borderColor: "rgba(99, 102, 241, 1)",
+            borderWidth: 2,
+            fill: false,
+          },
+        ],
       });
     }
   }, [monitoringData]);
@@ -107,7 +94,14 @@ const RealTimeChart = () => {
       x: {
         type: "category" as const,
         ticks: {
-          maxTicksLimit: 15,
+          maxTicksLimit: interval,
+        },
+      },
+      y: {
+        min: 0,
+        max: Math.max(...(monitoringData?.countList || [0])) + 10,
+        ticks: {
+          stepSize: 2,
         },
       },
     },

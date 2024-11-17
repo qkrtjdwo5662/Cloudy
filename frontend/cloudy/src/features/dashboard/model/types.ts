@@ -1,5 +1,6 @@
 export interface ServerMonitoringResponse {
-  data: [];
+  countList: [];
+  timeList: [];
 }
 
 export interface ContainerGetUsageResponse {
