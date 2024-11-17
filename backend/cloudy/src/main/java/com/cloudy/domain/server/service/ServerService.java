@@ -34,5 +34,8 @@ public interface ServerService {
     Map<String, Double> weeklyServerCost(Long serverId, LocalDate date);
 
     CpuUsage getAllMemoryData(long serverId) throws IOException;
+
     void saveServerCPUUsage() throws IOException;
+
+    List<InstanceRecResponse> getInstanceRecommendation(long serverId) throws IOException;
 }
