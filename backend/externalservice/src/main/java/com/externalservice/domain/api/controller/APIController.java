@@ -20,13 +20,11 @@ public class APIController {
 
     @PostMapping("/post")
     public ResponseEntity<?> postAPI(){
-        int size = 10000; // 행렬 크기 (메모리 사용량 조절)
+        int size = 500; // 행렬 크기 (메모리 사용량 조절)
 
         double[][] matrixA = generateMatrix(size);
         double[][] matrixB = generateMatrix(size);
         double[][] resultMatrix = new double[size][size];
-
-
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
