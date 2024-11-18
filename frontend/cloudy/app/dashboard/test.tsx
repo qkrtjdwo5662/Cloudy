@@ -39,7 +39,7 @@ const RealTimeChart = () => {
     data: monitoringData,
     error,
     isLoading,
-  } = useFetchServerMonitoring(1, "SECONDS", 5, interval);
+  } = useFetchServerMonitoring(1, "SECONDS", 3, interval);
 
   const [chartData, setChartData] = useState<ChartData>({
     labels: [],
