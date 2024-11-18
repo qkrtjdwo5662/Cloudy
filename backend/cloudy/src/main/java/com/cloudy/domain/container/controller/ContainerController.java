@@ -26,7 +26,7 @@ import java.util.Map;
 @Slf4j
 @RequestMapping("/containers")
 @RequiredArgsConstructor
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://k11a606.p.ssafy.io:3000", allowCredentials = "true")
 public class ContainerController {
 
     private final ContainerService containerService;
