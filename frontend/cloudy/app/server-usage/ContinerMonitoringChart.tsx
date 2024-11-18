@@ -10,7 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { useFetchServerMonitoring } from "@/features/dashboard/hooks/useFetchServerMonitoring";
+import { useFetchContinerMonitoring } from "@/features/server-usage/hooks/useFetchContinerMonitoring";
 
 ChartJS.register(
   CategoryScale,
@@ -33,51 +33,45 @@ type ChartData = {
   }[];
 };
 
-const RealTimeChart = () => {
+const ContainerMonitoringChart = () => {
   const interval = 30;
   const {
     data: monitoringData,
     error,
     isLoading,
-  } = useFetchServerMonitoring(1, "SECONDS", 3, interval);
+  } = useFetchContinerMonitoring(1, "SECONDS", 3, interval);
 
   const [chartData, setChartData] = useState<ChartData>({
     labels: [],
-    datasets: [
-      {
-        label: "서버 호출 횟수",
-        data: [],
-        borderColor: "rgba(99, 102, 241, 1)",
-        borderWidth: 2,
-        fill: false,
-      },
-    ],
+    datasets: [],
   });
 
+  const colors = [
+    "rgba(99, 102, 241, 1)",
+    "rgba(245, 158, 11, 1)",
+    "rgba(239, 68, 68, 1)",
+  ];
+
   useEffect(() => {
-    if (
-      monitoringData &&
-      Array.isArray(monitoringData.timeList) &&
-      Array.isArray(monitoringData.countList)
-    ) {
-      const { timeList, countList } = monitoringData;
+    if (monitoringData) {
+      const { timeList, countLists, containerNameList } = monitoringData;
 
       const formattedLabels = timeList.map((time: string) => {
         const date = new Date(time);
         return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
       });
 
+      const datasets = countLists.map((counts: number[], index: number) => ({
+        label: containerNameList[index],
+        data: counts,
+        borderColor: colors[index],
+        borderWidth: 2,
+        fill: false,
+      }));
+
       setChartData({
         labels: formattedLabels,
-        datasets: [
-          {
-            label: "서버 호출 횟수",
-            data: countList,
-            borderColor: "rgba(99, 102, 241, 1)",
-            borderWidth: 2,
-            fill: false,
-          },
-        ],
+        datasets: datasets,
       });
     }
   }, [monitoringData]);
@@ -99,9 +93,9 @@ const RealTimeChart = () => {
       },
       y: {
         min: 0,
-        max: Math.max(...(monitoringData?.countList || [0])) + 10,
+        max: 15,
         ticks: {
-          stepSize: 2,
+          stepSize: 3,
         },
       },
     },
@@ -111,7 +105,7 @@ const RealTimeChart = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return;
   }
 
   if (error) {
@@ -125,4 +119,4 @@ const RealTimeChart = () => {
   );
 };
 
-export default RealTimeChart;
+export default ContainerMonitoringChart;
