@@ -17,7 +17,7 @@ export default function ContainerUsagePage() {
         <div className="flex h-full flex-row gap-6 pt-10">
           <main className="flex w-2/3 rounded-5 border border-gray-200 bg-white p-6">
             <div className="flex w-full rounded-lg p-20">
-              <ServiceMonitoringChart containerId={containerId} />
+              <ServiceMonitoringChart id={containerId} />
             </div>
           </main>
 

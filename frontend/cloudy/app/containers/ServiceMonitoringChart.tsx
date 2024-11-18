@@ -34,37 +34,30 @@ type ChartData = {
 };
 
 type ServiceMonitoringChartProps = {
-  containerId: number | string;
+  id: number | string;
 };
 
-const ServiceMonitoringChart = ({
-  containerId,
-}: ServiceMonitoringChartProps) => {
+const ServiceMonitoringChart = ({ id }: ServiceMonitoringChartProps) => {
   const interval = 30;
+
+  const numericId = typeof id === "string" ? parseInt(id, 10) : id;
+
   const {
     data: monitoringData,
     error,
     isLoading,
-  } = useFetchServiceMonitoring(1, "SECONDS", 3, interval);
-  console.log(monitoringData);
+  } = useFetchServiceMonitoring(numericId, "SECONDS", 3, interval);
 
   const [chartData, setChartData] = useState<ChartData>({
     labels: [],
-    datasets: [
-      {
-        label: "서비스 호출 횟수",
-        data: [],
-        borderColor: "rgba(99, 102, 241, 1)",
-        borderWidth: 2,
-        fill: false,
-      },
-    ],
+    datasets: [],
   });
 
   const colors = [
     "rgba(99, 102, 241, 1)",
     "rgba(245, 158, 11, 1)",
     "rgba(239, 68, 68, 1)",
+    "rgba(34, 197, 94, 1)",
   ];
 
   useEffect(() => {
@@ -80,19 +73,7 @@ const ServiceMonitoringChart = ({
         countLists.length === 0 ||
         serviceNameList.length === 0
       ) {
-        return;
-      }
-
-      const containerIndex =
-        typeof containerId === "string"
-          ? parseInt(containerId, 10)
-          : containerId;
-
-      if (
-        isNaN(containerIndex) ||
-        containerIndex >= countLists.length ||
-        containerIndex < 0
-      ) {
+        console.warn("Monitoring data is incomplete", monitoringData);
         return;
       }
 
@@ -101,21 +82,20 @@ const ServiceMonitoringChart = ({
         return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
       });
 
-      const dataset = {
-        label:
-          serviceNameList[containerIndex] || `Service ${containerIndex + 1}`,
-        data: countLists[containerIndex] || [],
-        borderColor: colors[containerIndex],
+      const datasets = countLists.map((counts: number[], index: number) => ({
+        label: serviceNameList[index] || `Service ${index + 1}`,
+        data: counts,
+        borderColor: colors[index % colors.length],
         borderWidth: 2,
         fill: false,
-      };
+      }));
 
       setChartData({
         labels: formattedLabels,
-        datasets: [dataset],
+        datasets,
       });
     }
-  }, [monitoringData, containerId]);
+  }, [monitoringData]);
 
   const options = {
     responsive: true,
@@ -146,7 +126,7 @@ const ServiceMonitoringChart = ({
   };
 
   if (isLoading) {
-    return null;
+    return <div>Loading...</div>;
   }
 
   if (error) {
