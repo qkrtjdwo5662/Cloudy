@@ -16,14 +16,14 @@ public class AuthController {
     @PostMapping("/sms/send")
     public ResponseEntity<?> sendSms() {
         log.info("method: {}, API: {}, http_method: {}, external_service: {}, container: {}",
-                "sendSms", "CoolSMS", "POST", true, "commercial");
+                "sendSms", "/auth/sms/send", "POST", true, "commercial");
         return ResponseEntity.ok("Post Request");
     }
 
     @PostMapping("/sms/verify")
     public ResponseEntity<?> verifySms() {
         log.info("method: {}, API: {}, http_method: {}, external_service: {}, container: {}",
-                "verifySms", "PASS", "POST", true, "commercial");
+                "verifySms", "/auth/sms/verify", "POST", true, "commercial");
         return ResponseEntity.ok("Post Request");
     }
 
