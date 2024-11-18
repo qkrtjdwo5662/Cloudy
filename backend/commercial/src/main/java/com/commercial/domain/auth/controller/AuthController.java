@@ -16,28 +16,28 @@ public class AuthController {
     @PostMapping("/sms/send")
     public ResponseEntity<?> sendSms() {
         log.info("method: {}, API: {}, http_method: {}, external_service: {}, container: {}",
-                "sendSms", "/auth/sms/send", "POST", true, "commercial-be");
+                "sendSms", "CoolSMS", "POST", true, "commercial");
         return ResponseEntity.ok("Post Request");
     }
 
     @PostMapping("/sms/verify")
     public ResponseEntity<?> verifySms() {
         log.info("method: {}, API: {}, http_method: {}, external_service: {}, container: {}",
-                "verifySms", "/auth/sms/verify", "POST", true, "commercial-be");
+                "verifySms", "PASS", "POST", true, "commercial");
         return ResponseEntity.ok("Post Request");
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login() {
         log.info("method: {}, API: {}, http_method: {}, external_service: {}, container: {}",
-                "login", "/auth/login", "POST", false, "commercial-be");
+                "login", "/auth/login", "POST", false, "commercial");
         return ResponseEntity.ok("Post Request");
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> register() {
         log.info("method: {}, API: {}, http_method: {}, external_service: {}, container: {}",
-                "register", "/auth/register", "POST", false, "commercial-be");
+                "register", "/auth/register", "POST", false, "commercial");
         return ResponseEntity.ok("Post Request");
     }
 
