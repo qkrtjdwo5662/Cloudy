@@ -9,6 +9,7 @@ import com.cloudy.domain.container.model.dto.request.*;
 import com.cloudy.domain.container.model.dto.response.*;
 import com.cloudy.domain.container.repository.ContainerRepository;
 import com.cloudy.domain.server.model.Server;
+import com.cloudy.domain.server.model.dto.response.ServerMonitoringResponse;
 import com.cloudy.domain.server.repository.ServerRepository;
 import com.cloudy.global.util.GenerateDateList;
 import lombok.RequiredArgsConstructor;
@@ -108,6 +109,105 @@ public class ContainerServiceImpl implements ContainerService {
                 .toList();
 
         return ContainerGetUseResponses.from(containerResponses);
+    }
+
+    private List<LocalDateTime> generateTimeSlots(LocalDateTime dateTime, ChronoUnit unit, int interval, int count) {
+        List<LocalDateTime> timeSlots = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            timeSlots.add(dateTime.minus(i * interval, unit));
+        }
+        Collections.reverse(timeSlots); // 오름차순 정렬
+        return timeSlots;
+    }
+
+
+    @Override
+    public ContainerMonitoringResponse containerMonitoring(Long serverId, LocalDateTime dateTime, ChronoUnit unit, int interval, int count) {
+        Map<String, Long> requestCountsMap = new TreeMap<>();
+
+        // 9시간 보정된 시간 생성
+        LocalDateTime adjustedDateTime = dateTime.minusHours(9);
+
+        Server server = serverRepository.findById(serverId)
+                .orElseThrow(() -> new NotFoundException("Server not found with ID: " + serverId));
+
+        List<Container> containerList = containerRepository.findContainersByServerId(server);
+
+        // 시간 구간 생성 (unit이 초 또는 분으로 처리 가능)
+        List<LocalDateTime> timeSlots = generateTimeSlots(adjustedDateTime, unit, interval, count);
+        DateTimeFormatter formatter = unit == ChronoUnit.SECONDS
+                ? DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                : DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter esTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'");
+
+        // 인덱스는 dateTime의 날짜 기준으로 설정
+        String indexDate = dateTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+        String searchIndex = "server-logs-" + indexDate + "*";
+
+        int index = 0;
+        List<String> timeList = new ArrayList<>();
+        List<String> containerNameList = new ArrayList<>();
+        List<List<Long>> countLists = new ArrayList<>();
+        for(Container container: containerList){
+
+            for (LocalDateTime timeSlot : timeSlots) {
+                String formattedTime = timeSlot.plusHours(9).format(formatter);
+
+                try {
+                    String gteTime = timeSlot.minus(interval, unit).format(esTimeFormatter);
+                    String ltTime = timeSlot.format(esTimeFormatter);
+
+                    SearchResponse<Map> searchResponse = elasticsearchClient.search(s -> s
+                                    .index(searchIndex)
+                                    .query(q -> q
+                                            .bool(b -> b
+                                                    .filter(f -> f
+                                                            .range(r -> r
+                                                                    .field("@timestamp")
+                                                                    .gte(JsonData.of(gteTime))
+                                                                    .lt(JsonData.of(ltTime))
+                                                            )
+                                                    )
+                                                    .must(m -> m
+                                                            .matchPhrase(mp -> mp
+                                                                    .field("message")
+                                                                    .query("container: " + container.getContainerName())
+                                                            )
+                                                    )
+                                            )
+                                    ),
+                            Map.class
+                    );
+
+                    // 총 히트 수 가져오기
+                    long totalHits = searchResponse.hits().total().value();
+                    requestCountsMap.put(formattedTime, totalHits);
+
+                } catch (Exception e) {
+                    if (e.getMessage().contains("index_not_found_exception")) {
+                        requestCountsMap.put(formattedTime, 0L); // 인덱스가 없을 경우 0으로 설정
+                    } else {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            List<Long> countList = new ArrayList<>();
+
+            for (String key : requestCountsMap.keySet()) {
+                if(index == 0){
+                    timeList.add(key);
+                }
+                countList.add(requestCountsMap.get(key));
+            }
+            index++;
+            countLists.add(countList);
+            containerNameList.add(container.getContainerName());
+        }
+
+
+
+        return ContainerMonitoringResponse.of(timeList, countLists, containerNameList);
     }
 
     @Override
