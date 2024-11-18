@@ -6,11 +6,12 @@ import CpuUsageChart from "./CpuUsageChart";
 import ServerOption from "./serverOption";
 import CostSummary from "./costSummary";
 import Calendar from "./Calendar";
-import RealTimeChart from "./test";
+import RealTimeChart from "./ServerMonitoringChart";
 import { useEffect, useState } from "react";
 import { useFetchDailyCost } from "@/features/cost-calendar/hooks/useFetchDailyCost";
 import ServerRecommand from "./serverRecommand";
 import { useAuthStore } from "@/shared/stores/authStore";
+import ContainerMonitoringChart from "../server-usage/ContinerMonitoringChart";
 
 export default function DashBoardPage() {
   const [selectedDate, setSelectedDate] = useState("2024-11-13");
