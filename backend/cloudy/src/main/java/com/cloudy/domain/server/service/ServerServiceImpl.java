@@ -598,19 +598,25 @@ public class ServerServiceImpl implements ServerService {
                 // cpu 더 많은거 추천 3개
                 PriorityQueue<InstanceRecResponse> pq = new PriorityQueue<>(
                         (o1,o2) -> {
+
                             double dist1 = Math.abs(o1.getExpectedUsage() - 50.0);
                             double dist2 = Math.abs(o2.getExpectedUsage() - 50.0);
-
+                            if (dist1 == dist2){
+                                double cost1 = o1.getCostPerHour();
+                                double cost2 = o2.getCostPerHour();
+                                return  Double.compare(cost1,cost2);
+                            }
                             return Double.compare(dist1,dist2);
                         }
                 );
                 for (Instance cand : instances) {
-                    double ratio = Double.parseDouble(cand.getCpu())/Double.parseDouble(curInstance.getCpu());
+                    double ratio = Double.parseDouble(cand.getCpu()) / Double.parseDouble(curInstance.getCpu());
                     double expectedCpuUsage = ratio * meanCpu;
-                    if (Integer.parseInt(cand.getCpu()) > Integer.parseInt(curInstance.getCpu())
-                            && expectedCpuUsage <= upperThreshold && expectedCpuUsage >= lowerThreshold) {
+                    if (!curInstance.getInstanceName().equals(cand.getInstanceName()) && expectedCpuUsage <= upperThreshold
+                    ) {
                         pq.add(new InstanceRecResponse(cand.getInstanceName(), cand.getCloudType()
-                                ,cand.getCostPerHour(), expectedCpuUsage));
+                                , cand.getCostPerHour(), expectedCpuUsage));
+
                     }
                 }
                 List<InstanceRecResponse> res = new ArrayList<>();
@@ -620,21 +626,25 @@ public class ServerServiceImpl implements ServerService {
                     count--;
                 }
                 return res;
-            }else if (meanCpu <= lowerThreshold){
+            }else{
                 // cpu 더 적은거 추천 3개
                 PriorityQueue<InstanceRecResponse> pq = new PriorityQueue<>(
                         (o1,o2) -> {
                             double dist1 = Math.abs(o1.getExpectedUsage() - 50.0);
                             double dist2 = Math.abs(o2.getExpectedUsage() - 50.0);
-
+                            if (dist1 == dist2){
+                                double cost1 = o1.getCostPerHour();
+                                double cost2 = o2.getCostPerHour();
+                                return  Double.compare(cost1,cost2);
+                            }
                             return -Double.compare(dist1,dist2);
                         }
                 );
                 for (Instance cand : instances) {
                     double ratio = Double.parseDouble(cand.getCpu())/Double.parseDouble(curInstance.getCpu());
                     double expectedCpuUsage = ratio * meanCpu;
-                    if (Integer.parseInt(cand.getCpu()) > Integer.parseInt(curInstance.getCpu())
-                            && expectedCpuUsage <= upperThreshold && expectedCpuUsage >= lowerThreshold) {
+                    if (!curInstance.getInstanceName().equals(cand.getInstanceName())&& expectedCpuUsage <= upperThreshold
+                            ) {
                         pq.add(new InstanceRecResponse(cand.getInstanceName(), cand.getCloudType()
                                 ,cand.getCostPerHour(), expectedCpuUsage));
                     }
