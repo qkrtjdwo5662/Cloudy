@@ -1,16 +1,11 @@
 import React from "react";
+import { ContainerGetUseResponse } from "@/features/server-usage/model/types";
 
-interface TableRowProps {
-  containerId: number;
-  containerName: string;
-  serviceRequestCount: number;
+interface ContainerTableProps {
+  rows: ContainerGetUseResponse[];
 }
 
-interface TableProps {
-  rows: TableRowProps[];
-}
-
-export default function Table({ rows }: TableProps) {
+export default function ContainerTable({ rows }: ContainerTableProps) {
   return (
     <div className="flex-1 rounded-lg bg-white p-16">
       <div className="flex bg-indigo-500 font-semibold text-white">
