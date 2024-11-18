@@ -626,7 +626,7 @@ public class ServerServiceImpl implements ServerService {
                     count--;
                 }
                 return res;
-            }else if (meanCpu <= lowerThreshold){
+            }else{
                 // cpu 더 적은거 추천 3개
                 PriorityQueue<InstanceRecResponse> pq = new PriorityQueue<>(
                         (o1,o2) -> {
