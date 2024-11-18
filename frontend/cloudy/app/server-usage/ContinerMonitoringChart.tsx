@@ -40,6 +40,7 @@ const ContainerMonitoringChart = () => {
     error,
     isLoading,
   } = useFetchContinerMonitoring(1, "SECONDS", 3, interval);
+  console.log(monitoringData);
 
   const [chartData, setChartData] = useState<ChartData>({
     labels: [],
@@ -54,7 +55,20 @@ const ContainerMonitoringChart = () => {
 
   useEffect(() => {
     if (monitoringData) {
-      const { timeList, countLists, containerNameList } = monitoringData;
+      const {
+        timeList = [],
+        countLists = [],
+        containerNameList = [],
+      } = monitoringData;
+
+      if (
+        timeList.length === 0 ||
+        countLists.length === 0 ||
+        containerNameList.length === 0
+      ) {
+        console.warn("Monitoring data is incomplete", monitoringData);
+        return;
+      }
 
       const formattedLabels = timeList.map((time: string) => {
         const date = new Date(time);
@@ -62,9 +76,9 @@ const ContainerMonitoringChart = () => {
       });
 
       const datasets = countLists.map((counts: number[], index: number) => ({
-        label: containerNameList[index],
+        label: containerNameList[index] || `Container ${index + 1}`,
         data: counts,
-        borderColor: colors[index],
+        borderColor: colors[index % colors.length],
         borderWidth: 2,
         fill: false,
       }));
