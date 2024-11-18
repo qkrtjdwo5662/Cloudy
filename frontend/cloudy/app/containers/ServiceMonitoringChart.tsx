@@ -38,7 +38,7 @@ type ServiceMonitoringChartProps = {
 };
 
 const ServiceMonitoringChart = ({ id }: ServiceMonitoringChartProps) => {
-  const interval = 30;
+  const interval = 15;
 
   const numericId = typeof id === "string" ? parseInt(id, 10) : id;
 
