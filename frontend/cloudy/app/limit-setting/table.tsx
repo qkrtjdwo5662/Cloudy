@@ -61,7 +61,7 @@ export default function Table({ rows }: TableProps) {
           서버 이름
         </div>
         <div className="flex w-1/2 items-center justify-center border-b border-gray-200 px-20 py-10">
-          임계치 정보(단위: $)
+          임계치 정보($)
         </div>
       </div>
 

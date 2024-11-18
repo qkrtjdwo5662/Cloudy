@@ -126,7 +126,7 @@ const ServiceMonitoringChart = ({ id }: ServiceMonitoringChartProps) => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return;
   }
 
   if (error) {

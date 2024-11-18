@@ -14,7 +14,7 @@ export default function ContainerUsagePage() {
   const containerId = id as string;
   const numericId = parseInt(containerId, 10);
 
-  const { data } = useFetchServiceCount(numericId, "SECONDS", 3, 30);
+  const { data } = useFetchServiceCount(numericId, "SECONDS", 3, 15);
 
   const rows =
     data?.serviceUseGetResponses?.map((item: ServiceGetCount) => ({
