@@ -8,7 +8,7 @@
   }
 
   .scrollbar-custom::-webkit-scrollbar-thumb {
-    @apply min-h-[50px] rounded-[10px] border-[7px] border-white bg-warmGray300;
+    @apply bg-warmGray300 min-h-[50px] rounded-[10px] border-[7px] border-white;
   }
 
   .scrollbar-hidden {
@@ -22,6 +22,28 @@
       display: none;
     }
   }
+}
+
+/* 스크롤바의 너비 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* 스크롤바 트랙 */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* 스크롤바 핸들 */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+/* 스크롤바 핸들에 마우스가 올려졌을 때 */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 @layer utilities {
@@ -81,6 +103,12 @@ button,
 textarea,
 select {
   font: inherit;
+}
+
+input {
+  background-color: transparent;
+  outline: none;
+  box-shadow: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

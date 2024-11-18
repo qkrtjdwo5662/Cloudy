@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @RequestMapping("/auth")
+@CrossOrigin(origins = "http://k11a606.p.ssafy.io:3000", allowCredentials = "true")
 @RequiredArgsConstructor
 public class AuthController {
 

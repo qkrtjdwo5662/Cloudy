@@ -17,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/alarms")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://k11a606.p.ssafy.io:3000", allowCredentials = "true")
 public class AlarmController {
 
     private final AlarmService alarmService;

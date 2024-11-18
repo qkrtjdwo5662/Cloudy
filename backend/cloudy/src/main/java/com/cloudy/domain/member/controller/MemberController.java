@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequestMapping("/members")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://k11a606.p.ssafy.io:3000", allowCredentials = "true")
 public class MemberController {
 
     private final MemberService memberService;
