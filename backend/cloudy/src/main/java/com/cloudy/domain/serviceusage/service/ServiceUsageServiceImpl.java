@@ -87,7 +87,6 @@ public class ServiceUsageServiceImpl implements ServiceUsageService {
         List<ServiceUseGetResponse> serviceUsageResponses = serviceUsageList.stream()
                 .map(serviceUsage -> {
                     String serviceName = serviceUsage.getServiceName();
-
                     try {
                         // Elasticsearch 쿼리 설정
                         SearchResponse<Map> searchResponse = elasticsearchClient.search(s -> s
@@ -101,7 +100,7 @@ public class ServiceUsageServiceImpl implements ServiceUsageService {
                                                                         .lt(JsonData.of(ltTime))
                                                                 ))
                                                         .must(m -> m
-                                                                .match(mp -> mp
+                                                                .matchPhrase(mp -> mp
                                                                         .field("message")
                                                                         .query("API: " + serviceName)
                                                                 ))
