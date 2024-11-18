@@ -23,7 +23,7 @@ export const useCheckIdDuplicate = () => {
       setIdAvailable(response.data.data);
     } catch (err) {
       setIdError("Failed to check ID availability.");
-      console.error("Error checking ID:", err);
+      // console.error("Error checking ID:", err);
     } finally {
       setIdLoading(false);
     }

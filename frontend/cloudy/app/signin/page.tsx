@@ -37,7 +37,7 @@ export default function JoinPage() {
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
 
-    console.log(loginId, password);
+    // console.log(loginId, password);
     try {
       const response = await mutation.mutateAsync({ loginId, password });
 
@@ -49,12 +49,12 @@ export default function JoinPage() {
         setRole(response.role);
         setServerName(response.serverName);
       }
-      console.log("서버아이디", response.serverId);
+      // console.log("서버아이디", response.serverId);
 
       router.push("/dashboard");
     } catch (error) {
       alert("로그인 정보를 다시 확인하세요");
-      console.log("❌ Login Failed", error);
+      // console.log("❌ Login Failed", error);
     }
   };
 

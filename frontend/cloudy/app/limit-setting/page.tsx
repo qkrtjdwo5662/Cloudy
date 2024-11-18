@@ -30,7 +30,7 @@ export default function DashBoardPage() {
         }));
         setServerData(formattedData);
       } catch (error) {
-        console.error("Error fetching server data:", error);
+        // console.error("Error fetching server data:", error);
       }
     };
 

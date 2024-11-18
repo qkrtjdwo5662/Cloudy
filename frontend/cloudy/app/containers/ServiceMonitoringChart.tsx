@@ -73,7 +73,7 @@ const ServiceMonitoringChart = ({ id }: ServiceMonitoringChartProps) => {
         countLists.length === 0 ||
         serviceNameList.length === 0
       ) {
-        console.warn("Monitoring data is incomplete", monitoringData);
+        // console.warn("Monitoring data is incomplete", monitoringData);
         return;
       }
 

@@ -28,7 +28,7 @@ export default function CostCalendarPage() {
       fetchDailyCost(selectedDate);
       fetchWeeklyUsage(selectedDate);
       fetchWeeklyCost(selectedDate);
-      console.log("weeklyUsage", weeklyUsage);
+      // console.log("weeklyUsage", weeklyUsage);
     }
   }, [selectedDate, fetchDailyCost, fetchWeeklyUsage, fetchWeeklyCost]);
 
@@ -42,7 +42,7 @@ export default function CostCalendarPage() {
 
   const handleDateChange = (date: string) => {
     setSelectedDate(date);
-    console.log("selected", selectedDate);
+    // console.log("selected", selectedDate);
   };
 
   return (

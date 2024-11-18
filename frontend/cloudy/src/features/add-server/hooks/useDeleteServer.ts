@@ -6,7 +6,7 @@ export const useDeleteServer = () => {
     mutationFn: (serverId: number) => deleteServer(serverId),
     onSuccess: () => {},
     onError: (error) => {
-      console.error("Error deleting server:", error);
+      // console.error("Error deleting server:", error);
     },
   });
 };

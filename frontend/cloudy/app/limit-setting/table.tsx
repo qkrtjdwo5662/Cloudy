@@ -46,10 +46,10 @@ export default function Table({ rows }: TableProps) {
           },
         },
       );
-      console.log("Update successful:", response.data);
+      // console.log("Update successful:", response.data);
       alert("임계치가 성공적으로 업데이트되었습니다.");
     } catch (error) {
-      console.error("Error updating threshold:", error);
+      // console.error("Error updating threshold:", error);
       alert("임계치 업데이트에 실패했습니다.");
     }
   };
@@ -61,7 +61,7 @@ export default function Table({ rows }: TableProps) {
           서버 이름
         </div>
         <div className="flex w-1/2 items-center justify-center border-b border-gray-200 px-20 py-10">
-          임계치 정보
+          임계치 정보(단위: $)
         </div>
       </div>
 

@@ -40,7 +40,7 @@ const ContainerMonitoringChart = () => {
     error,
     isLoading,
   } = useFetchContinerMonitoring(1, "SECONDS", 3, interval);
-  console.log(monitoringData);
+  // console.log(monitoringData);
 
   const [chartData, setChartData] = useState<ChartData>({
     labels: [],
@@ -66,7 +66,7 @@ const ContainerMonitoringChart = () => {
         countLists.length === 0 ||
         containerNameList.length === 0
       ) {
-        console.warn("Monitoring data is incomplete", monitoringData);
+        // console.warn("Monitoring data is incomplete", monitoringData);
         return;
       }
 

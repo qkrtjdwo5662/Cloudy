@@ -51,7 +51,7 @@ export const fetchContainerCount = async (
   );
 
   // 응답 데이터 확인
-  console.log("fetchContainerCount Response:", response);
+  // console.log("fetchContainerCount Response:", response);
 
   // 필요한 데이터만 반환
   return response;

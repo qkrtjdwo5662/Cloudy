@@ -37,7 +37,7 @@ export const useFetchWeeklyCost = () => {
         setWeeklyCost(response.data.data || {});
       } catch (err) {
         setError("Failed to fetch weekly cost data.");
-        console.error("Error fetching weekly cost:", err);
+        // console.error("Error fetching weekly cost:", err);
       } finally {
         setLoading(false);
       }

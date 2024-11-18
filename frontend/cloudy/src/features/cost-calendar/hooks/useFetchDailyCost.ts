@@ -32,7 +32,7 @@ export const useFetchDailyCost = () => {
         setCost(response.data.data.cost);
       } catch (err) {
         setError("Failed to fetch daily cost availability.");
-        console.error("Error daily cost:", err);
+        // console.error("Error daily cost:", err);
       } finally {
         setLoading(false);
       }

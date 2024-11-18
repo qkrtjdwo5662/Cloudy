@@ -33,7 +33,7 @@ export const useFetchCostSummary = () => {
       setExpectedCost(response.data.data.expectedCost);
     } catch (err) {
       setError("Failed to fetch cost summary availability.");
-      console.error("Error cost summary:", err);
+      // console.error("Error cost summary:", err);
     } finally {
       setLoading(false);
     }
