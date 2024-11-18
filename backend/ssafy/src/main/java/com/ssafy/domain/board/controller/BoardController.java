@@ -25,21 +25,21 @@ public class BoardController {
     @GetMapping
     public ResponseEntity<?> getBoard() {
         log.info("method: {}, API: {}, http_method: {}, external_service: {}, container: {}",
-                "getBoard", "/boards", "GET", false, "ssafy-be");
+                "getBoard", "/boards", "GET", false, "ssafy");
         return ResponseEntity.ok("Get Request");
     }
 
     @PostMapping
     public ResponseEntity<?> createBoard() {
         log.info("method: {}, API: {}, http_method: {}, external_service: {}, container: {}",
-                "createBoard", "/boards", "POST", false, "ssafy-be");
+                "createBoard", "/boards", "POST", false, "ssafy");
         return ResponseEntity.ok("Post Request");
     }
 
     @GetMapping("/external-data/get")
     public Mono<String> getExternalData() {
         log.info("method: {}, API: {}, http_method: {}, external_service: {}, container: {}",
-                "getExternalData", "/external-data/get", "GET", true, "ssafy-be");
+                "getExternalData", "FUNCTIONS", "GET", true, "ssafy");
         return webClient.get()
                 .uri("/api/get")
                 .retrieve()
@@ -49,7 +49,7 @@ public class BoardController {
     @PostMapping("/external-data/post")
     public Mono<String> postExternalData() {
         log.info("method: {}, API: {}, http_method: {}, external_service: {}, container: {}",
-                "postExternalData", "/external-data/post", "POST", true, "ssafy-be");
+                "postExternalData", "LAMBDA", "POST", true, "ssafy");
         return webClient.post()
                 .uri("/api/post")
                 .retrieve()
