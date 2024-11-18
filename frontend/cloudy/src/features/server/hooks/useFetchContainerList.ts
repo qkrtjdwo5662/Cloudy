@@ -29,9 +29,9 @@ export const useFetchContainers = () => {
           },
         );
         setContainers(response.data.data.containerGetResponses);
-        console.log("Container", containers);
+        // console.log("Container", containers);
       } catch (error) {
-        console.error("Failed to fetch containers", error);
+        // console.error("Failed to fetch containers", error);
       } finally {
         setLoading(false);
       }

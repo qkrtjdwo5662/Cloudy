@@ -26,7 +26,7 @@ export default function Component({ onDateChange }: CalendarComponentProps) {
       const formattedDate = formatDateToString(today);
       onDateChange(formattedDate);
       fetchDailyCost(formattedDate);
-      console.log("초기화된 날짜:", today);
+      // console.log("초기화된 날짜:", today);
     } else {
       const formattedDate = formatDateToString(date);
       onDateChange(formattedDate);
@@ -43,7 +43,7 @@ export default function Component({ onDateChange }: CalendarComponentProps) {
           calendarType="gregory"
           onChange={(value) => {
             if (value instanceof Date) {
-              console.log("선택한 날짜:", value);
+              // console.log("선택한 날짜:", value);
               setDate(value);
               const formattedDate = formatDateToString(value);
               onDateChange(formattedDate);

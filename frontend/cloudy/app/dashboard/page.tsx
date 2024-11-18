@@ -24,7 +24,7 @@ export default function DashBoardPage() {
 
   const handleDateChange = (date: string) => {
     setSelectedDate(date);
-    console.log("selected", selectedDate);
+    // console.log("selected", selectedDate);
   };
 
   return (

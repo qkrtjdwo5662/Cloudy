@@ -23,7 +23,7 @@ export const useCheckNumberDuplicate = () => {
       setNumberAvailable(response.data.data);
     } catch (err) {
       setNumError("Failed to check Number availability.");
-      console.error("Error checking Number:", err);
+      // console.error("Error checking Number:", err);
     } finally {
       setNumLoading(false);
     }

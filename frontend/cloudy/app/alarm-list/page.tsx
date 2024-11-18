@@ -11,7 +11,7 @@ export default function AlarmList() {
 
   const alarmData: AlarmGetResponse[] = Array.isArray(data) ? data : [];
 
-  console.log(alarmData);
+  // console.log(alarmData);
 
   return (
     <div className="flex h-full w-full">

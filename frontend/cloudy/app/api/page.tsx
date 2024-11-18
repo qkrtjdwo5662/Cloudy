@@ -33,23 +33,23 @@ const AlarmList = () => {
     eventSource.onopen = () => {
       setIsConnected(true);
       setError(null);
-      console.log("SSE 연결 성공 - ReadyState:", eventSource.readyState);
+      // console.log("SSE 연결 성공 - ReadyState:", eventSource.readyState);
     };
 
     eventSource.addEventListener("ALARM", (event: MessageEvent) => {
       try {
         const newAlarm: Alarm = JSON.parse(event.data);
-        console.log("Parsed newAlarm:", newAlarm); // 알람 데이터 확인
+        // console.log("Parsed newAlarm:", newAlarm); // 알람 데이터 확인
         setAlarms((prevAlarms) => [newAlarm, ...prevAlarms]);
       } catch (err) {
         setError("알람 데이터를 처리하는 중 오류가 발생했습니다.");
-        console.error("알람 데이터 파싱 에러:", err);
+        // console.error("알람 데이터 파싱 에러:", err);
       }
     });
 
     // INIT 이벤트 처리
     eventSource.addEventListener("INIT", (event: MessageEvent) => {
-      console.log("INIT 이벤트:", event.data);
+      // console.log("INIT 이벤트:", event.data);
     });
 
     eventSource.onerror = () => {

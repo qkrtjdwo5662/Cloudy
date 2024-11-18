@@ -39,7 +39,7 @@ export const useFetchWeeklyUsage = () => {
         setWeeklyUsage(response.data.data.containerGetUseResponses || []);
       } catch (err) {
         setError("Failed to fetch weekly usage data.");
-        console.error("Error fetching weekly usage:", err);
+        // console.error("Error fetching weekly usage:", err);
       } finally {
         setLoading(false);
       }

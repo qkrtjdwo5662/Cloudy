@@ -31,6 +31,6 @@ export const fetchServerMonitoring = async (
     `/servers/monitoring?serverId=${serverId}&dateTime=${getCurrentDateTime()}&unit=${unit}&interval=${interval}&count=${count}`,
     "get",
   );
-  console.log("API Response:", response);
+  // console.log("API Response:", response);
   return response;
 };

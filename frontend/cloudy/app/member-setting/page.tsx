@@ -27,7 +27,7 @@ export default function AddMember() {
       const data = await fetchNormalMembers(accessToken);
       setMembers(data);
     } catch (error) {
-      console.error("fetchMembers Error:", error);
+      // console.error("fetchMembers Error:", error);
     } finally {
       setLoading(false);
     }
@@ -37,11 +37,11 @@ export default function AddMember() {
     if (!accessToken) return;
     try {
       const response = await registerNormalMember(newMember, accessToken);
-      console.log("Register Response:", response);
+      // console.log("Register Response:", response);
       alert("회원이 성공적으로 추가되었습니다.");
       await fetchMembers();
     } catch (error) {
-      console.error("회원 추가 실패:", error);
+      // console.error("회원 추가 실패:", error);
       alert("회원 추가에 실패했습니다.");
     }
   };
@@ -58,7 +58,7 @@ export default function AddMember() {
       );
       alert("회원이 성공적으로 삭제되었습니다.");
     } catch (error) {
-      console.error("회원 삭제 실패:", error);
+      // console.error("회원 삭제 실패:", error);
       alert("회원 삭제에 실패했습니다.");
     }
   };

@@ -84,7 +84,7 @@ export default function AddMemberForm({ onAddMember }: AddMemberFormProps) {
       } else {
         alert("알 수 없는 오류가 발생했습니다.");
       }
-      console.error("회원 추가 중 오류 발생:", error);
+      // console.error("회원 추가 중 오류 발생:", error);
     } finally {
       setLoading(false);
     }

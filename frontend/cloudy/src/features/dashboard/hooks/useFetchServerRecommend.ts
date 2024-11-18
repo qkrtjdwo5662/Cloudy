@@ -32,7 +32,7 @@ export const useFetchServerRecommend = () => {
       setServerRecommend(response.data.data || []);
     } catch (err) {
       setError("Failed to fetch server recommendation data.");
-      console.error("Error fetching server recommendation:", err);
+      // console.error("Error fetching server recommendation:", err);
     } finally {
       setLoading(false);
     }

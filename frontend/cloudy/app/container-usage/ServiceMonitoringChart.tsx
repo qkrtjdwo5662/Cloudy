@@ -46,7 +46,7 @@ const ServiceMonitoringChart = ({
     error,
     isLoading,
   } = useFetchServiceMonitoring(1, "SECONDS", 3, interval);
-  console.log(monitoringData);
+  // console.log(monitoringData);
 
   const [chartData, setChartData] = useState<ChartData>({
     labels: [],
