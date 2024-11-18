@@ -1,6 +1,4 @@
 "use client";
-import { NavigationBox } from "@/shared/ui";
-import MainLineChart from "../dashboard/mainLineChart";
 import Table from "./table";
 import BubbleChart from "./bubbleChart";
 import { Title } from "@/shared/ui";
