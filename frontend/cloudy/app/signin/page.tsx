@@ -12,6 +12,7 @@ import {
   useEffect,
 } from "react";
 import { useAuthStore } from "@/shared/stores/authStore";
+import Link from "next/link";
 
 export default function JoinPage() {
   const [loginId, setLoginId] = useState("");
@@ -69,9 +70,8 @@ export default function JoinPage() {
 
   return (
     <div className="flex h-full w-full items-center justify-center">
-      <div className="flex w-1/2 flex-col items-center justify-center rounded-10 border border-gray-200 bg-white py-160 shadow-lg">
+      <div className="flex w-1/2 flex-col items-center justify-center rounded-10 border border-gray-200 bg-white py-110 shadow-lg">
         <Title size="l">로그인</Title>
-
         <form
           onSubmit={handleSubmit}
           className="flex w-3/5 flex-col gap-32 p-8"
@@ -97,6 +97,9 @@ export default function JoinPage() {
             type="submit"
           />
         </form>
+        <Link href="/join" className="text-ml mt-20 text-indigo-500">
+          가입하기
+        </Link>{" "}
       </div>
     </div>
   );
