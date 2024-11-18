@@ -28,6 +28,7 @@ export default function JoinPage() {
   const setRegistrationNumber = useAuthStore(
     (state) => state.setRegistrationNumber,
   );
+  const setServerName = useAuthStore((state) => state.setServerName);
 
   useEffect(() => {
     setMounted(true);
@@ -46,6 +47,7 @@ export default function JoinPage() {
         setServerId(response.serverId);
         setRegistrationNumber(response.registrationNumber);
         setRole(response.role);
+        setServerName(response.serverName);
       }
       console.log("서버아이디", response.serverId);
 

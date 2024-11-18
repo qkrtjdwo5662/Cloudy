@@ -25,6 +25,7 @@ export const reissueToken = async () => {
       serverId: 1, // 예: 기본값 추가
       role: "user", // 예: 기본값 추가
       registrationNumber: "12345", // 예: 기본값 추가
+      serverName: "cloudy",
     },
     { bypassInterceptor: true } as ApiRequestConfig,
   );
