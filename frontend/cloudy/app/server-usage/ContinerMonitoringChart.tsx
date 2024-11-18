@@ -34,7 +34,7 @@ type ChartData = {
 };
 
 const ContainerMonitoringChart = () => {
-  const interval = 15;
+  const interval = 30;
   const {
     data: monitoringData,
     error,
