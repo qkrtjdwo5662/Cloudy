@@ -49,11 +49,16 @@ export default function ServerUsageChart() {
   };
 
   return (
-    <div className="flex h-full w-full items-center justify-center overflow-hidden">
+    <div className="main m-5 flex flex-col">
+      <div className="header">
+        <div className="mb-10 text-xl font-bold text-gray-600">
+          메모리 사용량
+        </div>
+      </div>
       <div className="relative" style={{ width: "100%", height: "60%" }}>
         <Doughnut data={chartData} options={options} />
         <div className="flex items-center justify-center pt-10">
-          <p className="text-lg font-semibold">현재 메모리 사용량: {label}%</p>
+          <p className="text-lg font-bold text-indigo-700">{label}%</p>
         </div>
       </div>
     </div>

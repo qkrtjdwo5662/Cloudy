@@ -11,6 +11,6 @@ export const useFetchServerMonitoring = (
   return useQuery<ServerMonitoringResponse, Error>({
     queryKey: ["ServerMonitoring", serverId, unit, interval, count],
     queryFn: () => fetchServerMonitoring(serverId, unit, interval, count),
-    refetchInterval: 5000,
+    refetchInterval: 3000,
   });
 };

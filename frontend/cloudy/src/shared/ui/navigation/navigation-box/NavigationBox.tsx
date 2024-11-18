@@ -8,8 +8,10 @@ import { useFetchServers } from "@/features/server/hooks/useFetchServers";
 import { AddDropDownBox } from "@/shared/ui/drop-down/drop-down-box/dropDown";
 
 const NAVIGATION_ITEMS = [
+  { leftIcon: "cloudy", to: "/dashboard", label: "대시보드" },
+  { leftIcon: "dns", to: "/server-usage", label: "서버 사용량" },
   {
-    leftIcon: "cloudy",
+    leftIcon: "sort",
     rightIcon: "keyboard_arrow_down",
     label: "컨테이너 사용량",
     isSubItem: false,
@@ -18,14 +20,15 @@ const NAVIGATION_ITEMS = [
       { to: "/sub2", label: "컨테이너 2" },
     ],
   },
-  { leftIcon: "cloudy", to: "/dashboard", label: "메인" },
-  { leftIcon: "cloudy", to: "/server-usage", label: "서버 사용량" },
-  { leftIcon: "cloudy", to: "/cost-calendar", label: "비용 캘린더" },
-  { leftIcon: "cloudy", to: "/member-setting", label: "회원 설정" },
-  { leftIcon: "cloudy", to: "/alarm-list", label: "알람 목록" },
-  { leftIcon: "cloudy", to: "/join", label: "회사 등록" },
-  { leftIcon: "cloudy", to: "/signin", label: "로그인" },
-  { leftIcon: "cloudy", to: "/limit-setting", label: "임계치 설정" },
+  { leftIcon: "date_range", to: "/cost-calendar", label: "비용 캘린더" },
+  { leftIcon: "alarm", to: "/alarm-list", label: "알람 목록" },
+  { leftIcon: "Group", to: "/member-setting", label: "회원 설정" },
+  {
+    leftIcon: "vertical_align_top",
+    to: "/limit-setting",
+    label: "임계치 설정",
+  },
+  { leftIcon: "addchart", to: "/add-server", label: "서버 설정" },
 ];
 
 export const NavigationBox = () => {
@@ -34,7 +37,7 @@ export const NavigationBox = () => {
   const email = useAuthStore((state) => state.email);
   const serverId = useAuthStore((state) => state.serverId);
   const setServerId = useAuthStore((state) => state.setServerId);
-  const role = useAuthStore((state) => state.role); // role 상태 가져오기
+  const role = useAuthStore((state) => state.role);
   const hasHydrated = useAuthStore((state) => state.hasHydrated);
 
   const [openIndex, setOpenIndex] = useState<number | null>(() => {
@@ -63,7 +66,7 @@ export const NavigationBox = () => {
   }
 
   return (
-    <div className="flex w-270 flex-col justify-between border-r border-gray-200">
+    <div className="flex h-screen w-270 flex-col border-r border-gray-200">
       <div className="flex border-b border-gray-200 p-20">
         {email ? (
           <AddDropDownBox
@@ -78,41 +81,36 @@ export const NavigationBox = () => {
           <span className="text-sm text-gray-500">로그인을 해주세요</span>
         )}
       </div>
-      <div className="flex h-full flex-col gap-12 px-12 py-10">
-        {NAVIGATION_ITEMS.map((item, index) => (
-          <div key={index}>
-            <NavigationItem
-              leftIcon={item.leftIcon}
-              rightIcon={item.rightIcon}
-              to={item.to}
-              isSubItem={item.isSubItem}
-              onClick={() => item.subItems && handleToggle(index)}
-            >
-              {item.label}
-            </NavigationItem>
-            {openIndex === index && item.subItems && (
-              <div className="flex flex-col gap-4">
-                {item.subItems.map((subItem, subIndex) => (
-                  <NavigationItem
-                    key={subIndex}
-                    to={subItem.to}
-                    isSubItem={true}
-                  >
-                    {subItem.label}
-                  </NavigationItem>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-      {role !== "NORMAL" && (
-        <div className="flex border-t border-gray-200 px-12 pt-12">
-          <NavigationItem leftIcon="settings" to="/add-server">
-            settings
-          </NavigationItem>
+      <div className="flex-1 overflow-y-auto">
+        <div className="flex flex-col gap-12 px-12 py-10">
+          {NAVIGATION_ITEMS.map((item, index) => (
+            <div key={index}>
+              <NavigationItem
+                leftIcon={item.leftIcon}
+                rightIcon={item.rightIcon}
+                to={item.to}
+                isSubItem={item.isSubItem}
+                onClick={() => item.subItems && handleToggle(index)}
+              >
+                {item.label}
+              </NavigationItem>
+              {openIndex === index && item.subItems && (
+                <div className="flex flex-col gap-4">
+                  {item.subItems.map((subItem, subIndex) => (
+                    <NavigationItem
+                      key={subIndex}
+                      to={subItem.to}
+                      isSubItem={true}
+                    >
+                      {subItem.label}
+                    </NavigationItem>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
-      )}
+      </div>
     </div>
   );
 };
