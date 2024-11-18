@@ -21,8 +21,8 @@ interface BubbleChartData {
 
 interface BubbleChartProps {
   rows: {
-    containerName: string;
-    serviceRequestCount: number;
+    serviceName: string;
+    count: number;
   }[];
 }
 
@@ -56,12 +56,12 @@ const options = {
 export default function BubbleChart({ rows }: BubbleChartProps) {
   const chartData = {
     datasets: rows.map((row, index) => ({
-      label: row.containerName,
+      label: row.serviceName,
       data: [
         {
           x: index * 10 + 10,
           y: Math.random() * 100,
-          r: Math.sqrt(row.serviceRequestCount) * 10,
+          r: Math.sqrt(row.count) * 10,
         },
       ],
       backgroundColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(

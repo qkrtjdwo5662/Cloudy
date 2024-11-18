@@ -3,11 +3,25 @@
 import { useParams } from "next/navigation";
 import ServiceMonitoringChart from "../ServiceMonitoringChart";
 import { Title } from "@/shared/ui";
+import { useFetchServiceCount } from "@/features/container-usage/hooks/useFetchServiceMonitoring";
+import { ServiceGetCount } from "@/features/container-usage/model/types";
+import ServiceTable from "../serviceTable";
+import BubbleChart from "../bubbleChart";
 
 export default function ContainerUsagePage() {
   const { id } = useParams();
 
   const containerId = id as string;
+  const numericId = parseInt(containerId, 10);
+
+  const { data } = useFetchServiceCount(numericId, "SECONDS", 3, 30);
+
+  const rows =
+    data?.serviceUseGetResponses?.map((item: ServiceGetCount) => ({
+      serviceId: item.serviceId,
+      serviceName: item.serviceName,
+      count: item.count,
+    })) ?? [];
 
   return (
     <div className="flex h-full w-full">
@@ -23,10 +37,10 @@ export default function ContainerUsagePage() {
 
           <aside className="flex h-full w-1/3 flex-col gap-6">
             <div className="flex h-full w-full rounded-5 border border-gray-200 bg-white">
-              {/* <Table rows={weeklyUsage} /> */}
+              <ServiceTable rows={rows} />
             </div>
             <div className="flex h-full w-full rounded-5 border border-gray-200 bg-white">
-              {/* <BubbleChart /> */}
+              <BubbleChart rows={rows} />
             </div>
           </aside>
         </div>

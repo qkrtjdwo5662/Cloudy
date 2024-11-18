@@ -1,18 +1,13 @@
 import React from "react";
+import { ServiceGetCount } from "@/features/container-usage/model/types";
 
-interface TableRowProps {
-  containerId: number;
-  containerName: string;
-  serviceRequestCount: number;
+interface ServiceTableProps {
+  rows: ServiceGetCount[];
 }
 
-interface TableProps {
-  rows: TableRowProps[];
-}
-
-export default function Table({ rows }: TableProps) {
+export default function ServiceTable({ rows }: ServiceTableProps) {
   return (
-    <div className="flex-1 rounded-lg bg-white p-16">
+    <div className="flex-1 rounded-lg bg-white p-10">
       <div className="flex bg-indigo-500 font-semibold text-white">
         <div className="flex w-1/2 items-center justify-center border-b border-gray-200 px-20 py-10">
           이름
@@ -33,10 +28,10 @@ export default function Table({ rows }: TableProps) {
               className="flex items-center border-b border-gray-200 font-semibold text-gray-700 hover:bg-gray-50"
             >
               <div className="flex w-1/2 items-center justify-center px-20 py-10">
-                {row.containerName}
+                {row.serviceName}
               </div>
               <div className="flex w-1/2 items-center justify-center px-20 py-10">
-                {row.serviceRequestCount}
+                {row.count}
               </div>
             </div>
           ))

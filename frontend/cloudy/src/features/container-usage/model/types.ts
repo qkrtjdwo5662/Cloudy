@@ -3,3 +3,13 @@ export interface ServiceMonitoringResponse {
   countLists: number[][];
   serviceNameList: string[];
 }
+
+export interface ServiceGetCount {
+  serviceId: number;
+  serviceName: string;
+  count: number;
+}
+
+export interface ServiceGetCounts {
+  serviceUseGetResponses: ServiceGetCount[];
+}
