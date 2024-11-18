@@ -6,6 +6,7 @@ import BubbleChart from "./bubbleChart";
 import { Title } from "@/shared/ui";
 import { useFetchWeeklyUsage } from "@/features/cost-calendar/hooks/useFetchWeeklyUsage";
 import { useEffect } from "react";
+import ContinerMonitoringChart from "./ContinerMonitoringChart";
 
 export default function DashBoardPage() {
   const { weeklyUsage, loading, error, fetchWeeklyUsage } =
@@ -32,7 +33,7 @@ export default function DashBoardPage() {
         <div className="flex h-full flex-row gap-6 pt-10">
           <main className="flex w-2/3 rounded-5 border border-gray-200 bg-white p-6">
             <div className="flex w-full rounded-lg p-20">
-              <MainLineChart />
+              <ContinerMonitoringChart />
             </div>
           </main>
 
