@@ -4,10 +4,25 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { NavigationItem } from "../navigation-item/NavigationItem";
 import { useAuthStore } from "@/shared/stores/authStore";
-import { useFetchServers } from "@/features/server/hooks/useFetchServers";
 import { AddDropDownBox } from "@/shared/ui/drop-down/drop-down-box/dropDown";
+import { useFetchContainers } from "@/features/server/hooks/useFetchContainerList";
+import { useFetchServers } from "@/features/server/hooks/useFetchServers";
 
-const NAVIGATION_ITEMS = [
+interface NavigationSubItem {
+  to: string;
+  label: string;
+}
+
+interface NavigationItemType {
+  leftIcon: string;
+  to?: string;
+  label: string;
+  isSubItem?: boolean;
+  rightIcon?: string;
+  subItems?: NavigationSubItem[];
+}
+
+const NAVIGATION_ITEMS: NavigationItemType[] = [
   { leftIcon: "cloudy", to: "/dashboard", label: "대시보드" },
   { leftIcon: "dns", to: "/server-usage", label: "서버 사용량" },
   {
@@ -15,10 +30,7 @@ const NAVIGATION_ITEMS = [
     rightIcon: "keyboard_arrow_down",
     label: "컨테이너 사용량",
     isSubItem: false,
-    subItems: [
-      { to: "/sub1", label: "컨테이너 1" },
-      { to: "/sub2", label: "컨테이너 2" },
-    ],
+    subItems: [],
   },
   { leftIcon: "date_range", to: "/cost-calendar", label: "비용 캘린더" },
   { leftIcon: "alarm", to: "/alarm-list", label: "알람 목록" },
@@ -33,7 +45,8 @@ const NAVIGATION_ITEMS = [
 
 export const NavigationBox = () => {
   const pathname = usePathname();
-  const { servers, loading } = useFetchServers();
+  const { containers, loading } = useFetchContainers();
+  const { servers } = useFetchServers();
   const email = useAuthStore((state) => state.email);
   const serverId = useAuthStore((state) => state.serverId);
   const setServerId = useAuthStore((state) => state.setServerId);
@@ -56,6 +69,21 @@ export const NavigationBox = () => {
       setOpenIndex(parentIndex);
     }
   }, [pathname]);
+
+  useEffect(() => {
+    const containerNavigationIndex = NAVIGATION_ITEMS.findIndex(
+      (item) => item.label === "컨테이너 사용량",
+    );
+
+    if (containerNavigationIndex !== -1 && containers.length > 0) {
+      NAVIGATION_ITEMS[containerNavigationIndex].subItems = containers.map(
+        (container) => ({
+          to: `/containers/${container.containerId}`,
+          label: container.containerName,
+        }),
+      );
+    }
+  }, [containers]);
 
   const handleToggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
