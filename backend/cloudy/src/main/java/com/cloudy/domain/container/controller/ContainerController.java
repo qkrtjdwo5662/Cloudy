@@ -118,7 +118,7 @@ public class ContainerController {
     @GetMapping("/monitoring")
     public Response<ContainerMonitoringResponse> monitoringServer(
             @Parameter(description = "서버 ID", example = "1") @RequestParam Long serverId,
-            @Parameter(description = "오늘 날짜와 시간(분 단위)", example = "2024-11-14 15:30:20") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") @RequestParam LocalDateTime dateTime,
+            @Parameter(description = "오늘 날짜와 시간(시,분, 초 단위)", example = "2024-11-14 15:30:20") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") @RequestParam LocalDateTime dateTime,
             @Parameter(description = "시간 단위 (SECONDS, MINUTES, HOURS)", example = "MINUTES") @RequestParam String unit,
             @Parameter(description = "간격 (단위당 시간 간격)", example = "30") @RequestParam int interval,
             @Parameter(description = "개수 (반환할 리스트 크기)", example = "30") @RequestParam int count) {

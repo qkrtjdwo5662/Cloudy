@@ -4,6 +4,7 @@ import com.cloudy.domain.member.exception.LoginFailException;
 import com.cloudy.domain.member.exception.NormalRegisterFailException;
 import com.cloudy.domain.member.exception.ReissueFailException;
 import com.cloudy.domain.member.model.Member;
+import com.cloudy.domain.member.model.Role;
 import com.cloudy.domain.member.model.dto.request.MemberLoginRequest;
 import com.cloudy.domain.member.model.dto.request.NormalMemberCreateRequest;
 import com.cloudy.domain.member.model.dto.request.SuperMemberCreateRequest;
@@ -78,9 +79,10 @@ public class AuthServiceImpl implements AuthService{
             throw new LoginFailException(ErrorCode.NOT_MATCH_PASSWORD, "아이디와 비밀번호 정보가 일치하지 않습니다.");
         }
 
+        Member superMember = memberRepository.findMemberByBusinessRegistrationNumberAndRole(member.getBusinessRegistrationNumber(), Role.valueOf("SUPER"));
         // JWT 토큰 생성
         JwtToken jwtToken = jwtTokenProvider.issue(member.getMemberId(), member.getRole());
-        List<Server> serverList = serverRepository.findByMember_MemberIdOrderByServerId(member.getMemberId());
+        List<Server> serverList = serverRepository.findByMember_MemberIdOrderByServerId(superMember.getMemberId());
 
         Server server = null;
         if(!serverList.isEmpty()){
