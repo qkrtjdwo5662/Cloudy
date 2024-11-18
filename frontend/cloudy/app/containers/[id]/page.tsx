@@ -12,7 +12,7 @@ export default function ContainerUsagePage() {
   return (
     <div className="flex h-full w-full">
       <div className="flex h-full w-full flex-col gap-6 p-20">
-        <Title size="l">서버 사용량</Title>
+        <Title size="l">컨테이너 사용량</Title>
 
         <div className="flex h-full flex-row gap-6 pt-10">
           <main className="flex w-2/3 rounded-5 border border-gray-200 bg-white p-6">
