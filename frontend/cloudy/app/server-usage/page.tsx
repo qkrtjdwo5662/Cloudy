@@ -8,7 +8,7 @@ import ContainerTable from "./containerTable";
 import { ContainerGetUseResponse } from "@/features/server-usage/model/types";
 
 export default function DashBoardPage() {
-  const { data } = useFetchContinerCount(1, "SECONDS", 3, 30);
+  const { data } = useFetchContinerCount(1, "SECONDS", 3, 15);
 
   const rows =
     data?.containerGetUseResponses?.map((item: ContainerGetUseResponse) => ({
