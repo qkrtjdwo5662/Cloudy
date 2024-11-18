@@ -34,7 +34,7 @@ type ChartData = {
 };
 
 const ContainerMonitoringChart = () => {
-  const interval = 30;
+  const interval = 15;
   const {
     data: monitoringData,
     error,
@@ -107,7 +107,7 @@ const ContainerMonitoringChart = () => {
       },
       y: {
         min: 0,
-        max: 15,
+        max: 30,
         ticks: {
           stepSize: 3,
         },

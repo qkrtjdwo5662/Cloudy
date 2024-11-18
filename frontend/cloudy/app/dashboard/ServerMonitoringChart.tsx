@@ -34,7 +34,7 @@ type ChartData = {
 };
 
 const RealTimeChart = () => {
-  const interval = 50;
+  const interval = 15;
   const {
     data: monitoringData,
     error,
@@ -99,9 +99,9 @@ const RealTimeChart = () => {
       },
       y: {
         min: 0,
-        max: 15,
+        max: 50,
         ticks: {
-          stepSize: 3,
+          stepSize: 5,
         },
       },
     },
