@@ -16,28 +16,28 @@ public class AuthController {
     @PostMapping("/sms/send")
     public ResponseEntity<?> sendSms() {
         log.info("method: {}, API: {}, http_method: {}, external_service: {}, container: {}",
-                "sendSms", "/auth/sms/send", "POST", true, "ssafy-be");
+                "sendSms", "TOSS", "POST", true, "ssafy");
         return ResponseEntity.ok("Post Request");
     }
 
     @PostMapping("/sms/verify")
     public ResponseEntity<?> verifySms() {
         log.info("method: {}, API: {}, http_method: {}, external_service: {}, container: {}",
-                "verifySms", "/auth/sms/verify", "POST", true, "ssafy-be");
+                "verifySms", "PASS", "POST", true, "ssafy");
         return ResponseEntity.ok("Post Request");
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login() {
         log.info("method: {}, API: {}, http_method: {}, external_service: {}, container: {}",
-                "login", "/auth/login", "POST", false, "ssafy-be");
+                "login", "/auth/login", "POST", false, "ssafy");
         return ResponseEntity.ok("Post Request");
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> register() {
         log.info("method: {}, API: {}, http_method: {}, external_service: {}, container: {}",
-                "register", "/auth/register", "POST", false, "ssafy-be");
+                "register", "/auth/register", "POST", false, "ssafy");
         return ResponseEntity.ok("Post Request");
     }
 
