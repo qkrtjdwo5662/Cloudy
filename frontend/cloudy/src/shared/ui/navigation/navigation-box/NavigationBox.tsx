@@ -8,10 +8,10 @@ import { useFetchServers } from "@/features/server/hooks/useFetchServers";
 import { AddDropDownBox } from "@/shared/ui/drop-down/drop-down-box/dropDown";
 
 const NAVIGATION_ITEMS = [
-  { leftIcon: "cloudy", to: "/dashboard", label: "메인" },
-  { leftIcon: "cloudy", to: "/server-usage", label: "서버 사용량" },
+  { leftIcon: "cloudy", to: "/dashboard", label: "대시보드" },
+  { leftIcon: "dns", to: "/server-usage", label: "서버 사용량" },
   {
-    leftIcon: "cloudy",
+    leftIcon: "sort",
     rightIcon: "keyboard_arrow_down",
     label: "컨테이너 사용량",
     isSubItem: false,
@@ -20,12 +20,15 @@ const NAVIGATION_ITEMS = [
       { to: "/sub2", label: "컨테이너 2" },
     ],
   },
-  { leftIcon: "cloudy", to: "/cost-calendar", label: "비용 캘린더" },
-  { leftIcon: "cloudy", to: "/alarm-list", label: "알람 목록" },
-  { leftIcon: "cloudy", to: "/member-setting", label: "회원 설정" },
-  { leftIcon: "cloudy", to: "/join", label: "회사 등록" },
-  { leftIcon: "cloudy", to: "/signin", label: "로그인" },
-  { leftIcon: "cloudy", to: "/limit-setting", label: "임계치 설정" },
+  { leftIcon: "date_range", to: "/cost-calendar", label: "비용 캘린더" },
+  { leftIcon: "alarm", to: "/alarm-list", label: "알람 목록" },
+  { leftIcon: "Group", to: "/member-setting", label: "회원 설정" },
+  {
+    leftIcon: "vertical_align_top",
+    to: "/limit-setting",
+    label: "임계치 설정",
+  },
+  { leftIcon: "addchart", to: "/add-server", label: "서버 설정" },
 ];
 
 export const NavigationBox = () => {
@@ -108,13 +111,6 @@ export const NavigationBox = () => {
           ))}
         </div>
       </div>
-      {role !== "NORMAL" && (
-        <div className="border-t border-gray-200 px-12 py-12">
-          <NavigationItem leftIcon="settings" to="/add-server">
-            settings
-          </NavigationItem>
-        </div>
-      )}
     </div>
   );
 };
