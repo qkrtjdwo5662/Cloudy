@@ -39,7 +39,7 @@ public class BoardController {
     @GetMapping("/external-data/get")
     public Mono<String> getExternalData() {
         log.info("method: {}, API: {}, http_method: {}, external_service: {}, container: {}",
-                "getExternalData", "FUNCTIONS", "GET", true, "ssafy");
+                "getExternalData", "/external-data/get", "GET", true, "ssafy");
         return webClient.get()
                 .uri("/api/get")
                 .retrieve()
@@ -49,7 +49,7 @@ public class BoardController {
     @PostMapping("/external-data/post")
     public Mono<String> postExternalData() {
         log.info("method: {}, API: {}, http_method: {}, external_service: {}, container: {}",
-                "postExternalData", "LAMBDA", "POST", true, "ssafy");
+                "postExternalData", "/external-data/post", "POST", true, "ssafy");
         return webClient.post()
                 .uri("/api/post")
                 .retrieve()
