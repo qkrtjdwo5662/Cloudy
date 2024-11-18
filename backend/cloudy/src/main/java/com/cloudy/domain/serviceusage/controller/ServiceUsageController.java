@@ -4,6 +4,7 @@ import com.cloudy.domain.container.model.dto.response.ContainerGetUseResponses;
 import com.cloudy.domain.serviceusage.model.dto.request.ServiceUsageCreateRequest;
 import com.cloudy.domain.serviceusage.model.dto.request.ServiceUsageGetServiceCostRequest;
 import com.cloudy.domain.serviceusage.model.dto.request.ServiceUsageRequest;
+import com.cloudy.domain.serviceusage.model.dto.response.ServiceMonitoringResponse;
 import com.cloudy.domain.serviceusage.model.dto.response.ServiceUsageGetServiceCostResponse;
 import com.cloudy.domain.serviceusage.model.dto.response.ServiceUsageResponse;
 import com.cloudy.domain.serviceusage.model.dto.response.ServiceUseGetResponses;
@@ -41,9 +42,9 @@ public class ServiceUsageController {
         return Response.SUCCESS(response, "Service usage updated successfully");
     }
 
-    @Operation(summary = "서버의 전체 컨테이너와 사용량 조회 API", description = "서버의 전체 컨테이너 사용량을 전체 조회합니다.")
+    @Operation(summary = "서비스 사용량 조회 API", description = "컨테이너의 각 서비스 사용량을 전체 조회합니다.")
     @SwaggerApiSuccess(description = "서버 전체 컨테이너 사용량 조회를 성공했습니다.")
-    @GetMapping("/services/monitoring")
+    @GetMapping("/services/monitoring-count")
     public Response<ServiceUseGetResponses> getContainers(
             @Parameter(description = "컨테이너 ID", example = "1") @RequestParam Long containerId,
             @Parameter(description = "오늘 날짜와 시간(분 단위)", example = "2024-11-14 15:30") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") @RequestParam LocalDateTime dateTime,
@@ -53,6 +54,22 @@ public class ServiceUsageController {
         ServiceUseGetResponses response = serviceUsageService.getServicesUse(containerId, dateTime, ChronoUnit.valueOf(unit.toUpperCase()), interval, count);
         return Response.SUCCESS(response, "OK");
     }
+
+    @Operation(summary = "서비스 모니터링 API", description = "컨테이너의 각 서비스를 모니터링합니다.")
+    @SwaggerApiSuccess(description = "서버 전체 컨테이너 모니터링을 성공했습니다.")
+    @GetMapping("/services/monitoring")
+    public Response<ServiceMonitoringResponse> serviceMonitoring(
+            @Parameter(description = "컨테이너 ID", example = "1") @RequestParam Long containerId,
+            @Parameter(description = "오늘 날짜와 시간(분 단위)", example = "2024-11-14 15:30") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") @RequestParam LocalDateTime dateTime,
+            @Parameter(description = "시간 단위 (SECONDS, MINUTES, HOURS)", example = "MINUTES") @RequestParam String unit,
+            @Parameter(description = "간격 (단위당 시간 간격)", example = "30") @RequestParam int interval,
+            @Parameter(description = "개수 (반환할 리스트 크기)", example = "30") @RequestParam int count) {
+        ServiceMonitoringResponse response = serviceUsageService.serviceMonitoring(containerId, dateTime, ChronoUnit.valueOf(unit.toUpperCase()), interval, count);
+        return Response.SUCCESS(response, "OK");
+    }
+
+
+
 
     @Operation(summary = "서비스 생성", description = "내/외부 서비스 생성 api")
     @SwaggerApiSuccess(description = "서비스 생성 성공")
