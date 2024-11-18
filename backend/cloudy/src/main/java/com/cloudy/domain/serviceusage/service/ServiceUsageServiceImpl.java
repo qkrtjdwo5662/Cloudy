@@ -148,7 +148,7 @@ public class ServiceUsageServiceImpl implements ServiceUsageService {
 
         List<ServiceUsage> serviceUsageList = serviceUsageRepository.findServiceUsagesByContainer(container);
 
-        Map<String, Long> requestCountsMap = new TreeMap<>();
+
 
         // 9시간 보정된 시간 생성
         LocalDateTime adjustedDateTime = dateTime.minusHours(9);
@@ -169,7 +169,7 @@ public class ServiceUsageServiceImpl implements ServiceUsageService {
         List<String> serviceNameList = new ArrayList<>();
         List<List<Long>> countLists = new ArrayList<>();
         for(ServiceUsage serviceUsage: serviceUsageList){
-
+            Map<String, Long> requestCountsMap = new TreeMap<>();
             for (LocalDateTime timeSlot : timeSlots) {
                 String formattedTime = timeSlot.plusHours(9).format(formatter);
 

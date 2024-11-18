@@ -123,7 +123,7 @@ public class ContainerServiceImpl implements ContainerService {
 
     @Override
     public ContainerMonitoringResponse containerMonitoring(Long serverId, LocalDateTime dateTime, ChronoUnit unit, int interval, int count) {
-        Map<String, Long> requestCountsMap = new TreeMap<>();
+
 
         // 9시간 보정된 시간 생성
         LocalDateTime adjustedDateTime = dateTime.minusHours(9);
@@ -149,7 +149,7 @@ public class ContainerServiceImpl implements ContainerService {
         List<String> containerNameList = new ArrayList<>();
         List<List<Long>> countLists = new ArrayList<>();
         for(Container container: containerList){
-
+            Map<String, Long> requestCountsMap = new TreeMap<>();
             for (LocalDateTime timeSlot : timeSlots) {
                 String formattedTime = timeSlot.plusHours(9).format(formatter);
 
