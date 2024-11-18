@@ -17,3 +17,7 @@
         - User: `cloudy`
         - Password: `cloudy1234@!`
 
+5) 프론트 빌드
+    - yarn install
+    - yarn build
+    - yarn start
