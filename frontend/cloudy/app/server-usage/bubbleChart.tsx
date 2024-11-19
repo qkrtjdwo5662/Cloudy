@@ -54,6 +54,11 @@ const options = {
 };
 
 export default function BubbleChart({ rows }: BubbleChartProps) {
+  const totalServiceRequestCount = rows.reduce(
+    (sum, row) => sum + row.serviceRequestCount,
+    0,
+  );
+
   const chartData = {
     datasets: rows.map((row, index) => ({
       label: row.containerName,
@@ -61,7 +66,7 @@ export default function BubbleChart({ rows }: BubbleChartProps) {
         {
           x: index * 10 + 10,
           y: Math.random() * 100,
-          r: Math.sqrt(row.serviceRequestCount) * 10,
+          r: (row.serviceRequestCount / totalServiceRequestCount) * 100,
         },
       ],
       backgroundColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(
