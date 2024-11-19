@@ -512,7 +512,7 @@ public class ServerServiceImpl implements ServerService {
         }
         if (numContainer == 0) return usage;
 
-        usage.setMemUsage(totalMemoryUsage);
+        usage.setMemUsage(totalMemoryUsage * 5);
         usage.setMemLimit(totalMemoryLimit);
         usage.setCpuPercent(totalCpuUsage / numContainer);
         return usage;

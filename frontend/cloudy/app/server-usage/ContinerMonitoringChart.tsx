@@ -107,7 +107,7 @@ const ContainerMonitoringChart = () => {
       },
       y: {
         min: 0,
-        max: 15,
+        max: 30,
         ticks: {
           stepSize: 3,
         },
