@@ -6,14 +6,17 @@ import CpuUsageChart from "./CpuUsageChart";
 import ServerOption from "./serverOption";
 import CostSummary from "./costSummary";
 import Calendar from "./Calendar";
-import RealTimeChart from "./test";
+import RealTimeChart from "./ServerMonitoringChart";
 import { useEffect, useState } from "react";
 import { useFetchDailyCost } from "@/features/cost-calendar/hooks/useFetchDailyCost";
 import ServerRecommand from "./serverRecommand";
+import { useAuthStore } from "@/shared/stores/authStore";
+import ContainerMonitoringChart from "../server-usage/ContinerMonitoringChart";
 
 export default function DashBoardPage() {
   const [selectedDate, setSelectedDate] = useState("2024-11-13");
   const { cost, loading, error, fetchDailyCost } = useFetchDailyCost();
+  const serverName = useAuthStore((state) => state.serverName);
 
   useEffect(() => {
     fetchDailyCost(selectedDate);
@@ -21,13 +24,13 @@ export default function DashBoardPage() {
 
   const handleDateChange = (date: string) => {
     setSelectedDate(date);
-    console.log("selected", selectedDate);
+    // console.log("selected", selectedDate);
   };
 
   return (
     <div className="flex h-full w-full">
       <div className="flex h-full w-full flex-col gap-6 p-20">
-        <Title size="l">서버 이름</Title>
+        <Title size="l">{serverName}</Title>
         <div className="flex h-full flex-col gap-6 pt-10">
           <section className="flex h-1/2 w-full gap-6">
             <article className="flex h-full w-3/4 overflow-hidden rounded-5 border border-gray-200 bg-white p-20">

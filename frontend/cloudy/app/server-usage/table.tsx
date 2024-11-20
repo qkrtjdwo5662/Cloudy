@@ -26,19 +26,25 @@ export default function Table({ rows }: TableProps) {
         className="flex flex-col overflow-y-auto"
         style={{ maxHeight: "220px" }}
       >
-        {rows.map((row, index) => (
-          <div
-            key={index}
-            className="flex items-center border-b border-gray-200 font-semibold text-gray-700 hover:bg-gray-50"
-          >
-            <div className="flex w-1/2 items-center justify-center px-20 py-10">
-              {row.containerName}
+        {rows.length > 0 ? (
+          rows.map((row, index) => (
+            <div
+              key={index}
+              className="flex items-center border-b border-gray-200 font-semibold text-gray-700 hover:bg-gray-50"
+            >
+              <div className="flex w-1/2 items-center justify-center px-20 py-10">
+                {row.containerName}
+              </div>
+              <div className="flex w-1/2 items-center justify-center px-20 py-10">
+                {row.serviceRequestCount}
+              </div>
             </div>
-            <div className="flex w-1/2 items-center justify-center px-20 py-10">
-              {row.serviceRequestCount}
-            </div>
+          ))
+        ) : (
+          <div className="flex items-center justify-center p-10 text-gray-500">
+            데이터가 없습니다.
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

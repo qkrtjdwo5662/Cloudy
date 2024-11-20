@@ -16,12 +16,12 @@ export const deleteNormalMember = async (
     );
 
     if (response.status === 200) {
-      console.log("회원 삭제 성공");
+      // console.log("회원 삭제 성공");
     } else {
-      console.error("회원 삭제 실패: ", response.data.message);
+      // console.error("회원 삭제 실패: ", response.data.message);
     }
   } catch (error) {
-    console.error("회원 삭제 중 오류 발생:", error);
+    // console.error("회원 삭제 중 오류 발생:", error);
     throw new Error("회원 삭제에 실패했습니다.");
   }
 };

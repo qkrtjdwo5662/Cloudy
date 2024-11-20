@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import React, { ReactNode, MouseEvent } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -7,26 +7,24 @@ interface NavigationItemProps {
   rightIcon?: string;
   isSubItem?: boolean;
   to?: string;
-  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onClick?: (e: MouseEvent<HTMLDivElement>) => void;
   children: ReactNode;
 }
 
-export const NavigationItem = ({
+const NavigationItemComponent = ({
   leftIcon,
   rightIcon,
-  isSubItem,
+  isSubItem = false,
   to,
   onClick,
   children,
 }: NavigationItemProps) => {
   const pathname = usePathname();
-  const isActive = pathname === to;
+  const isActive = to ? pathname === to : false;
 
   const content = (
     <div
-      className={`flex w-full cursor-pointer items-center gap-12 rounded-4 ${
-        isSubItem ? "pl-56 pr-20" : "px-20"
-      } py-12 ${isActive ? "bg-indigo-100" : ""}`}
+      className={`flex w-full cursor-pointer items-center gap-12 rounded-4 ${isSubItem ? "pl-56 pr-20" : "px-20"} py-12 ${isActive ? "bg-indigo-100" : ""}`}
       onClick={onClick}
     >
       {leftIcon && (
@@ -47,3 +45,5 @@ export const NavigationItem = ({
     content
   );
 };
+
+export const NavigationItem = React.memo(NavigationItemComponent);

@@ -54,7 +54,7 @@ const TableRow = ({
         },
         onError: (error) => {
           alert("서버 삭제 중 오류가 발생했습니다.");
-          console.error("Error deleting server:", error);
+          // console.error("Error deleting server:", error);
         },
       });
     }

@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
           // Uint8Array를 텍스트로 변환
           const decodedValue = textDecoder.decode(value, { stream: true });
           controller.enqueue(decodedValue);
-          console.log("Decoded Value:", decodedValue); // 디코딩된 문자열 출력
+          // console.log("Decoded Value:", decodedValue); // 디코딩된 문자열 출력
         }
       } finally {
         reader.releaseLock();

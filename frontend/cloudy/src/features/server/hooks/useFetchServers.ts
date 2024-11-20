@@ -29,7 +29,7 @@ export const useFetchServers = () => {
         );
         setServers(response.data.data);
       } catch (error) {
-        console.error("Failed to fetch servers", error);
+        // console.error("Failed to fetch servers", error);
       } finally {
         setLoading(false);
       }

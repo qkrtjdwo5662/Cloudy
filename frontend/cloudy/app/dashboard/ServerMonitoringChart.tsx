@@ -34,7 +34,7 @@ type ChartData = {
 };
 
 const RealTimeChart = () => {
-  const interval = 30;
+  const interval = 15;
   const {
     data: monitoringData,
     error,
@@ -99,9 +99,9 @@ const RealTimeChart = () => {
       },
       y: {
         min: 0,
-        max: Math.max(...(monitoringData?.countList || [0])) + 10,
+        max: 50,
         ticks: {
-          stepSize: 2,
+          stepSize: 5,
         },
       },
     },
@@ -111,7 +111,7 @@ const RealTimeChart = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return;
   }
 
   if (error) {

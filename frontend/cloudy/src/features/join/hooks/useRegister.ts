@@ -23,14 +23,14 @@ export const useRegister = () => {
         "http://k11a606.p.ssafy.io:8081/auth/register/super",
         data,
       );
-      console.log(response);
+      // console.log(response);
 
       if (response.status === 200) {
         setSuccess(true);
       }
     } catch (err) {
       setError("회원가입에 실패했습니다.");
-      console.error("Registration error:", err);
+      // console.error("Registration error:", err);
     } finally {
       setLoading(false);
     }

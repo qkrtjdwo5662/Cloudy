@@ -120,7 +120,7 @@ export default function AddServer() {
       },
       onError: (error) => {
         alert("서버 생성 중 오류가 발생했습니다.");
-        console.error("Error creating server:", error);
+        // console.error("Error creating server:", error);
       },
     });
   };
